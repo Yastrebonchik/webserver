@@ -6,19 +6,15 @@
 
 #IncludeRegexTransform: 
 
-/Users/kcedra/webserver/main.cpp
-iostream
+/Users/kcedra/webserver/RequestHeaders.cpp
+RequestHeaders.hpp
+/Users/kcedra/webserver/RequestHeaders.hpp
+
+/Users/kcedra/webserver/RequestHeaders.hpp
+string
 -
-sys/socket.h
+list
 -
-sys/types.h
--
-unistd.h
--
-fstream
--
-netinet/in.h
--
-arpa/inet.h
+map
 -
 

@@ -142,6 +142,60 @@ webserver/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/build
 .PHONY : webserver/fast
 
+RequestHeaders.o: RequestHeaders.cpp.o
+
+.PHONY : RequestHeaders.o
+
+# target to build an object file
+RequestHeaders.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/RequestHeaders.cpp.o
+.PHONY : RequestHeaders.cpp.o
+
+RequestHeaders.i: RequestHeaders.cpp.i
+
+.PHONY : RequestHeaders.i
+
+# target to preprocess a source file
+RequestHeaders.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/RequestHeaders.cpp.i
+.PHONY : RequestHeaders.cpp.i
+
+RequestHeaders.s: RequestHeaders.cpp.s
+
+.PHONY : RequestHeaders.s
+
+# target to generate assembly for a file
+RequestHeaders.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/RequestHeaders.cpp.s
+.PHONY : RequestHeaders.cpp.s
+
+ResponseHeaders.o: ResponseHeaders.cpp.o
+
+.PHONY : ResponseHeaders.o
+
+# target to build an object file
+ResponseHeaders.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ResponseHeaders.cpp.o
+.PHONY : ResponseHeaders.cpp.o
+
+ResponseHeaders.i: ResponseHeaders.cpp.i
+
+.PHONY : ResponseHeaders.i
+
+# target to preprocess a source file
+ResponseHeaders.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ResponseHeaders.cpp.i
+.PHONY : ResponseHeaders.cpp.i
+
+ResponseHeaders.s: ResponseHeaders.cpp.s
+
+.PHONY : ResponseHeaders.s
+
+# target to generate assembly for a file
+ResponseHeaders.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ResponseHeaders.cpp.s
+.PHONY : ResponseHeaders.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -178,6 +232,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... webserver"
+	@echo "... RequestHeaders.o"
+	@echo "... RequestHeaders.i"
+	@echo "... RequestHeaders.s"
+	@echo "... ResponseHeaders.o"
+	@echo "... ResponseHeaders.i"
+	@echo "... ResponseHeaders.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

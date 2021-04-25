@@ -5,6 +5,7 @@
 #include <fstream>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include "RequestHeaders.hpp"
 
 //struct in_addr {
 //	unsigned long s_addr;
@@ -18,17 +19,13 @@
 //};
 
 int main() {
-//    int sockfd;
-//
-//	sockfd = socket(PF_INET, SOCK_STREAM, 0);
-//	bind(sockfd, )
-//    //std::cout << "Hello, World!" << std::endl;
-	std::fstream	file("log.txt");
-	int sock, listener;
-	struct sockaddr_in addr;
-	char buf[1024];
-	char	ret[] = "HTTP/1.1 200 OK\r\nServer: webserver/n/r/r/nDate: Sat, 08 Mar 2014 22:53:46 GMT\r\nContent-Type: text/html\r\nContent-Length: 161\r\nLast-Modified: Sun, 21 Apr 2021 14:40:30 GMT\r\nConnection: keep-alive\r\n\r\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<title>ABOB</title>\n</head>\n<body>\n<a href=\"https://memepedia.ru/aboba/\">ABOBA</a>\n</body>\n</html>";
-	int bytes_read;
+	//std::fstream	file("log.txt");
+	RequestHeaders	request;
+	int				sock, listener;
+	struct			sockaddr_in addr;
+	char			buf[1024];
+	char			ret[] = "HTTP/1.1 200 OK\r\nServer: webserver/n/r/r/nDate: Sat, 08 Mar 2014 22:53:46 GMT\r\nContent-Type: text/html\r\nContent-Length: 161\r\nLast-Modified: Sun, 21 Apr 2021 14:40:30 GMT\r\nConnection: keep-alive\r\n\r\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<title>ABOB</title>\n</head>\n<body>\n<a href=\"https://memepedia.ru/aboba/\">ABOBA</a>\n</body>\n</html>";
+	int				bytes_read;
 
 	listener = socket(AF_INET, SOCK_STREAM, 0);
 	if(listener < 0)
@@ -60,13 +57,15 @@ int main() {
 		while(1)
 		{
 			bytes_read = recv(sock, buf, 1024, 0);
-			file << buf;
+			request.getSource(buf);
+			request.getInfo();
+			//file << buf;
 			if(bytes_read <= 0) break;
 			send(sock, ret, bytes_read, 0);
 		}
 
 		close(sock);
 	//}
-	file.close();
+	//file.close();
     return 0;
 }

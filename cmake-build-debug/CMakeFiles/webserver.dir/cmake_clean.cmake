@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/webserver.dir/RequestHeaders.cpp.o"
+  "CMakeFiles/webserver.dir/ResponseHeaders.cpp.o"
   "CMakeFiles/webserver.dir/main.cpp.o"
   "webserver"
   "webserver.pdb"
