@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/kcedra/webserver/main.cpp
+iostream
+-
+sys/socket.h
+-
+sys/types.h
+-
+unistd.h
+-
+fstream
+-
+netinet/in.h
+-
+arpa/inet.h
+-
+
