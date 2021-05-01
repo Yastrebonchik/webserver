@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+../libft/libft.h
+stdlib.h
+-
+unistd.h
+-
+
 /Users/kcedra/webserver/RequestHeaders.cpp
 RequestHeaders.hpp
 /Users/kcedra/webserver/RequestHeaders.hpp
@@ -16,5 +22,31 @@ string
 list
 -
 map
+-
+cstring
+-
+libft.h
+/Users/kcedra/webserver/libft.h
+
+/Users/kcedra/webserver/main.cpp
+iostream
+-
+sys/socket.h
+-
+sys/types.h
+-
+unistd.h
+-
+fstream
+-
+netinet/in.h
+-
+arpa/inet.h
+-
+RequestHeaders.hpp
+/Users/kcedra/webserver/RequestHeaders.hpp
+errno.h
+-
+ctime
 -
 

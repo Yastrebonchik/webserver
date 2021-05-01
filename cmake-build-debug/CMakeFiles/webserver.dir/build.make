@@ -128,6 +128,7 @@ webserver: CMakeFiles/webserver.dir/main.cpp.o
 webserver: CMakeFiles/webserver.dir/RequestHeaders.cpp.o
 webserver: CMakeFiles/webserver.dir/ResponseHeaders.cpp.o
 webserver: CMakeFiles/webserver.dir/build.make
+webserver: ../libft/libft.a
 webserver: CMakeFiles/webserver.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/kcedra/webserver/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable webserver"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/webserver.dir/link.txt --verbose=$(VERBOSE)

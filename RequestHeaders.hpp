@@ -6,9 +6,11 @@
 # define WEBSERVER_REQUESTHEADERS_HPP
 
 
-#include <string>
-#include <list>
-#include <map>
+# include <string>
+# include <list>
+# include <map>
+# include <cstring>
+# include "libft.h"
 
 class RequestHeaders {
 private:
@@ -31,34 +33,50 @@ private:
 	std::list<std::string>			_transferEncoding;
 	std::list<std::string>			_userAgent;
 	char							*_source;
-	size_t 							_index;
+	std::list<char*> 				_tokens;
 public:
 	RequestHeaders();
 	RequestHeaders(char *source);
 	~RequestHeaders();
-	void		getSource(char *source);
-	std::string	getHeader();
-	void 		detectHeader(std::string header);
-	void 		getInfo();
-	void		getMethod();
-	void 		getUri();
-	void 		getVersion();
-	void		getAccept();
-	void 		getAcceptCharset();
-	void 		getAcceptLanguage();
-	void 		getAuthorization();
-	void 		getConnection();
-	void 		getContentLanguage();
-	void 		getContentLength();
-	void 		getContentLocation();
-	void 		getContentType();
-	void 		getDate();
-	void 		getHost();
-	void 		getLastModified();
-	void 		getReferer();
-	void 		getTransferEncoding();
-	void 		getUserAgent();
+	void							getSource(char *source);
+	std::string 					get_method() const;
+	std::string 					get_uri() const;
+	std::string 					get_version() const;
+	std::map<std::string, float>	get_accept() const;
+	std::list<std::string>			get_acceptCharset() const;
+	std::list<std::string>			get_acceptLanguage() const;
+	std::list<std::string>			get_authorization() const;
+	std::string 					get_connection() const;
+	std::list<std::string>			get_contentLanguage() const;
+	size_t 							get_contentLength() const;
+	std::string 					get_contentLocation() const;
+	std::list<std::string>			get_contentType() const;
+	std::string 					get_date() const;
+	std::string 					get_host() const;
+	std::string 					get_lastModified() const;
+	std::string 					get_referer() const;
+	std::list<std::string>			get_transferEncoding() const;
+	std::list<std::string>			get_userAgent() const;
+	std::string						getSourceHeader();
+	void 							detectHeader(std::string header);
+	void 							setInfo();
+	void 							setStartLine();
+	void							setAccept();
+	void 							setAcceptCharset();
+	void 							setAcceptLanguage();
+	void 							setAuthorization();
+	void					 		setConnection();
+	void 							setContentLanguage();
+	void 							setContentLength();
+	void 							setContentLocation();
+	void 							setContentType();
+	void 							setDate();
+	void 							setHost();
+	void 							setLastModified();
+	void 							setReferer();
+	void 							setTransferEncoding();
+	void 							setUserAgent();
+	void 							clear();
 };
-
 
 #endif //WEBSERVER_REQUESTHEADERS_HPP
