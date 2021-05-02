@@ -12,10 +12,6 @@ stdlib.h
 unistd.h
 -
 
-/Users/kcedra/webserver/RequestHeaders.cpp
-RequestHeaders.hpp
-/Users/kcedra/webserver/RequestHeaders.hpp
-
 /Users/kcedra/webserver/RequestHeaders.hpp
 string
 -
@@ -27,6 +23,8 @@ cstring
 -
 libft.h
 /Users/kcedra/webserver/libft.h
+algorithm
+-
 
 /Users/kcedra/webserver/main.cpp
 iostream

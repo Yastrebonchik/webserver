@@ -4,6 +4,10 @@
 
 #include "RequestHeaders.hpp"
 
+//bool cmp(std::pair<std::string, float> &a, std::pair<std::string, float>& b){
+//	return a.second < b.second;
+//}
+
 RequestHeaders::RequestHeaders(){
 }
 
@@ -29,7 +33,7 @@ std::string	RequestHeaders::getSourceHeader(){
 	return (ret);
 }
 
-void 	RequestHeaders::getSource(char *source){
+void 	RequestHeaders::setSource(char *source){
 	this->_source = source;
 }
 
@@ -84,81 +88,173 @@ void 	RequestHeaders::setStartLine() {
 }
 
 void 	RequestHeaders::setAccept(){
+	char 		*token;
+	char 		**values;
+	std::string format;
+	float 		q;
 
+	token = strtok(ft_strchr(this->_tokens.front(), ' ') + 1, ",");
+	while (token != NULL){
+		values = ft_split(token, ';');
+		format = values[0];
+		q  = 1;
+		if (values[1] != NULL)
+			q = atof(ft_strchr(values[1], '=') + 1);
+		this->_accept.insert(std::pair<std::string, float>(format, q));
+		free(values[0]);
+		values[0] = NULL;
+		if (values[1] != NULL)
+			free(values[1]);
+		values[1] = NULL;
+		free(values);
+		values = NULL;
+		token = strtok(NULL, ",");
+	}
+	//std::sort(this->_accept.begin(), this->_accept.end(), cmp);
 }
 
 void 	RequestHeaders::setAcceptLanguage(){
+	char 		*token;
+	char 		**values;
+	std::string language;
+	float 		q;
 
+	token = strtok(ft_strchr(this->_tokens.front(), ' ') + 1, ",");
+	while (token != NULL){
+		values = ft_split(token, ';');
+		language = values[0];
+		q  = 1;
+		if (values[1] != NULL)
+			q = atof(ft_strchr(values[1], '=') + 1);
+		this->_acceptLanguage.insert(std::pair<std::string, float>(language, q));
+		free(values[0]);
+		values[0] = NULL;
+		if (values[1] != NULL)
+			free(values[1]);
+		values[1] = NULL;
+		free(values);
+		values = NULL;
+		token = strtok(NULL, ",");
+	}
 }
 
 void 	RequestHeaders::setAcceptCharset(){
+	char 		*token;
+	char 		**values;
+	std::string charset;
+	float 		q;
 
+	token = strtok(ft_strchr(this->_tokens.front(), ' ') + 1, ",");
+	while (token != NULL){
+		values = ft_split(token, ';');
+		charset = values[0];
+		q  = 1;
+		if (values[1] != NULL)
+			q = atof(ft_strchr(values[1], '=') + 1);
+		this->_acceptCharset.insert(std::pair<std::string, float>(charset, q));
+		free(values[0]);
+		values[0] = NULL;
+		if (values[1] != NULL)
+			free(values[1]);
+		values[1] = NULL;
+		free(values);
+		values = NULL;
+		token = strtok(NULL, ",");
+	}
 }
 
 void 	RequestHeaders::setAuthorization(){
-
-}
-
-void 	RequestHeaders::setConnection(){
 	char	*token;
 
 	token = ft_strchr(this->_tokens.front(), ' ');
 	this->_connection = ++token;
 }
 
-void 	RequestHeaders::setContentLanguage(){
+void 	RequestHeaders::setConnection(){
+	char	*token;
 
+	token = ft_strchr(this->_tokens.front(), ' ') + 1;
+	this->_connection = token;
+}
+
+void 	RequestHeaders::setContentLanguage(){
+	char		*token;
+	std::string language;
+
+	token = strtok(ft_strchr(this->_tokens.front(), ' ') + 1, ",");
+	while (token != NULL){
+		language = token;
+		this->_contentLanguage.push_back(language);
+		token = strtok(NULL, ",");
+	}
 }
 
 void 	RequestHeaders::setContentLength(){
+	char		*token;
 
+	token = ft_strchr(this->_tokens.front(), ' ') + 1;
+	this->_contentLength = ft_atoi(token);
 }
 
 void 	RequestHeaders::setContentLocation(){
 	char	*token;
 
-	token = ft_strchr(this->_tokens.front(), ' ');
-	this->_contentLocation = ++token;
+	token = ft_strchr(this->_tokens.front(), ' ') + 1;
+	this->_contentLocation = token;
 }
 
 void 	RequestHeaders::setContentType(){
+	char	*token;
 
+	token = ft_strchr(this->_tokens.front(), ' ') + 1;
+	this->_contentType = token;
 }
 
 void 	RequestHeaders::setDate(){
 	char	*token;
 
-	token = ft_strchr(this->_tokens.front(), ' ');
-	this->_date = ++token;
+	token = ft_strchr(this->_tokens.front(), ' ') + 1;
+	this->_date = token;
 }
 
 void 	RequestHeaders::setHost(){
 	char	*token;
 
-	token = ft_strchr(this->_tokens.front(), ' ');
-	this->_host = ++token;
+	token = ft_strchr(this->_tokens.front(), ' ') + 1;
+	this->_host = token;
 }
 
 void 	RequestHeaders::setLastModified(){
 	char	*token;
 
-	token = ft_strchr(this->_tokens.front(), ' ');
-	this->_lastModified = ++token;
+	token = ft_strchr(this->_tokens.front(), ' ') + 1;
+	this->_lastModified = token;
 }
 
 void 	RequestHeaders::setReferer(){
 	char	*token;
 
-	token = ft_strchr(this->_tokens.front(), ' ');
-	this->_referer = ++token;
+	token = ft_strchr(this->_tokens.front(), ' ') + 1;
+	this->_referer = token;
 }
 
 void 	RequestHeaders::setTransferEncoding(){
+	char		*token;
+	std::string encoding;
 
+	token = strtok(ft_strchr(this->_tokens.front(), ' ') + 1, ",");
+	while (token != NULL){
+		encoding = token;
+		this->_transferEncoding.push_back(encoding);
+		token = strtok(NULL, ",");
+	}
 }
 
 void 	RequestHeaders::setUserAgent(){
+	char	*token;
 
+	token = ft_strchr(this->_tokens.front(), ' ') + 1;
+	this->_userAgent = token;
 }
 
 void 	RequestHeaders::setInfo(){
@@ -194,11 +290,11 @@ std::map<std::string, float>	RequestHeaders::get_accept() const{
 	return (this->_accept);
 }
 
-std::list<std::string>			RequestHeaders::get_acceptCharset() const{
+std::map<std::string, float>	RequestHeaders::get_acceptCharset() const{
 	return (this->_acceptCharset);
 }
 
-std::list<std::string>			RequestHeaders::get_acceptLanguage() const{
+std::map<std::string, float>	RequestHeaders::get_acceptLanguage() const{
 	return (this->_acceptLanguage);
 }
 
@@ -222,7 +318,7 @@ std::string 					RequestHeaders::get_contentLocation() const{
 	return (this->_contentLocation);
 }
 
-std::list<std::string>			RequestHeaders::get_contentType() const{
+std::string						RequestHeaders::get_contentType() const{
 	return	(this->_contentType);
 }
 
@@ -246,7 +342,7 @@ std::list<std::string>			RequestHeaders::get_transferEncoding() const{
 	return (this->_transferEncoding);
 }
 
-std::list<std::string>			RequestHeaders::get_userAgent() const{
+std::string						RequestHeaders::get_userAgent() const{
 	return (this->_userAgent);
 }
 
@@ -254,4 +350,19 @@ void 							RequestHeaders::clear() {
 	this->_method = "";
 	this->_uri = "";
 	this->_version = "";
+	this->_accept.clear();
+	this->_acceptCharset.clear();
+	this->_acceptLanguage.clear();
+	this->_authorization.clear();
+	this->_connection.clear();
+	this->_contentLanguage.clear();
+	this->_contentLength = 0;
+	this->_contentLocation.clear();
+	this->_contentType.clear();
+	this->_date.clear();
+	this->_host.clear();
+	this->_lastModified.clear();
+	this->_referer.clear();
+	this->_transferEncoding.clear();
+	this->_userAgent.clear();
 }

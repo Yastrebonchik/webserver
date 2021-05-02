@@ -32,10 +32,10 @@ int main() {
 	struct			sockaddr_in addr;
 	char			buf[1024];
 	char 			*ret;
-	//char			ret[1024] = "HTTP/1.1 200 OK\r\nServer: webserver/n/r/r/nDate: Sat, 08 Mar 2014 22:53:46 GMT\r\nContent-Type: text/html\r\nContent-Length: 161\r\nLast-Modified: Sun, 21 Apr 2021 14:40:30 GMT\r\nConnection: keep-alive\r\n\r\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<title>ABOB</title>\n</head>\n<body>\n<a href=\"https://memepedia.ru/aboba/\">ABOBA</a>\n</body>\n</html>";
 	int				bytes_read;
 
-	std::srand(std::time(0));
+	std::srand(std::time(0)); //Обновление последовательности рандомизации
+	ret = NULL;
 	listener = socket(AF_INET, SOCK_STREAM, 0);
 	if(listener < 0)
 	{
@@ -67,7 +67,7 @@ int main() {
 		{
 			bytes_read = recv(sock, buf, 1024, 0);
 			if(bytes_read <= 0) break;
-			request.getSource(buf);
+			request.setSource(buf);
 			request.setInfo();
 			ft_bzero(buf, 1024);
 			//ft_bzero(ret, 1024);
@@ -80,14 +80,16 @@ int main() {
 						error += line;
 						error += '\n';
 					}
-					ret = ft_strdup("HTTP/1.1 400 Bad Request\n" \
+					ret = (char*)malloc(sizeof(char) * (195 + error.length() + 1));
+					ft_bzero(ret, 195 + error.length() + 1);
+					ft_strlcpy(ret, "HTTP/1.1 400 Bad Request\n" \
                         "Server: webserver\n" \
                         "Date: Sat, 01 May 2021 17:15:05 GMT\n" \
                         "Content-Type: text/html\n" \
                         "Content-Length: 152\n" \
                         "Connection: close\n" \
-                        "Strict-Transport-Security: max-age=86400\r\n\r\n");
-					strcat(ret, error.c_str());
+                        "Strict-Transport-Security: max-age=86400\r\n\r\n", 195 + 1);
+					ft_strlcat(ret, error.c_str(), 195 + error.length() + 1);
 					errorfile.close();
 				}
 				else {
@@ -97,20 +99,22 @@ int main() {
 						error += line;
 						error += '\n';
 					}
-					ret = ft_strdup("HTTP/1.1 200 OK\n" \
+					ret = (char*)malloc(sizeof(char) * (194 + error.length() + 1));
+					ft_bzero(ret, 194 + error.length() + 1);
+					ft_strlcpy(ret, "HTTP/1.1 200 OK\n" \
                         "Server: webserver\n" \
                         "Date: Sat, 01 May 2021 17:15:05 GMT\n" \
                         "Content-Type: text/html\n" \
                         "Content-Length: 161\n" \
                         "Connection: close\n" \
-                        "Strict-Transport-Security: max-age=86400\r\n\r\n");
-					strcat(ret, error.c_str());
+                        "Strict-Transport-Security: max-age=86400\r\n\r\n", 194 + 1);
+					ft_strlcat(ret, error.c_str(), 194 + error.length() + 1);
 					retfile.close();
 				}
 			}
-			send(sock, ret, bytes_read, 0);
-			//free(ret);
-			ret = nullptr;
+			send(sock, ret, ft_strlen(ret), 0);
+			free(ret);
+			ret = NULL;
 			request.clear();
 			error.clear();
 		}
