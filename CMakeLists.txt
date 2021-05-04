@@ -4,7 +4,7 @@ project(webserver)
 set(CMAKE_CXX_STANDARD 98)
 
 include_directories(libft)
-add_executable(webserver main.cpp RequestHeaders.cpp RequestHeaders.hpp ResponseHeaders.cpp ResponseHeaders.hpp)
+add_executable(webserver main.cpp RequestHeaders.cpp RequestHeaders.hpp ResponseHeaders.cpp ResponseHeaders.hpp methods.cpp methods.h ConfigClass.hpp ConfigClass.cpp)
 
 find_library(LIBFT ft libft)
 target_link_libraries(webserver LINK_PUBLIC ${LIBFT})

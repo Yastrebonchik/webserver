@@ -142,6 +142,33 @@ webserver/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/build
 .PHONY : webserver/fast
 
+ConfigClass.o: ConfigClass.cpp.o
+
+.PHONY : ConfigClass.o
+
+# target to build an object file
+ConfigClass.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ConfigClass.cpp.o
+.PHONY : ConfigClass.cpp.o
+
+ConfigClass.i: ConfigClass.cpp.i
+
+.PHONY : ConfigClass.i
+
+# target to preprocess a source file
+ConfigClass.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ConfigClass.cpp.i
+.PHONY : ConfigClass.cpp.i
+
+ConfigClass.s: ConfigClass.cpp.s
+
+.PHONY : ConfigClass.s
+
+# target to generate assembly for a file
+ConfigClass.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ConfigClass.cpp.s
+.PHONY : ConfigClass.cpp.s
+
 RequestHeaders.o: RequestHeaders.cpp.o
 
 .PHONY : RequestHeaders.o
@@ -223,6 +250,33 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+methods.o: methods.cpp.o
+
+.PHONY : methods.o
+
+# target to build an object file
+methods.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/methods.cpp.o
+.PHONY : methods.cpp.o
+
+methods.i: methods.cpp.i
+
+.PHONY : methods.i
+
+# target to preprocess a source file
+methods.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/methods.cpp.i
+.PHONY : methods.cpp.i
+
+methods.s: methods.cpp.s
+
+.PHONY : methods.s
+
+# target to generate assembly for a file
+methods.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/methods.cpp.s
+.PHONY : methods.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -232,6 +286,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... webserver"
+	@echo "... ConfigClass.o"
+	@echo "... ConfigClass.i"
+	@echo "... ConfigClass.s"
 	@echo "... RequestHeaders.o"
 	@echo "... RequestHeaders.i"
 	@echo "... RequestHeaders.s"
@@ -241,6 +298,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... methods.o"
+	@echo "... methods.i"
+	@echo "... methods.s"
 .PHONY : help
 
 

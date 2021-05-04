@@ -4,9 +4,9 @@
 
 #include "RequestHeaders.hpp"
 
-//bool cmp(std::pair<std::string, float> &a, std::pair<std::string, float>& b){
-//	return a.second < b.second;
-//}
+bool sortbyvalue(std::pair<std::string, float> &a, std::pair<std::string, float>& b){
+	return a.second > b.second;
+}
 
 RequestHeaders::RequestHeaders(){
 }
@@ -100,7 +100,7 @@ void 	RequestHeaders::setAccept(){
 		q  = 1;
 		if (values[1] != NULL)
 			q = atof(ft_strchr(values[1], '=') + 1);
-		this->_accept.insert(std::pair<std::string, float>(format, q));
+		this->_accept.push_back(std::pair<std::string, float>(format, q));
 		free(values[0]);
 		values[0] = NULL;
 		if (values[1] != NULL)
@@ -110,7 +110,7 @@ void 	RequestHeaders::setAccept(){
 		values = NULL;
 		token = strtok(NULL, ",");
 	}
-	//std::sort(this->_accept.begin(), this->_accept.end(), cmp);
+	std::sort(this->_accept.begin(), this->_accept.end(), sortbyvalue);
 }
 
 void 	RequestHeaders::setAcceptLanguage(){
@@ -126,7 +126,7 @@ void 	RequestHeaders::setAcceptLanguage(){
 		q  = 1;
 		if (values[1] != NULL)
 			q = atof(ft_strchr(values[1], '=') + 1);
-		this->_acceptLanguage.insert(std::pair<std::string, float>(language, q));
+		this->_acceptLanguage.push_back(std::pair<std::string, float>(language, q));
 		free(values[0]);
 		values[0] = NULL;
 		if (values[1] != NULL)
@@ -136,6 +136,7 @@ void 	RequestHeaders::setAcceptLanguage(){
 		values = NULL;
 		token = strtok(NULL, ",");
 	}
+	std::sort(this->_acceptLanguage.begin(), this->_acceptLanguage.end(), sortbyvalue);
 }
 
 void 	RequestHeaders::setAcceptCharset(){
@@ -151,7 +152,7 @@ void 	RequestHeaders::setAcceptCharset(){
 		q  = 1;
 		if (values[1] != NULL)
 			q = atof(ft_strchr(values[1], '=') + 1);
-		this->_acceptCharset.insert(std::pair<std::string, float>(charset, q));
+		this->_acceptCharset.push_back(std::pair<std::string, float>(charset, q));
 		free(values[0]);
 		values[0] = NULL;
 		if (values[1] != NULL)
@@ -161,6 +162,7 @@ void 	RequestHeaders::setAcceptCharset(){
 		values = NULL;
 		token = strtok(NULL, ",");
 	}
+	std::sort(this->_acceptCharset.begin(), this->_acceptCharset.end(), sortbyvalue);
 }
 
 void 	RequestHeaders::setAuthorization(){
@@ -286,15 +288,15 @@ std::string 					RequestHeaders::get_version() const{
 	return (this->_version);
 }
 
-std::map<std::string, float>	RequestHeaders::get_accept() const{
+std::vector<std::pair<std::string, float> >	RequestHeaders::get_accept() const{
 	return (this->_accept);
 }
 
-std::map<std::string, float>	RequestHeaders::get_acceptCharset() const{
+std::vector<std::pair<std::string, float> >	RequestHeaders::get_acceptCharset() const{
 	return (this->_acceptCharset);
 }
 
-std::map<std::string, float>	RequestHeaders::get_acceptLanguage() const{
+std::vector<std::pair<std::string, float> >	RequestHeaders::get_acceptLanguage() const{
 	return (this->_acceptLanguage);
 }
 
@@ -347,22 +349,28 @@ std::string						RequestHeaders::get_userAgent() const{
 }
 
 void 							RequestHeaders::clear() {
-	this->_method = "";
-	this->_uri = "";
-	this->_version = "";
-	this->_accept.clear();
-	this->_acceptCharset.clear();
-	this->_acceptLanguage.clear();
-	this->_authorization.clear();
-	this->_connection.clear();
-	this->_contentLanguage.clear();
-	this->_contentLength = 0;
-	this->_contentLocation.clear();
-	this->_contentType.clear();
-	this->_date.clear();
-	this->_host.clear();
-	this->_lastModified.clear();
-	this->_referer.clear();
-	this->_transferEncoding.clear();
-	this->_userAgent.clear();
+	try {
+		this->_method.clear();
+		this->_uri.clear();
+		this->_version.clear();
+		this->_accept.clear();
+		this->_acceptCharset.clear();
+		this->_acceptLanguage.clear();
+		this->_authorization.clear();
+		this->_connection.clear();
+		this->_contentLanguage.clear();
+		this->_contentLength = 0;
+		this->_contentLocation.clear();
+		this->_contentType.clear();
+		this->_date.clear();
+		this->_host.clear();
+		this->_lastModified.clear();
+		this->_referer.clear();
+		this->_transferEncoding.clear();
+		this->_userAgent.clear();
+		this->_tokens.clear();
+	}
+	catch (std::exception) {
+		std::cout << "Something went wrong while clearing request headers" << std::endl;
+	}
 }

@@ -82,6 +82,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/kcedra/webserver/ConfigClass.cpp">
+			<Option target="webserver"/>
+		</Unit>
+		<Unit filename="/Users/kcedra/webserver/ConfigClass.hpp">
+			<Option target="webserver"/>
+		</Unit>
 		<Unit filename="/Users/kcedra/webserver/RequestHeaders.cpp">
 			<Option target="webserver"/>
 		</Unit>
@@ -95,6 +101,12 @@
 			<Option target="webserver"/>
 		</Unit>
 		<Unit filename="/Users/kcedra/webserver/main.cpp">
+			<Option target="webserver"/>
+		</Unit>
+		<Unit filename="/Users/kcedra/webserver/methods.cpp">
+			<Option target="webserver"/>
+		</Unit>
+		<Unit filename="/Users/kcedra/webserver/methods.h">
 			<Option target="webserver"/>
 		</Unit>
 		<Unit filename="/Users/kcedra/webserver/CMakeLists.txt">

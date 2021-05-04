@@ -3,18 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: student <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: alexander <alexander@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/29 20:19:23 by student           #+#    #+#             */
-/*   Updated: 2020/05/26 13:41:51 by kcedra           ###   ########.fr       */
+/*   Updated: 2020/09/25 23:11:33 by alexander        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# define BUFFER_SIZE 10
+
 # include <stdlib.h>
 # include <unistd.h>
+# include <sys/types.h>
+# include <sys/uio.h>
 
 typedef struct		s_list
 {
@@ -35,6 +39,11 @@ int					ft_toupper(int c);
 int					ft_tolower(int c);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
+int					ft_strchrnum(const char *s, int c);
+int					add_first_buf(char **text, char *buffer, int size);
+int					get_next_line(int fd, char **line);
+double				ft_abs(double a);
+double				min_of_2(double a, double b);
 void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);
 void				ft_putendl_fd(char *s, int fd);
@@ -54,7 +63,7 @@ char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strchr(const char *s, int c);
 char				*ft_strrchr(const char *s, int c);
 char				*ft_strtrim(char const *s1, char const *set);
-char				*ft_itoa(int nb);
+char				*ft_itoa(long long int nb);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char				**ft_split(char const *s, char c);
 t_list				*ft_lstnew(void *content);

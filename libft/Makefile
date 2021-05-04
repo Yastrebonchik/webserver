@@ -3,14 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kcedra <marvin@42.fr>                      +#+  +:+       +#+         #
+#    By: alexander <alexander@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/05/27 16:34:05 by kcedra            #+#    #+#              #
-#    Updated: 2020/05/28 19:15:53 by kcedra           ###   ########.fr        #
+#    Updated: 2020/09/25 23:12:18 by alexander        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-COMPILER = clang++
+CC = clang++
 
 NAME = libft.a
 
@@ -19,19 +19,19 @@ HEADER = libft.h
 SOURCES = ft_memchr.cpp ft_strlcpy.cpp ft_memccpy.cpp ft_strlen.cpp ft_atoi.cpp ft_memcpy.cpp ft_strmapi.cpp ft_bzero.cpp ft_memset.cpp ft_strncmp.cpp\
 ft_calloc.cpp ft_putchar_fd.cpp ft_strnstr.cpp ft_isalnum.cpp ft_putendl_fd.cpp ft_strrchr.cpp ft_isalpha.cpp ft_putnbr_fd.cpp ft_strtrim.cpp\
 ft_isascii.cpp ft_putstr_fd.cpp ft_substr.cpp ft_isdigit.cpp ft_split.cpp ft_tolower.cpp ft_isprint.cpp ft_strchr.cpp ft_toupper.cpp ft_itoa.cpp\
-ft_strdup.cpp ft_strjoin.cpp ft_strlcat.cpp ft_memcmp.cpp ft_memmove.cpp
+ft_strdup.cpp ft_strjoin.cpp ft_strlcat.cpp ft_memcmp.cpp ft_memmove.cpp get_next_line.cpp get_next_line_utils.cpp ft_abs.cpp ft_min_of_2.cpp
 
 O_FILES = $(SOURCES:.cpp=.o)
 
-BONUS_SOURCES = ft_lstnew.c ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstlast.c ft_lstsize.c ft_lstdelone.c ft_lstiter.c\
-ft_lstmap.c
+BONUS_SOURCES = ft_lstnew.cpp ft_lstadd_back.cpp ft_lstadd_front.cpp ft_lstclear.cpp ft_lstlast.cpp ft_lstsize.cpp ft_lstdelone.cpp ft_lstiter.cpp\
+ft_lstmap.cpp
 
-BONUS_O_FILES = $(BONUS_SOURCES:.c=.o)
+BONUS_O_FILES = $(BONUS_SOURCES:.cpp=.o)
 
 FLAGS = -Wall -Wextra -Werror
 
-.c.o:	
-	$(COMPILER) $(FLAGS) -c $< -o ${<:.c=.o}
+.cpp.o:
+	$(CC) $(FLAGS) -c $< -o ${<:.cpp=.o}
 
 all: $(NAME)
 
@@ -39,8 +39,7 @@ $(NAME): $(O_FILES) $(HEADER)
 	ar rcs $(NAME) $(O_FILES)
 
 clean:
-	rm -f $(O_FILES)
-	rm -f $(BONUS_O_FILES)
+	rm -f *.o
 
 fclean:	clean
 	rm -f $(NAME)
