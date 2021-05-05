@@ -10,10 +10,11 @@
 # include "ConfigClass.hpp"
 # include <unistd.h>
 # include <fcntl.h>
+# include <dirent.h>
 
 char 			*generateAnswer(RequestHeaders request);
-char 			*GET(RequestHeaders request);
-char 			*POST(RequestHeaders request);
+char 			*GET(RequestHeaders request, ConfigClass server);
+char 			*POST(RequestHeaders request, ConfigClass server);
 char 			*noSuchMethod(RequestHeaders request);
 
 #endif //WEBSERVER_METHODS_H

@@ -101,6 +101,10 @@ void 					ResponseHeaders::setContentType(std::string type){
 	this->_contentType = type;
 }
 
+void 					ResponseHeaders::setDate(RequestHeaders request) {
+	this->_date = request.get_date();
+}
+
 void 					ResponseHeaders::setServer(){
 	this->_server.push_back("Webserver/1.0");
 }

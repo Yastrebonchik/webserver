@@ -54,6 +54,7 @@ public:
 	void 					setConnection(std::string phrase);
 	void 					setContentLength(size_t length);
 	void 					setContentType(std::string type);
+	void 					setDate(RequestHeaders request);
 	void 					setServer();
 	void 					pageAdd(std::string line);
 };

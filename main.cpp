@@ -26,7 +26,7 @@
 int main() {
 	std::fstream	errorfile;
 	std::fstream	retfile;
-	std::string 	error;
+	//std::string 	error;
 	std::string 	line;
 	RequestHeaders	request;
 	int 			random;
@@ -66,58 +66,20 @@ int main() {
 
 		while(1) {
 			bytes_read = recv(sock, buf, 1024, 0);
-			if(bytes_read <= 0) break;
+			if(bytes_read <= 0)
+				break;
 			request.setSource(buf);
 			request.setInfo();
 			ft_bzero(buf, 1024);
 			ret = generateAnswer(request);
-//			if (request.get_method() == "GET"){
-//				random = std::rand() % 2;
-//				if (random == 0) {
-//					errorfile.open("error400.html", std::fstream::in);
-//					isopen = errorfile.is_open();
-//					while (std::getline(errorfile, line)) {
-//						error += line;
-//						error += '\n';
-//					}
-//					ret = (char*)malloc(sizeof(char) * (195 + error.length() + 1));
-//					ft_bzero(ret, 195 + error.length() + 1);
-//					ft_strlcpy(ret, "HTTP/1.1 400 Bad Request\n" \
-//                        "Server: webserver\n" \
-//                        "Date: Sat, 01 May 2021 17:15:05 GMT\n" \
-//                        "Content-Type: text/html\n" \
-//                        "Content-Length: 152\n" \
-//                        "Connection: close\n" \
-//                        "Strict-Transport-Security: max-age=86400\r\n\r\n", 195 + 1);
-//					ft_strlcat(ret, error.c_str(), 195 + error.length() + 1);
-//					errorfile.close();
-//				}
-//				else {
-//					retfile.open("testpage.html", std::fstream::in);
-//					isopen = retfile.is_open();
-//					while (std::getline(retfile, line)) {
-//						error += line;
-//						error += '\n';
-//					}
-//					ret = (char*)malloc(sizeof(char) * (194 + error.length() + 1));
-//					ft_bzero(ret, 194 + error.length() + 1);
-//					ft_strlcpy(ret, "HTTP/1.1 200 OK\n" \
-//                        "Server: webserver\n" \
-//                        "Date: Sat, 01 May 2021 17:15:05 GMT\n" \
-//                        "Content-Type: text/html\n" \
-//                        "Content-Length: 161\n" \
-//                        "Connection: close\n" \
-//                        "Strict-Transport-Security: max-age=86400\r\n\r\n", 194 + 1);
-//					ft_strlcat(ret, error.c_str(), 194 + error.length() + 1);
-//					retfile.close();
-//				}
-//			}
 			if (send(sock, ret, ft_strlen(ret) + 1, 0) < 0)
 				std::cout << "Error number = " << errno << std::endl;
 			free(ret);
 			ret = NULL;
 			request.clear();
-			error.clear();
+			//error.clear();
+			if (request.get_connection() == "close")
+				break;
 		}
 		close(sock);
 	}
