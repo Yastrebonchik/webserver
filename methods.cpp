@@ -12,12 +12,14 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 	std::string 	fileline;
 	std::string 	file;
 	std::string 	directory;
+	std::string     uri = request.get_uri();
 	struct dirent	*entry;
+	std::string     seekfilename;
 	char 			*line;
 	DIR 			*dir;
 	int 			fd;
-	std::string::iterator it = request.get_uri().end();
-	std::string::iterator ite = request.get_uri().end();
+	std::string::iterator it = uri.end();
+	std::string::iterator ite = uri.end();
 
 	if (*(--it) == '/') {
 //		dir = opendir((server.root + request.get_uri()).c_str());
@@ -31,18 +33,19 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 		while (*it != '/') {
 			it--;
 		}
-		directory = (server.root + std::string(request.get_uri().begin(), it++));
+		directory = (server.root + std::string(uri.begin(), it++)) + '/';
 		dir = opendir(directory.c_str());
 //		if (!dir) {
 //			perror("diropen");
 //			exit(5);
 //		}
 		it--;
-		while (it++ != ite) {
+		while (++it != ite) {
 			file += *(it);
 		}
 		while (dir != NULL && (entry = readdir(dir)) != NULL) {
-			if (std::string(entry->d_name) == file) {
+		    seekfilename = entry->d_name;
+			if (seekfilename == file) {
 				closedir(dir);
 				break;
 			}
@@ -154,7 +157,7 @@ char 	*generateAnswer(RequestHeaders request) {
 	server.server_name = "default_server";
 	server.ip = "127.0.0.1";
 	server.port = 80;
-	server.root = "/Users/kcedra/webserver/directory_for_tests";
+	server.root = "/Users/alexander/webserver/directory_for_tests";
 	chdir(server.root.c_str());
 	config.push_back(server);
 	method = request.get_method();

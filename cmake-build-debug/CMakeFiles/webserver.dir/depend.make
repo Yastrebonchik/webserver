@@ -4,26 +4,26 @@
 CMakeFiles/webserver.dir/ConfigClass.cpp.o: ../ConfigClass.cpp
 CMakeFiles/webserver.dir/ConfigClass.cpp.o: ../ConfigClass.hpp
 
-CMakeFiles/webserver.dir/RequestHeaders.cpp.o: ../libft/libft.h
 CMakeFiles/webserver.dir/RequestHeaders.cpp.o: ../RequestHeaders.cpp
 CMakeFiles/webserver.dir/RequestHeaders.cpp.o: ../RequestHeaders.hpp
+CMakeFiles/webserver.dir/RequestHeaders.cpp.o: ../libft.h
 
-CMakeFiles/webserver.dir/ResponseHeaders.cpp.o: ../libft/libft.h
 CMakeFiles/webserver.dir/ResponseHeaders.cpp.o: ../RequestHeaders.hpp
 CMakeFiles/webserver.dir/ResponseHeaders.cpp.o: ../ResponseHeaders.cpp
 CMakeFiles/webserver.dir/ResponseHeaders.cpp.o: ../ResponseHeaders.hpp
+CMakeFiles/webserver.dir/ResponseHeaders.cpp.o: ../libft.h
 
-CMakeFiles/webserver.dir/main.cpp.o: ../libft/libft.h
 CMakeFiles/webserver.dir/main.cpp.o: ../ConfigClass.hpp
 CMakeFiles/webserver.dir/main.cpp.o: ../RequestHeaders.hpp
 CMakeFiles/webserver.dir/main.cpp.o: ../ResponseHeaders.hpp
+CMakeFiles/webserver.dir/main.cpp.o: ../libft.h
 CMakeFiles/webserver.dir/main.cpp.o: ../main.cpp
 CMakeFiles/webserver.dir/main.cpp.o: ../methods.h
 
-CMakeFiles/webserver.dir/methods.cpp.o: ../libft/libft.h
 CMakeFiles/webserver.dir/methods.cpp.o: ../ConfigClass.hpp
 CMakeFiles/webserver.dir/methods.cpp.o: ../RequestHeaders.hpp
 CMakeFiles/webserver.dir/methods.cpp.o: ../ResponseHeaders.hpp
+CMakeFiles/webserver.dir/methods.cpp.o: ../libft.h
 CMakeFiles/webserver.dir/methods.cpp.o: ../methods.cpp
 CMakeFiles/webserver.dir/methods.cpp.o: ../methods.h
 

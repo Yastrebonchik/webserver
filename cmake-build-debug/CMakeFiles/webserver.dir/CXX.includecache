@@ -6,23 +6,13 @@
 
 #IncludeRegexTransform: 
 
-../libft/libft.h
-stdlib.h
--
-unistd.h
--
-sys/types.h
--
-sys/uio.h
--
-
-/Users/kcedra/webserver/ConfigClass.hpp
+/Users/alexander/webserver/ConfigClass.hpp
 string
 -
 vector
 -
 
-/Users/kcedra/webserver/RequestHeaders.hpp
+/Users/alexander/webserver/RequestHeaders.hpp
 string
 -
 list
@@ -34,31 +24,41 @@ vector
 cstring
 -
 libft.h
-/Users/kcedra/webserver/libft.h
+/Users/alexander/webserver/libft.h
 algorithm
 -
 iostream
 -
 
-/Users/kcedra/webserver/ResponseHeaders.hpp
+/Users/alexander/webserver/ResponseHeaders.hpp
 string
 -
 list
 -
 RequestHeaders.hpp
-/Users/kcedra/webserver/RequestHeaders.hpp
+/Users/alexander/webserver/RequestHeaders.hpp
 
-/Users/kcedra/webserver/methods.cpp
+/Users/alexander/webserver/libft.h
+stdlib.h
+-
+unistd.h
+-
+sys/types.h
+-
+sys/uio.h
+-
+
+/Users/alexander/webserver/methods.cpp
 methods.h
-/Users/kcedra/webserver/methods.h
+/Users/alexander/webserver/methods.h
 
-/Users/kcedra/webserver/methods.h
+/Users/alexander/webserver/methods.h
 ResponseHeaders.hpp
-/Users/kcedra/webserver/ResponseHeaders.hpp
+/Users/alexander/webserver/ResponseHeaders.hpp
 RequestHeaders.hpp
-/Users/kcedra/webserver/RequestHeaders.hpp
+/Users/alexander/webserver/RequestHeaders.hpp
 ConfigClass.hpp
-/Users/kcedra/webserver/ConfigClass.hpp
+/Users/alexander/webserver/ConfigClass.hpp
 unistd.h
 -
 fcntl.h
