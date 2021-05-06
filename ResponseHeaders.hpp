@@ -8,6 +8,8 @@
 # include <string>
 # include <list>
 # include "RequestHeaders.hpp"
+# include <time.h>
+# include <sys/time.h>
 
 class ResponseHeaders {
 private:

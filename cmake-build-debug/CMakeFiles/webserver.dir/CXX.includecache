@@ -6,13 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/Users/alexander/webserver/ConfigClass.hpp
-string
+../libft/libft.h
+stdlib.h
 -
-vector
+unistd.h
+-
+sys/types.h
+-
+sys/uio.h
 -
 
-/Users/alexander/webserver/RequestHeaders.hpp
+/Users/kcedra/webserver/RequestHeaders.hpp
 string
 -
 list
@@ -24,45 +28,25 @@ vector
 cstring
 -
 libft.h
-/Users/alexander/webserver/libft.h
+/Users/kcedra/webserver/libft.h
 algorithm
 -
 iostream
 -
 
-/Users/alexander/webserver/ResponseHeaders.hpp
+/Users/kcedra/webserver/ResponseHeaders.cpp
+ResponseHeaders.hpp
+/Users/kcedra/webserver/ResponseHeaders.hpp
+
+/Users/kcedra/webserver/ResponseHeaders.hpp
 string
 -
 list
 -
 RequestHeaders.hpp
-/Users/alexander/webserver/RequestHeaders.hpp
-
-/Users/alexander/webserver/libft.h
-stdlib.h
+/Users/kcedra/webserver/RequestHeaders.hpp
+time.h
 -
-unistd.h
--
-sys/types.h
--
-sys/uio.h
--
-
-/Users/alexander/webserver/methods.cpp
-methods.h
-/Users/alexander/webserver/methods.h
-
-/Users/alexander/webserver/methods.h
-ResponseHeaders.hpp
-/Users/alexander/webserver/ResponseHeaders.hpp
-RequestHeaders.hpp
-/Users/alexander/webserver/RequestHeaders.hpp
-ConfigClass.hpp
-/Users/alexander/webserver/ConfigClass.hpp
-unistd.h
--
-fcntl.h
--
-dirent.h
+sys/time.h
 -
 

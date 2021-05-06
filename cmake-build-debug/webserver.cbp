@@ -8,110 +8,108 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/Users/alexander/webserver/cmake-build-debug"/>
+				<Option working_dir="/Users/kcedra/webserver/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/Users/alexander/webserver/cmake-build-debug"/>
+				<Option working_dir="/Users/kcedra/webserver/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/Users/alexander/webserver/cmake-build-debug"/>
+				<Option working_dir="/Users/kcedra/webserver/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="webserver">
-				<Option output="/Users/alexander/webserver/cmake-build-debug/webserver" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/alexander/webserver/cmake-build-debug"/>
+				<Option output="/Users/kcedra/webserver/cmake-build-debug/webserver" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kcedra/webserver/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/Users/alexander/webserver/libft"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/Users/kcedra/webserver/libft"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
-					<Add directory="/usr/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
 					<Add directory="/System/Library/Frameworks"/>
 					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 webserver"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 webserver"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="webserver/fast">
-				<Option output="/Users/alexander/webserver/cmake-build-debug/webserver" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/alexander/webserver/cmake-build-debug"/>
+				<Option output="/Users/kcedra/webserver/cmake-build-debug/webserver" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kcedra/webserver/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/Users/alexander/webserver/libft"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/Users/kcedra/webserver/libft"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
-					<Add directory="/usr/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
 					<Add directory="/System/Library/Frameworks"/>
 					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 webserver/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/alexander/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 webserver/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/kcedra/webserver/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/alexander/webserver/ConfigClass.cpp">
+		<Unit filename="/Users/kcedra/webserver/ConfigClass.cpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/alexander/webserver/ConfigClass.hpp">
+		<Unit filename="/Users/kcedra/webserver/ConfigClass.hpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/alexander/webserver/RequestHeaders.cpp">
+		<Unit filename="/Users/kcedra/webserver/RequestHeaders.cpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/alexander/webserver/RequestHeaders.hpp">
+		<Unit filename="/Users/kcedra/webserver/RequestHeaders.hpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/alexander/webserver/ResponseHeaders.cpp">
+		<Unit filename="/Users/kcedra/webserver/ResponseHeaders.cpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/alexander/webserver/ResponseHeaders.hpp">
+		<Unit filename="/Users/kcedra/webserver/ResponseHeaders.hpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/alexander/webserver/main.cpp">
+		<Unit filename="/Users/kcedra/webserver/main.cpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/alexander/webserver/methods.cpp">
+		<Unit filename="/Users/kcedra/webserver/methods.cpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/alexander/webserver/methods.h">
+		<Unit filename="/Users/kcedra/webserver/methods.h">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/alexander/webserver/CMakeLists.txt">
+		<Unit filename="/Users/kcedra/webserver/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

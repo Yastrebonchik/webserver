@@ -24,20 +24,14 @@
 //};
 
 int main() {
-	std::fstream	errorfile;
-	std::fstream	retfile;
-	//std::string 	error;
-	std::string 	line;
 	RequestHeaders	request;
-	int 			random;
-	bool 			isopen;
+	std::string 	line;
 	int				sock, listener;
 	struct			sockaddr_in addr;
 	char			buf[1024];
 	char 			*ret;
 	int				bytes_read;
 
-	std::srand(std::time(0)); //Обновление последовательности рандомизации
 	ret = NULL;
 	listener = socket(AF_INET, SOCK_STREAM, 0);
 	//fcntl(listener, F_SETFL, O_NONBLOCK);
@@ -66,7 +60,7 @@ int main() {
 
 		while(1) {
 			bytes_read = recv(sock, buf, 1024, 0);
-			if(bytes_read <= 0)
+			if (bytes_read <= 0)
 				break;
 			request.setSource(buf);
 			request.setInfo();
@@ -77,13 +71,10 @@ int main() {
 			free(ret);
 			ret = NULL;
 			request.clear();
-			//error.clear();
-			if (request.get_connection() == "close")
-				break;
 		}
-		close(sock);
+		if (request.get_connection() == "close")
+			close(sock);
 	}
 	close(listener);
-	//file.close();
     return 0;
 }

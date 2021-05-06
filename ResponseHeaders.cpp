@@ -102,6 +102,17 @@ void 					ResponseHeaders::setContentType(std::string type){
 }
 
 void 					ResponseHeaders::setDate(RequestHeaders request) {
+//	struct timeval	gmt;
+//	struct tm 		*m_time;
+//	char str_t[128];
+//
+//	//Нужно добавить костыль в виде считывания даты при поступлении реквеста и вычислении новой после выполнения запроса.
+//	ft_bzero(str_t, 128);
+//	localtime()
+//	//Считываем системное время
+//	gettimeofday(&gmt, NULL);
+//	//Преобразуем локальное время в текстовую строку
+//	strftime(str_t, 128, "Date: %x %A %X %Z", gmt);
 	this->_date = request.get_date();
 }
 
