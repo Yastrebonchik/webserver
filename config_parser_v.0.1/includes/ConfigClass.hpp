@@ -1,7 +1,7 @@
 #ifndef CONFIGCLASS_HPP
 #define CONFIGCLASS_HPP
 # include "config.hpp"
-
+//
 //class LocationClass;
 
 class ConfigClass {
