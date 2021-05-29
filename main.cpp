@@ -24,15 +24,19 @@
 //};
 
 int main() {
-	RequestHeaders	request;
-	std::string 	line;
-	int				sock, listener;
-	struct			sockaddr_in addr;
-	char			buf[1024];
-	char 			*ret;
-	int				bytes_read;
+	RequestHeaders				request;
+	std::vector<ConfigClass>	config;
+	ConfigClass					server;
+	std::string 				line;
+	int							sock, listener;
+	struct						sockaddr_in addr;
+	char						buf[1024];
+	char 						*ret;
+	int							bytes_read;
 
 	ret = NULL;
+	config_parser((char*)"config_parser_v.0.1/config/config_file", config);
+	server = config[0];
 	listener = socket(AF_INET, SOCK_STREAM, 0);
 	//fcntl(listener, F_SETFL, O_NONBLOCK);
 	if(listener < 0) {
@@ -41,8 +45,8 @@ int main() {
 	}
 
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(80);
-	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	addr.sin_port = server.getPort();
+	addr.sin_addr.s_addr = server.getIp();
 	if(bind(listener, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
 		perror("bind");
 		exit(2);
@@ -65,7 +69,7 @@ int main() {
 			request.setSource(buf);
 			request.setInfo();
 			ft_bzero(buf, 1024);
-			ret = generateAnswer(request);
+			ret = generateAnswer(request, server);
 			if (send(sock, ret, ft_strlen(ret) + 1, 0) < 0)
 				std::cout << "Error number = " << errno << std::endl;
 			free(ret);

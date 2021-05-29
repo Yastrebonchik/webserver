@@ -63,7 +63,7 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 
 	if (request.get_uri() == "/") {
 		if (request.get_uri() == "/")
-			file = "index.html";
+			file = server.getIndex();
 		else
 			file = request.get_uri(); // Нужно будет сделать выбор файла с опциям, по приоритету и т.п.
 	}
@@ -71,7 +71,7 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 		while (*it != '/') {
 			it--;
 		}
-		directory = (server.root + std::string(uri.begin(), it++)) + '/';
+		directory = (server.getRoot() + std::string(uri.begin(), it++)) + '/';
 		dir = opendir(directory.c_str());
 		it--;
 		while (++it != ite) {
@@ -126,24 +126,23 @@ char 	*noSuchMethod(RequestHeaders request) {
 	return (returnError(request, 501, "Not Implemented"));
 }
 
-char 	*generateAnswer(RequestHeaders request) {
-	ConfigClass					server;
-	std::vector<ConfigClass>	config;
+char 	*generateAnswer(RequestHeaders request, ConfigClass config) {
+	//ConfigClass					server;
 	std::string 				method;
 	char 						*ret;
 
-	server.server_name = "default_server";
-	server.ip = "127.0.0.1";
-	server.port = 80;
-	server.root = "/Users/kcedra/webserver/directory_for_tests";
-	chdir(server.root.c_str());
-	config.push_back(server);
+//	server.server_name = "default_server";
+//	server.ip = "127.0.0.1";
+//	server.port = 80;
+//	server.root = "/Users/kcedra/webserver/directory_for_tests";
+	chdir(config.getRoot().c_str());
+	//config.push_back(server);
 	method = request.get_method();
 	if (method == "GET") {
-		ret = GET(request, server);
+		ret = GET(request, config);
 	}
 	else if (method == "POST") {
-		ret = POST(request, server);
+		ret = POST(request, config);
 	}
 	else {
 		ret = noSuchMethod(request);

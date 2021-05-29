@@ -142,33 +142,6 @@ webserver/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/build
 .PHONY : webserver/fast
 
-ConfigClass.o: ConfigClass.cpp.o
-
-.PHONY : ConfigClass.o
-
-# target to build an object file
-ConfigClass.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ConfigClass.cpp.o
-.PHONY : ConfigClass.cpp.o
-
-ConfigClass.i: ConfigClass.cpp.i
-
-.PHONY : ConfigClass.i
-
-# target to preprocess a source file
-ConfigClass.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ConfigClass.cpp.i
-.PHONY : ConfigClass.cpp.i
-
-ConfigClass.s: ConfigClass.cpp.s
-
-.PHONY : ConfigClass.s
-
-# target to generate assembly for a file
-ConfigClass.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ConfigClass.cpp.s
-.PHONY : ConfigClass.cpp.s
-
 RequestHeaders.o: RequestHeaders.cpp.o
 
 .PHONY : RequestHeaders.o
@@ -286,9 +259,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... webserver"
-	@echo "... ConfigClass.o"
-	@echo "... ConfigClass.i"
-	@echo "... ConfigClass.s"
 	@echo "... RequestHeaders.o"
 	@echo "... RequestHeaders.i"
 	@echo "... RequestHeaders.s"
