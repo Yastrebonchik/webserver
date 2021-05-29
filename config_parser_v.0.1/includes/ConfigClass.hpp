@@ -4,6 +4,8 @@
 
 //class LocationClass;
 
+//test comment
+
 class ConfigClass {
 	private:
 		std::string	server_name;
