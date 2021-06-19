@@ -1,6 +1,10 @@
 #include "../includes/ConfigClass.hpp"
+#include "LocationClass.hpp"
 
-ConfigClass::ConfigClass() {};
+ConfigClass::ConfigClass(){
+	std::vector<LocationClass> locations;
+	this->locations = &locations;
+};
 
 ConfigClass::~ConfigClass() {};
 

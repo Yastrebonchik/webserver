@@ -4,6 +4,7 @@
 int main (int argc, char **argv)
 {
 	std::vector<ConfigClass> conf;
+
 	int i;
 	int size;
 

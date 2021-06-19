@@ -1,10 +1,9 @@
 #ifndef CONFIGCLASS_HPP
 #define CONFIGCLASS_HPP
-# include "config.hpp"
-//
-//class LocationClass;
+#include <vector>
+#include <string>
 
-//test comment
+class LocationClass;
 
 class ConfigClass {
 	private:
@@ -15,10 +14,11 @@ class ConfigClass {
 		std::string	index;
 		std::string	error_page;
 		int			client_body_size;
-		//std::vector<LocationClass> locations;
+		std::vector<LocationClass> *locations;
 
-	public : ConfigClass();
-		~ConfigClass();
+	public:
+		ConfigClass();
+		virtual ~ConfigClass();
 
 		void setServer_name(std::string &x);
 		void setIp(uint32_t x);
@@ -27,7 +27,7 @@ class ConfigClass {
 		void setIndex(std::string &x);
 		void setErrorPage(std::string &x);
 		void setClientBodySize(int x);
-		//void addLocation(std::string &x);
+		void addLocation(std::string &x);
 
 		std::string	getServer_name() const;
 		uint32_t	getIp() const;
@@ -36,7 +36,7 @@ class ConfigClass {
 		std::string	getIndex() const;
 		std::string	getErrorPage() const;
 		int			getClientBodySize() const;
-		//std::vector<LocationClass> &getLocations() const;
+		std::vector<LocationClass> &getLocations() const;
 };
 
 #endif
