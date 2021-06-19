@@ -22,13 +22,13 @@ int class_add(std::map<std::string, std::string> &attributes, std::vector<Config
 	while (nbrs)
 	{
 		if (i < 4)
-			ip[i] = ft_atoi(nbrs);
+			ip[i] = atoi(nbrs);
 		else
-			port = ft_atoi(nbrs);
+			port = atoi(nbrs);
 		nbrs = strtok(NULL, ".:");
 		i++;
 	}
-	cbs = ft_atoi((char*)(attributes.find("client_body_size")->second).c_str());
+	cbs = atoi((char*)(attributes.find("client_body_size")->second).c_str());
 	x = (uint32_t)ip[3] << 24;
 	x += (uint32_t)ip[2] << 16;
 	x += (uint32_t)ip[1] << 8;
@@ -69,16 +69,8 @@ int server_add(std::list<std::list<std::string> > &lines, std::list<std::list<st
 			break;
 	}
 	it_map = attributes.begin();
-
-	/*std::cout << "----------------------------\n";
-	while (it_map != attributes.end())
-	{
-		std::cout << it_map->first << " = " << it_map->second << std::endl;
-		it_map++;
-	}*/
 	if (class_add(attributes, conf))
 		return (1);
-	//std::cout << "Server added\n----------------------------\n";
 	return (0);
 }
 
@@ -104,46 +96,45 @@ int static server_fuller(std::list<std::list<std::string> > lines, std::vector<C
 	return (0);
 }
 
-static void list_word_fuller(char *line, std::list<std::list<std::string> > *config)
+static void list_word_fuller(std::string line, std::list<std::list<std::string> > *config)
 {
 	std::list<std::string> words;
-	char *word;
+	std::stringstream ss;
+    std::string word;
 
-	word = strtok(line, " 	");
-	if (!word)
-		return;
-	while (word)
+	std::replace( line.begin(), line.end(), '	', ' ');
+	ss << line;
+	while ((std::getline(ss, word, ' ')))
 	{
-		words.push_back(word);
-		word = strtok(NULL, " 	");
+		if (word.length())
+		{
+			std::cout << word << "- after second getline" << std::endl;
+			words.push_back(word);
+		}
 	}
 	config->push_back(words);
 }
 
 static int open_read(char *file, std::list<std::list<std::string> > *config)
 {
-	int fd;
+	//int fd;
 	int gnl_res;
-	char *line;
+	std::string line;
+	std::fstream fd;
 
-	line = NULL;
-	if ((fd = open(file, O_RDONLY)) < 0)
-		return (fd);
-	while ((gnl_res = (get_next_line(fd, &line))) > 0)
-	{
+	fd.open(file, std::fstream::in);
+	if (!fd.is_open())
+		return (1);
+	while ((std::getline(fd, line)))
 		list_word_fuller(line, config);
-		free(line);
-	}
-	list_word_fuller(line, config);
-	free(line);
-	return (fd);
+	return (0);
 }
 
 int config_parser(char *file, std::vector<ConfigClass> &conf)
 {
 	std::list<std::list<std::string> > lines;
 
-	if (open_read(file, &lines) < 0)
+	if (open_read(file, &lines))
 		return (ft_strerror("Configuration file openning or reading error"));
 	if (config_check(lines))
 		return (1);
