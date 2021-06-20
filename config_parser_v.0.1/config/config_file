@@ -1,15 +1,4 @@
 server {
-	server_name      default_server
-	listen 0.0.0.0:80
-	root /Users/rbeach/Desktop/webserver/directory_for_tests
-					
-	
-	
-	index index.html
-
-}
-
-server {
 	listen 192.168.17.14:8002
 	server_name      second
 	
@@ -21,7 +10,25 @@ server {
 	error_page custom_error
 	client_body_size 	50
 	allow_methods GET POST
+
+	location /bla/blf {
+		index index.html
+		redirection /vgopu
+		listing yes
+		cgi_dir  /cgishka
+		allow_methods GET POST
+	}
 }
 
+server {
+	server_name      default_server
+	listen 0.0.0.0:80
+	root /Users/rbeach/Desktop/webserver/directory_for_tests
+					
+	
+	
+	index index.html
+
+}
 
 

@@ -1,6 +1,6 @@
 #ifndef CONFIGCLASS_HPP
 #define CONFIGCLASS_HPP
-#include <vector>
+#include <list>
 #include <string>
 
 class LocationClass;
@@ -14,7 +14,7 @@ class ConfigClass {
 		std::string	index;
 		std::string	error_page;
 		int			client_body_size;
-		std::vector<LocationClass> *locations;
+		std::list<LocationClass> *locations;
 
 	public:
 		ConfigClass();
@@ -27,7 +27,7 @@ class ConfigClass {
 		void setIndex(std::string &x);
 		void setErrorPage(std::string &x);
 		void setClientBodySize(int x);
-		void addLocation(std::string &x);
+		void setLocations(std::list<LocationClass> );
 
 		std::string	getServer_name() const;
 		uint32_t	getIp() const;
@@ -36,7 +36,7 @@ class ConfigClass {
 		std::string	getIndex() const;
 		std::string	getErrorPage() const;
 		int			getClientBodySize() const;
-		std::vector<LocationClass> &getLocations() const;
+		std::list<LocationClass> *getLocations() const;
 };
 
 #endif

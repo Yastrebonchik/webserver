@@ -6,7 +6,7 @@
 #    By: rbeach <rbeach@student.21-school.ru>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/10 14:22:17 by rbeach            #+#    #+#              #
-#    Updated: 2021/06/19 11:47:15 by rbeach           ###   ########.fr        #
+#    Updated: 2021/06/20 16:27:01 by rbeach           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ S_DIR = src
 
 O_DIR = obj
 
-SRCS = config_parser.cpp config_check.cpp ConfigClass.cpp utils.cpp
+SRCS = config_parser.cpp config_check.cpp ConfigClass.cpp LocationClass.cpp utils.cpp
 
 OBJECTS = $(addprefix $(O_DIR)/, $(SRCS:.cpp=.o))
 
