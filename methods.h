@@ -14,6 +14,7 @@
 # include <sys/stat.h>
 # include <time.h>
 # include "config_parser.hpp"
+# include "utils.hpp"
 
 char	*generateAnswer(RequestHeaders request, ConfigClass config);
 char 	*GET(RequestHeaders request, ConfigClass server);

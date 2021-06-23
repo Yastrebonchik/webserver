@@ -38,7 +38,7 @@ all: $(NAME)
 
 $(NAME): $(OBJECTS) main.cpp
 	ar rcs $(NAME) $(OBJECTS)
-	clang++ main.cpp libconfpar.a
+	#clang++ main.cpp libconfpar.a
 
 $(O_DIR)/%.o: $(S_DIR)/%.cpp
 	mkdir -p $(O_DIR)

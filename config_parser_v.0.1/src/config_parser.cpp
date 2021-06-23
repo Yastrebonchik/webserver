@@ -108,7 +108,7 @@ static void list_word_fuller(std::string line, std::list<std::list<std::string> 
 	{
 		if (word.length())
 		{
-			std::cout << word << "- after second getline" << std::endl;
+		//	std::cout << word << "- after second getline" << std::endl;
 			words.push_back(word);
 		}
 	}

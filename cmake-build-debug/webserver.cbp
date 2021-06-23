@@ -105,6 +105,12 @@
 		<Unit filename="/Users/kcedra/webserver/methods.h">
 			<Option target="webserver"/>
 		</Unit>
+		<Unit filename="/Users/kcedra/webserver/utils.cpp">
+			<Option target="webserver"/>
+		</Unit>
+		<Unit filename="/Users/kcedra/webserver/utils.hpp">
+			<Option target="webserver"/>
+		</Unit>
 		<Unit filename="/Users/kcedra/webserver/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

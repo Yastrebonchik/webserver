@@ -10,7 +10,7 @@ CONFPAR_DIR = config_parser_v.0.1
 
 CONFPAR = libconfpar.a
 
-FLAGS = #-Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra -std=c++98
 
 #TEST_FLAGS = -o3 -g3
 
