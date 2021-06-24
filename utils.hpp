@@ -9,7 +9,7 @@
 # include <unistd.h>
 # include <sys/types.h>
 # include <sys/uio.h>
-
+# include <string>
 # define BUFFER_SIZE 32
 
 char	*ft_strchr(const char *s, int c);
@@ -22,5 +22,6 @@ void	ft_bzero(void *s, size_t n);
 int		ft_atoi(const char *str);
 int		get_next_line(int fd, char **line);
 char	*ft_strjoin(char const *s1, char const *s2);
+std::string	mimeDetect(std::string file);
 
 #endif //WEBSERVER_UTILS_HPP

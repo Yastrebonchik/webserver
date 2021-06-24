@@ -10,14 +10,13 @@ server {
 }
 
 server {
-	listen           0.0.0.0:8080
+	listen           0.0.0.0:445
 	server_name      second
 
 	root /Users/kcedra/webserver/another_dir_for_tests
 
 
-
-	index error501.html
+	index inde.html
 	error_page custom_error
 	client_body_size 	50
 	allow_methods GET POST

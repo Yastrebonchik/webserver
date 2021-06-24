@@ -412,3 +412,12 @@ int			get_next_line(int fd, char **line)
 	else
 		return (main_loop(line, &text, buffer, fd));
 }
+
+std::string	mimeDetect(std::string file) {
+	std::string	ret;
+
+	for (std::string::reverse_iterator it = file.rbegin(); *it != '.'; ++it) {
+		ret.insert(ret.begin(), *it);
+	}
+	return (ret);
+}
