@@ -15,6 +15,7 @@
 # include <time.h>
 # include "config_parser.hpp"
 # include "utils.hpp"
+# include <fstream>
 
 char	*generateAnswer(RequestHeaders request, ConfigClass config);
 char 	*GET(RequestHeaders request, ConfigClass server);

@@ -60,6 +60,10 @@ iostream
 utils.hpp
 /Users/kcedra/webserver/utils.hpp
 
+/Users/kcedra/webserver/ResponseHeaders.cpp
+ResponseHeaders.hpp
+/Users/kcedra/webserver/ResponseHeaders.hpp
+
 /Users/kcedra/webserver/ResponseHeaders.hpp
 string
 -
@@ -104,6 +108,10 @@ methods.h
 vector
 -
 
+/Users/kcedra/webserver/methods.cpp
+methods.h
+/Users/kcedra/webserver/methods.h
+
 /Users/kcedra/webserver/methods.h
 ResponseHeaders.hpp
 /Users/kcedra/webserver/ResponseHeaders.hpp
@@ -125,6 +133,8 @@ config_parser.hpp
 /Users/kcedra/webserver/config_parser.hpp
 utils.hpp
 /Users/kcedra/webserver/utils.hpp
+fstream
+-
 
 /Users/kcedra/webserver/utils.hpp
 stdlib.h

@@ -60,6 +60,7 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 	char 					*line;
 	DIR 					*dir;
 	int 					fd;
+	size_t 					pos;
 
 	if (request.get_uri() == "/") {
 		file = server.getIndex(); // Нужно будет сделать выбор файла с опциям, по приоритету и т.п.
@@ -87,15 +88,26 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 		}
 		file = directory + file;
 	}
+	if ((pos = file.find("?")) != std::string::npos)
+		file.erase(pos, file.length() - 1);
 	fd = open(file.c_str(), O_RDONLY);
 	if (fd < 0)
 		return (returnError(request, 404, "Not Found"));
 	else {
-		while (get_next_line(fd, &line) > 0) {
-			fileline = line;
-			free(line);
-			line = nullptr;
-			response.pageAdd(fileline + "\n");
+		if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg") {
+			line = (char *)malloc(32);
+			while (read(fd, line, 32) > 0) {
+				fileline = line;
+				response.pageAdd(fileline);
+			}
+		}
+		else {
+			while (get_next_line(fd, &line)) {
+				fileline = line;
+				free(line);
+				line = nullptr;
+				response.pageAdd(fileline + "\n");
+			}
 		}
 		close(fd);
 	}
@@ -104,10 +116,7 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 	response.setReasonPhrase("OK");
 	response.setConnection("close");
 	response.setContentLength(response.getPage().length());
-	if (mimeDetect(file) == "jpg")
-		response.setContentType("image/jpeg");
-	else
-		response.setContentType("text/html; charset=UTF-8");
+	response.setContentType(mimeDetect(file));
 	response.setDate(request);
 	response.setServer();
 	statusCode = std::to_string(response.getStatusCode()); //Добавить сюда свой итоа

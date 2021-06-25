@@ -72,7 +72,7 @@ int main() {
 	int 						i = 0;
 	struct						sockaddr_in addr;
 	struct 						timeval timeout;
-	char						buf[1024];
+	char						buf[100000];
 	//char 						*recieve = (char *)malloc(1);
 	char 						*ret;
 	int							bytes_read;
@@ -103,9 +103,9 @@ int main() {
 			perror("bind");
 			exit(2);
 		}
-		listen(listener[i], 1);
-		//FD_SET(listener[i], &readfds);
-		//FD_SET(listener[i], &writefds);
+		listen(listener[i], SOMAXCONN);
+//		FD_SET(listener[i], &readfds);
+//		FD_SET(listener[i], &writefds);
 		//fcntl(listener[i], F_SETFL, O_NONBLOCK);
 		i++;
 	}
@@ -115,13 +115,17 @@ int main() {
 //		if (select(maxfd + 1, &readfds, &writefds, NULL, &timeout) > 0) {
 //			while (FD_ISSET(listener[i], &readfds) == false)
 //				i++;
-//			FD_ZERO(&readfds);
-//			FD_ZERO(&writefds);
+			//FD_ZERO(&readfds);
+			//FD_ZERO(&writefds);
 //			for (int j = 0; j < maxfd; ++j) {
 //				FD_SET(listener[i], &readfds);
 //				FD_SET(listener[i], &writefds);
 //			}
 			sock = accept(listener[i], NULL, NULL);
+			int opt = 1;
+			setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)); // Возможно придется убрать (позволяет избежать попаболи с bind)
+			//FD_SET(sock, &readfds);
+			//FD_SET()
 			//fcntl(listener[i], F_SETFL, O_NONBLOCK);
 			server = config[i];
 			i = 0;
@@ -134,7 +138,7 @@ int main() {
 			while (1) {
 				check++;
 
-				bytes_read = recv(sock, buf, 1024 - 1, 0);
+				bytes_read = recv(sock, buf, 100000 - 1, 0);
 				if (bytes_read < 1) {
 					std::cout << check << std::endl;
 					close(sock);
@@ -142,8 +146,7 @@ int main() {
 				}
 				request.setSource(buf);
 				request.setInfo();
-				ft_bzero(buf, 1024);
-				//ft_bzero(recieve, ft_strlen(recieve));
+				ft_bzero(buf, 100000);
 				ret = generateAnswer(request, server);
 				if (send(sock, ret, ft_strlen(ret) + 1, 0) < 0)
 					std::cout << "Error number = " << errno << std::endl;
