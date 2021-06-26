@@ -1,13 +1,13 @@
 server {
 
-	listen 192.168.17.14:8002
+	listen 0.0.0.0:80
 
 	server_name      second
 
-	root /Users/kcedra/webserver/another_dir_for_tests
+	root /Users/kcedra/webserver/directory_for_tests/devAid-v1.1
 
 
-	index inde.html
+	index index.html
 	error_page custom_error
 	client_body_size 	50
 	allow_methods GET POST
@@ -32,8 +32,8 @@ server {
 
 server {
 	server_name      default_server
-	listen 0.0.0.0:80
-	root /Users/rbeach/Desktop/webserver/directory_for_tests
+	listen 0.0.0.0:8002
+	root /Users/kcedra/webserver/directory_for_tests
 					
 	
 	
