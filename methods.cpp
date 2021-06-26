@@ -60,12 +60,10 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 	char 					*line;
 	DIR 					*dir;
 	int 					fd;
+	size_t 					pos;
 
 	if (request.get_uri() == "/") {
-		if (request.get_uri() == "/")
-			file = server.getIndex();
-		else
-			file = request.get_uri(); // Нужно будет сделать выбор файла с опциям, по приоритету и т.п.
+		file = server.getIndex(); // Нужно будет сделать выбор файла с опциям, по приоритету и т.п.
 	}
 	else {
 		while (*it != '/') {
@@ -88,29 +86,42 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 		if (dir == NULL || entry == NULL) {
 			return (returnError(request, 404, "Not Found"));
 		}
+		file = directory + file;
 	}
+	if ((pos = file.find("?")) != std::string::npos)
+		file.erase(pos, file.length() - 1);
 	fd = open(file.c_str(), O_RDONLY);
-	while (get_next_line(fd, &line) > 0){
-		fileline = line;
-		free(line);
-		line = nullptr;
-		response.pageAdd(fileline + "\n");
+	if (fd < 0)
+		return (returnError(request, 404, "Not Found"));
+	else {
+		if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg") {
+			line = (char *)malloc(32);
+			while (read(fd, line, 32) > 0) {
+				fileline = line;
+				response.pageAdd(fileline);
+			}
+		}
+		else {
+			while (get_next_line(fd, &line)) {
+				fileline = line;
+				free(line);
+				line = nullptr;
+				response.pageAdd(fileline + "\n");
+			}
+		}
+		close(fd);
 	}
-	close(fd);
 	response.setVersion();
 	response.setStatusCode(200);
 	response.setReasonPhrase("OK");
-	response.setConnection("keep-alive");
+	response.setConnection("close");
 	response.setContentLength(response.getPage().length());
-	if (file == "aboba.jpg")
-		response.setContentType("image/jpeg");
-	else
-		response.setContentType("text/html; charset=UTF-8");
+	response.setContentType(mimeDetect(file));
 	response.setDate(request);
 	response.setServer();
 	statusCode = std::to_string(response.getStatusCode()); //Добавить сюда свой итоа
 	contentLength = std::to_string(response.getContentLength());
-	ret = response.getVersion() + " " + statusCode + " " + response.getReasonPhrase();// + "\nAllow: " + response.getAllow();
+	ret = response.getVersion() + " " + statusCode + " " + response.getReasonPhrase();
 	ret += "\nConnection: " + response.getConnection() + "\nContent-Length: " + contentLength + "\nContent-Type: " + response.getContentType();
 	ret += "\nServer: " + response.getServer();
 	ret += "\r\n\r\n" + response.getPage();
@@ -119,6 +130,8 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 }
 
 char 	*POST(RequestHeaders request, ConfigClass server) {
+	request.get_uri();
+	server.getRoot();
 	return nullptr;
 }
 
@@ -131,12 +144,7 @@ char 	*generateAnswer(RequestHeaders request, ConfigClass config) {
 	std::string 				method;
 	char 						*ret;
 
-//	server.server_name = "default_server";
-//	server.ip = "127.0.0.1";
-//	server.port = 80;
-//	server.root = "/Users/kcedra/webserver/directory_for_tests";
 	chdir(config.getRoot().c_str());
-	//config.push_back(server);
 	method = request.get_method();
 	if (method == "GET") {
 		ret = GET(request, config);

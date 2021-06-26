@@ -120,6 +120,6 @@ void 					ResponseHeaders::setServer(){
 	this->_server.push_back("Webserver/1.0");
 }
 
-void 					ResponseHeaders::pageAdd(std::string line){
+void 					ResponseHeaders::pageAdd(std::string line) {
 	this->_page += line;
 }

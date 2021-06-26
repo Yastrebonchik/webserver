@@ -8,6 +8,7 @@
 # include <string>
 # include <list>
 # include "RequestHeaders.hpp"
+# include "utils.hpp"
 # include <time.h>
 # include <sys/time.h>
 

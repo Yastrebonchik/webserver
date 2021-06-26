@@ -1,12 +1,13 @@
 server {
+
 	listen 192.168.17.14:8002
+
 	server_name      second
-	
-	root ./site2
-					
-	
-	
-	index index.html
+
+	root /Users/kcedra/webserver/another_dir_for_tests
+
+
+	index inde.html
 	error_page custom_error
 	client_body_size 	50
 	allow_methods GET POST

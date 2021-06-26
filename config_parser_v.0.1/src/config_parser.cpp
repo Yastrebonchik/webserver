@@ -178,7 +178,6 @@ static void list_word_fuller(std::string line, std::list<std::list<std::string> 
 	{
 		if (word.length())
 			words.push_back(word);
-	}
 	config->push_back(words);
 }
 

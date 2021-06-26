@@ -46,7 +46,6 @@
 				<Compiler>
 					<Add directory="/Users/kcedra/webserver/libft"/>
 					<Add directory="/Users/kcedra/webserver/config_parser_v.0.1/includes"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.0/include"/>
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
@@ -69,7 +68,6 @@
 				<Compiler>
 					<Add directory="/Users/kcedra/webserver/libft"/>
 					<Add directory="/Users/kcedra/webserver/config_parser_v.0.1/includes"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.0/include"/>
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
@@ -103,6 +101,12 @@
 			<Option target="webserver"/>
 		</Unit>
 		<Unit filename="/Users/kcedra/webserver/methods.h">
+			<Option target="webserver"/>
+		</Unit>
+		<Unit filename="/Users/kcedra/webserver/utils.cpp">
+			<Option target="webserver"/>
+		</Unit>
+		<Unit filename="/Users/kcedra/webserver/utils.hpp">
 			<Option target="webserver"/>
 		</Unit>
 		<Unit filename="/Users/kcedra/webserver/CMakeLists.txt">

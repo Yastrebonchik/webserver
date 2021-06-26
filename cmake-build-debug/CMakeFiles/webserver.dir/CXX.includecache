@@ -15,6 +15,10 @@ vector
 -
 iostream
 -
+fstream
+-
+sstream
+-
 fcntl.h
 -
 errno.h
@@ -31,26 +35,12 @@ map
 -
 arpa/inet.h
 -
-libft.h
-../config_parser_v.0.1/includes/libft.h
 ConfigClass.hpp
 ../config_parser_v.0.1/includes/ConfigClass.hpp
 
 ../config_parser_v.0.1/includes/config_parser.hpp
 config.hpp
 ../config_parser_v.0.1/includes/config.hpp
-libft.h
-../config_parser_v.0.1/includes/libft.h
-
-../libft/libft.h
-stdlib.h
--
-unistd.h
--
-sys/types.h
--
-sys/uio.h
--
 
 /Users/kcedra/webserver/RequestHeaders.hpp
 string
@@ -63,12 +53,16 @@ vector
 -
 cstring
 -
-libft.h
-/Users/kcedra/webserver/libft.h
 algorithm
 -
 iostream
 -
+utils.hpp
+/Users/kcedra/webserver/utils.hpp
+
+/Users/kcedra/webserver/ResponseHeaders.cpp
+ResponseHeaders.hpp
+/Users/kcedra/webserver/ResponseHeaders.hpp
 
 /Users/kcedra/webserver/ResponseHeaders.hpp
 string
@@ -77,6 +71,8 @@ list
 -
 RequestHeaders.hpp
 /Users/kcedra/webserver/RequestHeaders.hpp
+utils.hpp
+/Users/kcedra/webserver/utils.hpp
 time.h
 -
 sys/time.h
@@ -109,6 +105,8 @@ sys/select.h
 -
 methods.h
 /Users/kcedra/webserver/methods.h
+vector
+-
 
 /Users/kcedra/webserver/methods.cpp
 methods.h
@@ -133,4 +131,20 @@ time.h
 -
 config_parser.hpp
 /Users/kcedra/webserver/config_parser.hpp
+utils.hpp
+/Users/kcedra/webserver/utils.hpp
+fstream
+-
+
+/Users/kcedra/webserver/utils.hpp
+stdlib.h
+-
+unistd.h
+-
+sys/types.h
+-
+sys/uio.h
+-
+string
+-
 
