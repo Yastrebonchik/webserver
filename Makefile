@@ -22,7 +22,7 @@ HEADERS = methods.h RequestHeaders.hpp ResponseHeaders.hpp
 
 O_DIR = obj
 
-SRCS = main.cpp RequestHeaders.cpp ResponseHeaders.cpp methods.cpp
+SRCS = main.cpp RequestHeaders.cpp ResponseHeaders.cpp methods.cpp #cgi.cpp
 
 OBJECTS = $(addprefix $(O_DIR)/, $(SRCS:.cpp=.o))
 
