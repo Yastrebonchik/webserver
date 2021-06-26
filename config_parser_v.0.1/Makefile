@@ -6,7 +6,7 @@
 #    By: rbeach <rbeach@student.21-school.ru>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/10 14:22:17 by rbeach            #+#    #+#              #
-#    Updated: 2021/06/19 11:47:15 by rbeach           ###   ########.fr        #
+#    Updated: 2021/06/26 14:02:46 by rbeach           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,7 @@ LIBFT_DIR = libft
 
 LIBFT = libft.a
 
-FLAGS = -std=c++98#-Wall -Werror -Wextra
-
-TEST_FLAGS = -o3 -g3
+FLAGS = -std=c++98 -Wall -Werror -Wextra -g
 
 HEADERS = config_check.hpp config_parser.hpp ConfigClass.hpp
 
@@ -30,7 +28,7 @@ S_DIR = src
 
 O_DIR = obj
 
-SRCS = config_parser.cpp config_check.cpp ConfigClass.cpp utils.cpp
+SRCS = config_parser.cpp config_check.cpp ConfigClass.cpp LocationClass.cpp utils.cpp
 
 OBJECTS = $(addprefix $(O_DIR)/, $(SRCS:.cpp=.o))
 

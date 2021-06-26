@@ -13,6 +13,7 @@
 #include <map>
 #include <arpa/inet.h>
 #include "ConfigClass.hpp"
+#include "LocationClass.hpp"
 
 int config_check(std::list<std::list<std::string> > lines);
 int ft_strerror(std::string str);

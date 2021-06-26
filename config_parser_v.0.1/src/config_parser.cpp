@@ -1,6 +1,6 @@
 #include "../includes/config_parser.hpp"
 
-int class_add(std::map<std::string, std::string> &attributes, std::vector<ConfigClass> &conf)
+int class_add(std::map<std::string, std::string> &attributes, std::vector<ConfigClass> &conf, std::list<LocationClass> *locations)
 {
 	ConfigClass *server;
 	int			ip[4];
@@ -40,36 +40,108 @@ int class_add(std::map<std::string, std::string> &attributes, std::vector<Config
 	server->setIndex(attributes.find("index")->second);
 	server->setErrorPage(attributes.find("error_page")->second);
 	server->setClientBodySize(cbs);
+	server->setLocations(locations);
 	conf.push_back(*server);
 	return (0);
+}
+
+static LocationClass *location_class_create(std::map<std::string, std::string> &attributes)
+{
+	LocationClass *location = new LocationClass();
+	std::list<std::string> *words = new std::list<std::string>();
+	std::stringstream ss;
+	std::string word;
+
+	if (attributes.find("listing")->second == "yes")
+		location->setListing(1);
+	else
+		location->setListing(0);
+	location->setClientBodySize(atoi((char *)(attributes.find("client_body_size")->second).c_str()));
+	location->setRoot(attributes.find("root")->second);
+	location->setIndex(attributes.find("index")->second);
+	location->setErrorPage(attributes.find("error_page")->second);
+	location->setLocation(attributes.find("location")->second);
+	location->setRedirection(attributes.find("redirection")->second);
+	location->setCgi_dir(attributes.find("cgi_dir")->second);
+	ss << attributes.find("allow_methods")->second;
+	while ((std::getline(ss, word, ' ')))
+	{
+		if (word.length())
+			words->push_back(word);
+	}
+	location->setMethods(words);
+	return (location);
+}
+
+LocationClass *location_add(std::list<std::list<std::string> > &lines, std::list<std::list<std::string> >::iterator &it)
+{
+	std::map<std::string, std::string>::iterator it_map;
+	std::map<std::string, std::string> attributes;
+	std::list<std::string>::iterator it_str;
+
+	attributes["listen"] = DEFAULT_LISTEN;
+	attributes["error_page"] = DEFAULT_ERROR_PAGE;
+	attributes["client_body_size"] = DEFAULT_CLIENT_BODY_SIZE;
+	attributes["root"] = DEFAULT_ROOT;
+	attributes["index"] = DEFAULT_INDEX;
+	attributes["location"] = "";
+	attributes["redirection"] = "";
+	attributes["listing"] = "";
+	attributes["cgi_dir"] = "";
+	attributes["allow_methods"] = "";
+
+	while (it != lines.end() && *(((*it).begin())) != "}")
+	{
+		if ((it_map = attributes.find(*((*it).begin()))) != attributes.end())
+		{
+			if (*((*it).begin()) == "allow_methods")
+			{
+				it_str = (*it).begin();
+				it_str++;
+				while (it_str != (*it).end())
+				{
+					attributes["allow_methods"] = attributes["allow_methods"] + " " + *it_str;
+					it_str++;
+				}
+			}
+			else if (++((*it).begin()) != (*it).end())
+				it_map->second = *(++((*it).begin()));
+		}
+		it++;
+	}
+	return (location_class_create(attributes));
 }
 
 int server_add(std::list<std::list<std::string> > &lines, std::list<std::list<std::string> >::iterator &it, std::vector<ConfigClass> &conf)
 {
 	std::map<std::string, std::string> attributes;
-	
 	attributes["server_name"] = DEFAULT_SERVER_NAME;
 	attributes["listen"] = DEFAULT_LISTEN;
 	attributes["error_page"] = DEFAULT_ERROR_PAGE;
 	attributes["client_body_size"] = DEFAULT_CLIENT_BODY_SIZE;
 	attributes["root"] = DEFAULT_ROOT;
 	attributes["index"] = DEFAULT_INDEX;
-
 	std::map<std::string, std::string>::iterator it_map;
-
+	std::list<LocationClass> *locations = new std::list<LocationClass>();
 	while (it != lines.end())
 	{
-		if ((it_map = attributes.find(*((*it).begin()))) != attributes.end())
+		if (*((*it).begin()) == "location")
 		{
-			if (++((*it).begin()) != (*it).end())
-				it_map->second = *(++((*it).begin()));
+			locations->push_back(*location_add(lines, it));
+			if (it == lines.end() || *((*it).begin()) == "server")
+				break;
+		}
+		if ((it_map = attributes.find(*((*it).begin()))) != attributes.end())
+			{
+				if (++((*it).begin()) != (*it).end())
+					it_map->second = *(++((*it).begin()));
 		}
 		it++;
 		if (it != lines.end() && *((*it).begin()) == "server")
 			break;
 	}
 	it_map = attributes.begin();
-	if (class_add(attributes, conf))
+	if (class_add(attributes, conf, locations))
 		return (1);
 	return (0);
 }
@@ -77,9 +149,7 @@ int server_add(std::list<std::list<std::string> > &lines, std::list<std::list<st
 int static server_fuller(std::list<std::list<std::string> > lines, std::vector<ConfigClass> &conf)
 {
 	std::list<std::list<std::string> >::iterator it;
-	int br;
 
-	br = 0;
 	it = lines.begin();
 	while (it != lines.end())
 	{
@@ -107,18 +177,12 @@ static void list_word_fuller(std::string line, std::list<std::list<std::string> 
 	while ((std::getline(ss, word, ' ')))
 	{
 		if (word.length())
-		{
-		//	std::cout << word << "- after second getline" << std::endl;
 			words.push_back(word);
-		}
-	}
 	config->push_back(words);
 }
 
 static int open_read(char *file, std::list<std::list<std::string> > *config)
 {
-	//int fd;
-	int gnl_res;
 	std::string line;
 	std::fstream fd;
 
