@@ -1,5 +1,10 @@
 #include "CGI.hpp"
 
+std::string positiveNumberToString(size_t num)
+{
+	return "KEK";
+}
+
 CGI::CGI(Client const &client, ConfigLocation location, std::string const &path) : client_(client), location_(location), ptrFile(NULL), ptrCgiFile(NULL), env_(NULL)
 {
 	char cwd[PATH_MAX + 1];
@@ -32,7 +37,7 @@ void CGI::createMetaVariables()
 {
 	if (client_.getHeaderAuthorization().size() > 0)
 	{
-		std::string decoded = Base64::decode(client_.getHeaderAuthorization().at(WEBSERV_AUTH));
+		std::string decoded = Base64::decode(client_.getHeaderAuthorization().at(WEBSERV_AUTH));   //ХЗ!
 		size_t pos = decoded.find(":");
 
 		envMap_["AUTH_TYPE"] = WEBSERV_AUTH;
@@ -41,7 +46,7 @@ void CGI::createMetaVariables()
 	}
 	if (client_.getBody().length() > 0)
 	{
-		envMap_["CONTENT_LENGTH"] = positiveNumberToString(client_.getBody().length());
+		envMap_["CONTENT_LENGTH"] = positiveNumberToString(client_.getBody().length());   //конвертация числа с строку
 
 		if (client_.getHeaderContentType().length() > 0)
 			envMap_["CONTENT_TYPE"] = client_.getHeaderContentType();
@@ -58,13 +63,13 @@ void CGI::createMetaVariables()
 	if (getsockname(client_.getSocketClient(), (struct sockaddr *)&addrCl, &lenCl) == 0)
 	{
 		envMap_["REMOTE_ADDR"] = std::string(inet_ntoa(addrCl.sin_addr));
-		envMap_["REMOTE_PORT"] = positiveNumberToString(ntohs(addrCl.sin_port));
+		envMap_["REMOTE_PORT"] = positiveNumberToString(ntohs(addrCl.sin_port));   //конвертация числа с строку
 	}
 	envMap_["REQUEST_METHOD"] = client_.getMethod();
 	envMap_["REQUEST_URI"] = client_.getPath() + client_.getFileName();
 	envMap_["SCRIPT_NAME"] = location_.getScrypt();
 	envMap_["SERVER_NAME"] = client_.getServer().getServerName();
-	envMap_["SERVER_PORT"] = positiveNumberToString(size_t(client_.getServer(),getPort()));
+	envMap_["SERVER_PORT"] = positiveNumberToString(size_t(client_.getServer().getPort()));   //конвертация числа с строку
 	envMap_["SERVER_PROTOCOL"] = WEBSERV_HTTP;
 	envMap_["SERVER_SOFTWARE"] = WEBSERV_NAME;
 
@@ -91,7 +96,7 @@ void CGI::createHttpMetaVariables()
 
 void CGI::printMetaVariables()
 {
-	std::cout << UNDERLINE_W << "PRINT MetaVariables" << RESET_C << std::endl;
+	//std::cout << UNDERLINE_W << "PRINT MetaVariables" << RESET_C << std::endl;
 
 	std::map<std::string, std::string>::iterator it = envMap_.begin();
 	while (it != envMap_.end())
@@ -111,7 +116,7 @@ void CGI::createCgiEnv()
 		throw(std::runtime_error(strerror(errno)));
 	for (it = envMap_.begin(); it != envMap_.end(); it++)
 	{
-		envir_ = (it->first + "=" + it->second);
+		envir_ = (it->first + "=" + it->second);    //XZ chto eto!
 		if (!(env_[i] = ft_strdup(envir_.c_str())))
 			throw(std::runtime_error(strerror(errno)));
 		i++;
@@ -127,7 +132,7 @@ std::string CGI::run(std::string &data)
 	int fd_cgiFile = open((*ptrCgiFile).c_str(), O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd_cgiFile < 0)
 	{
-		//g_log.printErrorMassage("CGI fail to open file: " + *ptrCgiFile);
+		//g_log.printErrorMassage("CGI fail to open file: " + *ptrCgiFile);      //Есть функция шлющщая ошибки??
 		return "500";
 	}
 	pid_t pid;
@@ -135,7 +140,7 @@ std::string CGI::run(std::string &data)
 
 	if (pipe(fd) != 0)
 	{
-		//g_log.printErrorMassage("Pipe error: " + std::string(strerror(errno)));
+		//g_log.printErrorMassage("Pipe error: " + std::string(strerror(errno)));      //Есть функция шлющщая ошибки??
 		close(fd_cgiFile);
 		return "500";
 	}
@@ -143,7 +148,7 @@ std::string CGI::run(std::string &data)
 	pid = fork();
 	if (pid < 0)
 	{
-		//g_log.printErrorMassage("Fork error: " + std::string(strerror(errno)));
+		//g_log.printErrorMassage("Fork error: " + std::string(strerror(errno)));      //Есть функция шлющщая ошибки??
 		close(fd_cgiFile);
 		return "500";
 	}
@@ -160,7 +165,7 @@ std::string CGI::run(std::string &data)
 
 		int exec_res = execve(args_[0], args_, env_);
 
-		//g_log.printErrorMassage("Execve error '" + std::string(args_[0]) + "': " + std::string(strerror(errno)));
+		//g_log.printErrorMassage("Execve error '" + std::string(args_[0]) + "': " + std::string(strerror(errno)));      //Есть функция шлющщая ошибки??
 		exit(exec_res);
 	}
 	else
@@ -169,7 +174,7 @@ std::string CGI::run(std::string &data)
 		if (client_.getBody().length() > 0)
 			if (write(fd[1], client_.getBody().c_str(), client_.getBody().length()) == -1)
 			{
-				//g_log.printErrorMassage("Write error: " + std::string(strerror(errno)));
+				//g_log.printErrorMassage("Write error: " + std::string(strerror(errno)));      //Есть функция шлющщая ошибки??
 				kill(pid, SIGKILL);
 				close(fd[1]);
 				return "500";
@@ -178,12 +183,12 @@ std::string CGI::run(std::string &data)
 
 		if (waitpid(pid, &status, 0) == -1)
 		{
-			//g_log.printErrorMassage("Waitpid error: " + std::string(strerror(errno)));
+			//g_log.printErrorMassage("Waitpid error: " + std::string(strerror(errno)));      //Есть функция шлющщая ошибки??
 			return "500";
 		}
 		if (WIFEXITED(status) && WIFSIGNALED(status) != 0)
 		{
-			//g_log.printErrorMassage("CGI return: " + positiveNumberToString(WIFSIGNALED(status)));
+			//g_log.printErrorMassage("CGI return: " + positiveNumberToString(WIFSIGNALED(status)));      //Есть функция шлющщая ошибки??
 			return "500";
 		}
 	}
@@ -209,7 +214,7 @@ bool CGI::readFile(std::string const &file, std::string &body)
 	fd = open(file.c_str(), O_RDONLY);
 	if (fd < -1)
 	{
-		//g_log.printErrorMassage("File not open! " + std::string(strerror(errno)));
+		//g_log.printErrorMassage("File not open! " + std::string(strerror(errno)));      //Есть функция шлющщая ошибки??
 		return false;
 	}
 
@@ -220,7 +225,7 @@ bool CGI::readFile(std::string const &file, std::string &body)
 	if (ret == -1)
 	{
 		body = "";
-		//g_log.printErrorMassage("Error in file reading: " + std::string(strerror(errno)));
+		//g_log.printErrorMassage("Error in file reading: " + std::string(strerror(errno)));      //Есть функция шлющщая ошибки??
 		return false;
 	}
 	return true;

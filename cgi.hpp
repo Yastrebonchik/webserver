@@ -16,6 +16,9 @@
 #include "utils.hpp"
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 #define DEFAULT_PATH "./config"
 #define DEFAULT_CONF "./config/default.conf"
@@ -55,6 +58,7 @@ public:
 
 	void createMetaVariables();
 	void createHttpMetaVariables();
+	void printMetaVariables();
 	void createCgiEnv();
 	std::string run(std::string &data);
 	bool readFile(std::string const &file, std::string &body);
