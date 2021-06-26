@@ -27,7 +27,7 @@ class ConfigClass {
 		void setIndex(std::string &x);
 		void setErrorPage(std::string &x);
 		void setClientBodySize(int x);
-		void setLocations(std::list<LocationClass> );
+		void setLocations(std::list<LocationClass> *locations);
 
 		std::string	getServer_name() const;
 		uint32_t	getIp() const;
@@ -37,6 +37,7 @@ class ConfigClass {
 		std::string	getErrorPage() const;
 		int			getClientBodySize() const;
 		std::list<LocationClass> *getLocations() const;
+		int getLocNum() const;
 };
 
 #endif

@@ -16,7 +16,7 @@ void LocationClass::setListing(int lis){
 void LocationClass::setCgi_dir(std::string str) {
 	this->cgi_dir = str;
 }
-void LocationClass::setMethods(std::list<std::string> methods){
+void LocationClass::setMethods(std::list<std::string> *methods){
 	this->allow_methods = methods;
 }
 
@@ -32,6 +32,6 @@ int LocationClass::getListing(){
 std::string LocationClass::getCgi_dir(){
 	return this->cgi_dir;
 }
-std::list<std::string> LocationClass::getMethods() {
+std::list<std::string> *LocationClass::getMethods() {
 		return this->allow_methods;
 }

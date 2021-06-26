@@ -13,7 +13,7 @@ class LocationClass : public ConfigClass
 		std::string redirection;
 		int listing;
 		std::string cgi_dir;
-		std::list<std::string> allow_methods;
+		std::list<std::string> *allow_methods;
 	
 	public:
 		LocationClass();
@@ -23,13 +23,13 @@ class LocationClass : public ConfigClass
 		void setRedirection(std::string);
 		void setListing(int);
 		void setCgi_dir(std::string);
-		void setMethods(std::list<std::string>);
+		void setMethods(std::list<std::string>*);
 
 		std::string getLocation();
 		std::string getRedirection();
 		int getListing();
 		std::string getCgi_dir();
-		std::list<std::string> getMethods();
+		std::list<std::string> *getMethods();
 };
 
 #endif

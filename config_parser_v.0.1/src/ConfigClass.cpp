@@ -1,9 +1,8 @@
 #include "../includes/ConfigClass.hpp"
-#include "LocationClass.hpp"
+#include "../includes/LocationClass.hpp"
 
 ConfigClass::ConfigClass(){
-	std::list<LocationClass> locations;
-	this->locations = &locations;
+	this->locations = NULL;
 };
 
 ConfigClass::~ConfigClass() {};
@@ -36,9 +35,9 @@ void ConfigClass::setClientBodySize(int x)
 {
 	this->client_body_size = x;
 };
-void ConfigClass::setLocations(std::list<LocationClass> locations)
+void ConfigClass::setLocations(std::list<LocationClass> *locations)
 {
-	this->locations = &locations;
+	this->locations = locations;
 }
 
 std::string ConfigClass::getServer_name() const
@@ -72,4 +71,10 @@ int ConfigClass::getClientBodySize() const
 
 std::list<LocationClass> *ConfigClass::getLocations() const{
 	return this->locations;
+}
+
+int ConfigClass::getLocNum() const {
+	if (this->locations)
+		return (this->locations->size());
+	return (0);
 }

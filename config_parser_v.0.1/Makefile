@@ -6,7 +6,7 @@
 #    By: rbeach <rbeach@student.21-school.ru>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/10 14:22:17 by rbeach            #+#    #+#              #
-#    Updated: 2021/06/20 16:27:01 by rbeach           ###   ########.fr        #
+#    Updated: 2021/06/26 14:02:46 by rbeach           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,7 @@ LIBFT_DIR = libft
 
 LIBFT = libft.a
 
-FLAGS = -std=c++98#-Wall -Werror -Wextra
-
-TEST_FLAGS = -o3 -g3
+FLAGS = -std=c++98 -Wall -Werror -Wextra -g
 
 HEADERS = config_check.hpp config_parser.hpp ConfigClass.hpp
 
@@ -38,7 +36,7 @@ all: $(NAME)
 
 $(NAME): $(OBJECTS) main.cpp
 	ar rcs $(NAME) $(OBJECTS)
-	clang++ main.cpp libconfpar.a
+	#clang++ main.cpp libconfpar.a
 
 $(O_DIR)/%.o: $(S_DIR)/%.cpp
 	mkdir -p $(O_DIR)
