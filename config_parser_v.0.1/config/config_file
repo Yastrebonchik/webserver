@@ -4,7 +4,7 @@ server {
 
 	server_name      second
 
-	root /Users/kcedra/webserver/directory_for_tests/devAid-v1.1
+	root /Users/kcedra/webserver/directory_for_tests
 
 
 	index index.html

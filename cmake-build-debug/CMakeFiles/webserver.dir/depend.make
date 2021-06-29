@@ -11,6 +11,7 @@ CMakeFiles/webserver.dir/ResponseHeaders.cpp.o: ../ResponseHeaders.hpp
 CMakeFiles/webserver.dir/ResponseHeaders.cpp.o: ../utils.hpp
 
 CMakeFiles/webserver.dir/main.cpp.o: ../config_parser_v.0.1/includes/ConfigClass.hpp
+CMakeFiles/webserver.dir/main.cpp.o: ../config_parser_v.0.1/includes/LocationClass.hpp
 CMakeFiles/webserver.dir/main.cpp.o: ../config_parser_v.0.1/includes/config.hpp
 CMakeFiles/webserver.dir/main.cpp.o: ../config_parser_v.0.1/includes/config_parser.hpp
 CMakeFiles/webserver.dir/main.cpp.o: ../RequestHeaders.hpp
@@ -20,6 +21,7 @@ CMakeFiles/webserver.dir/main.cpp.o: ../methods.h
 CMakeFiles/webserver.dir/main.cpp.o: ../utils.hpp
 
 CMakeFiles/webserver.dir/methods.cpp.o: ../config_parser_v.0.1/includes/ConfigClass.hpp
+CMakeFiles/webserver.dir/methods.cpp.o: ../config_parser_v.0.1/includes/LocationClass.hpp
 CMakeFiles/webserver.dir/methods.cpp.o: ../config_parser_v.0.1/includes/config.hpp
 CMakeFiles/webserver.dir/methods.cpp.o: ../config_parser_v.0.1/includes/config_parser.hpp
 CMakeFiles/webserver.dir/methods.cpp.o: ../RequestHeaders.hpp

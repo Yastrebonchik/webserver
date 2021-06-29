@@ -8,10 +8,10 @@ bool sortbyvalue(std::pair<std::string, float> &a, std::pair<std::string, float>
 	return a.second > b.second;
 }
 
-RequestHeaders::RequestHeaders(){
+RequestHeaders::RequestHeaders() {
 }
 
-RequestHeaders::~RequestHeaders(){
+RequestHeaders::~RequestHeaders() {
 }
 
 RequestHeaders::RequestHeaders(char *source) : _source(source){

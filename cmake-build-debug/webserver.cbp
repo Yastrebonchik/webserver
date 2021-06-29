@@ -82,6 +82,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/kcedra/webserver/Connection.cpp">
+			<Option target="webserver"/>
+		</Unit>
+		<Unit filename="/Users/kcedra/webserver/Connection.hpp">
+			<Option target="webserver"/>
+		</Unit>
 		<Unit filename="/Users/kcedra/webserver/RequestHeaders.cpp">
 			<Option target="webserver"/>
 		</Unit>

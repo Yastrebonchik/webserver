@@ -72,6 +72,10 @@ std::string 			ResponseHeaders::getPage(){
 	return (this->_page);
 }
 
+char* 					ResponseHeaders::getBinaryPage() {
+	return (this->_binaryPage);
+};
+
 void 					ResponseHeaders::setVersion(){
 	this->_version = "HTTP/1.1";
 }
@@ -123,3 +127,16 @@ void 					ResponseHeaders::setServer(){
 void 					ResponseHeaders::pageAdd(std::string line) {
 	this->_page += line;
 }
+
+
+void 					ResponseHeaders::binaryPageAdd(char *line) {
+	//char 	*bubble;
+
+	if (!this->_binaryPage)
+		this->_binaryPage = (char*)malloc(1);
+	//bubble = this->_binaryPage;
+	this->_binaryPage = ft_strjoin(this->_binaryPage, line);
+	if (line == nullptr)
+		this->_binaryPage = nullptr;
+	//free(bubble);
+};

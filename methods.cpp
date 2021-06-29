@@ -14,7 +14,7 @@ char 	*returnError(RequestHeaders request, size_t statusC, std::string reason) {
 	int 			fd;
 
 	fd = open(std::string("error" + std::to_string(statusC) + ".html").c_str(), O_RDONLY);
-	while (get_next_line(fd, &line) > 0){
+	while (get_next_line(fd, &line) > 0) {
 		fileline = line;
 		free(line);
 		line = nullptr;
@@ -52,11 +52,14 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 	std::string 			file;
 	std::string 			directory;
 	std::string     		uri = request.get_uri();
-	std::string::iterator	it = uri.end();
-	std::string::iterator	ite = uri.end();
+	std::string::iterator	it;
+	std::string::iterator	ite;
 	struct stat 			*buf = (struct stat*)malloc(sizeof(struct stat));
 	struct dirent			*entry;
 	std::string     		seekfilename;
+	std::string 			root;
+	//size_t					binaryLen = 0;
+	size_t 					bufRead;
 	char 					*line;
 	DIR 					*dir;
 	int 					fd;
@@ -66,6 +69,10 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 		file = server.getIndex(); // Нужно будет сделать выбор файла с опциям, по приоритету и т.п.
 	}
 	else {
+		if ((pos = uri.find("?")) != std::string::npos)
+			uri.erase(pos, uri.length() - 1);
+		it = uri.end();
+		ite = uri.end();
 		while (*it != '/') {
 			it--;
 		}
@@ -76,9 +83,9 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 			file += *(it);
 		}
 		while (dir != NULL && (entry = readdir(dir)) != NULL) {
-		    seekfilename = entry->d_name;
+			seekfilename = entry->d_name;
 			stat(file.c_str(), buf);
-		    if (seekfilename == file && !S_ISDIR(buf->st_mode)) {
+			if (seekfilename == file && !S_ISDIR(buf->st_mode)) {
 				closedir(dir);
 				break;
 			}
@@ -94,11 +101,16 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 	if (fd < 0)
 		return (returnError(request, 404, "Not Found"));
 	else {
-		if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg") {
-			line = (char *)malloc(32);
-			while (read(fd, line, 32) > 0) {
+		if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg"
+		|| mimeDetect(file).find("font") != std::string::npos) {
+			line = (char *)malloc(128);
+			while ((bufRead = read(fd, line, 127)) > 0) {
+				line[bufRead] = '\0';
 				fileline = line;
 				response.pageAdd(fileline);
+				//binaryLen += bufRead;
+				//ft_bzero(line, 128);
+				//response.binaryPageAdd(line);
 			}
 		}
 		else {
@@ -108,6 +120,7 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 				line = nullptr;
 				response.pageAdd(fileline + "\n");
 			}
+			response.binaryPageAdd(nullptr);
 		}
 		close(fd);
 	}
@@ -115,6 +128,9 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 	response.setStatusCode(200);
 	response.setReasonPhrase("OK");
 	response.setConnection("close");
+	//if (response.getBinaryPage() != nullptr)
+	//	response.setContentLength(ft_strlen(response.getBinaryPage()));
+	//else
 	response.setContentLength(response.getPage().length());
 	response.setContentType(mimeDetect(file));
 	response.setDate(request);
@@ -124,8 +140,16 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 	ret = response.getVersion() + " " + statusCode + " " + response.getReasonPhrase();
 	ret += "\nConnection: " + response.getConnection() + "\nContent-Length: " + contentLength + "\nContent-Type: " + response.getContentType();
 	ret += "\nServer: " + response.getServer();
-	ret += "\r\n\r\n" + response.getPage();
-	line = ft_strdup(ret.c_str());
+	ret += "\r\n\r\n";
+	if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg"
+	|| mimeDetect(file).find("font") != std::string::npos) {
+		line = ft_strjoin(ret.c_str(), response.getBinaryPage());
+	}
+	else {
+		ret += response.getPage();
+		line = ft_strdup(ret.c_str());
+	}
+	response.binaryPageAdd(nullptr);
 	return (line);
 }
 

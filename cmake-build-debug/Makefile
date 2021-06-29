@@ -142,6 +142,33 @@ webserver/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/build
 .PHONY : webserver/fast
 
+Connection.o: Connection.cpp.o
+
+.PHONY : Connection.o
+
+# target to build an object file
+Connection.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/Connection.cpp.o
+.PHONY : Connection.cpp.o
+
+Connection.i: Connection.cpp.i
+
+.PHONY : Connection.i
+
+# target to preprocess a source file
+Connection.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/Connection.cpp.i
+.PHONY : Connection.cpp.i
+
+Connection.s: Connection.cpp.s
+
+.PHONY : Connection.s
+
+# target to generate assembly for a file
+Connection.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/Connection.cpp.s
+.PHONY : Connection.cpp.s
+
 RequestHeaders.o: RequestHeaders.cpp.o
 
 .PHONY : RequestHeaders.o
@@ -286,6 +313,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... webserver"
+	@echo "... Connection.o"
+	@echo "... Connection.i"
+	@echo "... Connection.s"
 	@echo "... RequestHeaders.o"
 	@echo "... RequestHeaders.i"
 	@echo "... RequestHeaders.s"

@@ -12,6 +12,7 @@ CMakeFiles/webserver.dir/ResponseHeaders.cpp.o
  /Users/kcedra/webserver/utils.hpp
 CMakeFiles/webserver.dir/main.cpp.o
  ../config_parser_v.0.1/includes/ConfigClass.hpp
+ ../config_parser_v.0.1/includes/LocationClass.hpp
  ../config_parser_v.0.1/includes/config.hpp
  ../config_parser_v.0.1/includes/config_parser.hpp
  /Users/kcedra/webserver/RequestHeaders.hpp
@@ -21,6 +22,7 @@ CMakeFiles/webserver.dir/main.cpp.o
  /Users/kcedra/webserver/utils.hpp
 CMakeFiles/webserver.dir/methods.cpp.o
  ../config_parser_v.0.1/includes/ConfigClass.hpp
+ ../config_parser_v.0.1/includes/LocationClass.hpp
  ../config_parser_v.0.1/includes/config.hpp
  ../config_parser_v.0.1/includes/config_parser.hpp
  /Users/kcedra/webserver/RequestHeaders.hpp

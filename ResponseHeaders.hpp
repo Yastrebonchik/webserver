@@ -30,6 +30,9 @@ private:
 	std::list<std::string>	_server;
 	std::list<std::string>	_WWWAuthenticate;
 	std::string 			_page;
+	char 					*_binaryPage;
+	bool 					sendFlag;
+
 public:
 	ResponseHeaders();
 	~ResponseHeaders();
@@ -50,6 +53,7 @@ public:
 	std::string				getServer() const;
 	std::list<std::string>	getWWWAuthenticate() const;
 	std::string 			getPage();
+	char* 					getBinaryPage();
 	void 					setVersion();
 	void 					setStatusCode(size_t code);
 	void 					setReasonPhrase(std::string phrase);
@@ -60,6 +64,7 @@ public:
 	void 					setDate(RequestHeaders request);
 	void 					setServer();
 	void 					pageAdd(std::string line);
+	void 					binaryPageAdd(char *line);
 };
 
 
