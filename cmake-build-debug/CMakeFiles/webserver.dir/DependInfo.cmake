@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/kcedra/webserver/Connection.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/Connection.cpp.o"
+  "/Users/kcedra/webserver/ConnectionClass.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/ConnectionClass.cpp.o"
   "/Users/kcedra/webserver/RequestHeaders.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/RequestHeaders.cpp.o"
   "/Users/kcedra/webserver/ResponseHeaders.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/ResponseHeaders.cpp.o"
   "/Users/kcedra/webserver/main.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/main.cpp.o"

@@ -421,25 +421,27 @@ std::string	mimeDetect(std::string file) {
 	}
 	if (ret.find("html") != std::string::npos)
 		ret = "text/html; charset=UTF-8";
-	if (ret.find("css") != std::string::npos)
+	else if (ret.find("css") != std::string::npos)
 		ret = "text/css; charset=UTF-8";
-	if (ret.find("js") != std::string::npos)
+	else if (ret.find("js") != std::string::npos)
 		ret = "text/css; charset=UTF-8";
-	if (ret.find("png") != std::string::npos)
+	else if (ret.find("png") != std::string::npos)
 		ret = "image/png";
-	if (ret.find("jpg") != std::string::npos || ret.find("jpeg") != std::string::npos
+	else if (ret.find("jpg") != std::string::npos || ret.find("jpeg") != std::string::npos
 	|| ret.find("jfif") != std::string::npos || ret.find("pjpeg") != std::string::npos
 	|| ret.find("pjp") != std::string::npos)
 		ret = "image/jpeg";
-	if (ret.find("ico") != std::string::npos)
+	else if (ret.find("ico") != std::string::npos)
 		ret = "image/png";
-	if (ret.find("woff") != std::string::npos)
+	else if (ret.find("woff") != std::string::npos)
 		ret = "font/woff";
-	if (ret.find("ttf") != std::string::npos)
+	else if (ret.find("ttf") != std::string::npos)
 		ret = "font/ttf";
-	if (ret.find("otf") != std::string::npos)
+	else if (ret.find("otf") != std::string::npos)
 		ret = "font/ttf";
-	if (ret.find("less") != std::string::npos)
+	else if (ret.find("less") != std::string::npos)
+		ret = "text/plain";
+	else
 		ret = "text/plain";
 	return (ret);
 }

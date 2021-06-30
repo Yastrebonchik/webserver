@@ -31,7 +31,6 @@ private:
 	std::list<std::string>	_WWWAuthenticate;
 	std::string 			_page;
 	char 					*_binaryPage;
-	bool 					sendFlag;
 
 public:
 	ResponseHeaders();

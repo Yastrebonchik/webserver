@@ -4,7 +4,7 @@ server {
 
 	server_name      second
 
-	root /Users/kcedra/webserver/directory_for_tests
+	root /Users/kcedra/webserver/directory_for_tests/devAid-v1.1
 
 
 	index index.html
@@ -41,4 +41,11 @@ server {
 
 }
 
+server {
+	server_name      third_server
+	listen 0.0.0.0:8000
+	root /Users/kcedra/webserver/directory_for_tests/tournament
 
+	index compete.html
+
+}

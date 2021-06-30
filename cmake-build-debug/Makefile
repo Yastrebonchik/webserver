@@ -142,32 +142,32 @@ webserver/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/build
 .PHONY : webserver/fast
 
-Connection.o: Connection.cpp.o
+ConnectionClass.o: ConnectionClass.cpp.o
 
-.PHONY : Connection.o
+.PHONY : ConnectionClass.o
 
 # target to build an object file
-Connection.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/Connection.cpp.o
-.PHONY : Connection.cpp.o
+ConnectionClass.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ConnectionClass.cpp.o
+.PHONY : ConnectionClass.cpp.o
 
-Connection.i: Connection.cpp.i
+ConnectionClass.i: ConnectionClass.cpp.i
 
-.PHONY : Connection.i
+.PHONY : ConnectionClass.i
 
 # target to preprocess a source file
-Connection.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/Connection.cpp.i
-.PHONY : Connection.cpp.i
+ConnectionClass.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ConnectionClass.cpp.i
+.PHONY : ConnectionClass.cpp.i
 
-Connection.s: Connection.cpp.s
+ConnectionClass.s: ConnectionClass.cpp.s
 
-.PHONY : Connection.s
+.PHONY : ConnectionClass.s
 
 # target to generate assembly for a file
-Connection.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/Connection.cpp.s
-.PHONY : Connection.cpp.s
+ConnectionClass.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ConnectionClass.cpp.s
+.PHONY : ConnectionClass.cpp.s
 
 RequestHeaders.o: RequestHeaders.cpp.o
 
@@ -313,9 +313,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... webserver"
-	@echo "... Connection.o"
-	@echo "... Connection.i"
-	@echo "... Connection.s"
+	@echo "... ConnectionClass.o"
+	@echo "... ConnectionClass.i"
+	@echo "... ConnectionClass.s"
 	@echo "... RequestHeaders.o"
 	@echo "... RequestHeaders.i"
 	@echo "... RequestHeaders.s"

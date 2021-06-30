@@ -141,18 +141,18 @@ CMakeFiles/webserver.dir/utils.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/webserver.dir/utils.cpp.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kcedra/webserver/utils.cpp -o CMakeFiles/webserver.dir/utils.cpp.s
 
-CMakeFiles/webserver.dir/Connection.cpp.o: CMakeFiles/webserver.dir/flags.make
-CMakeFiles/webserver.dir/Connection.cpp.o: ../Connection.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kcedra/webserver/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/webserver.dir/Connection.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/webserver.dir/Connection.cpp.o -c /Users/kcedra/webserver/Connection.cpp
+CMakeFiles/webserver.dir/ConnectionClass.cpp.o: CMakeFiles/webserver.dir/flags.make
+CMakeFiles/webserver.dir/ConnectionClass.cpp.o: ../ConnectionClass.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kcedra/webserver/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/webserver.dir/ConnectionClass.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/webserver.dir/ConnectionClass.cpp.o -c /Users/kcedra/webserver/ConnectionClass.cpp
 
-CMakeFiles/webserver.dir/Connection.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/webserver.dir/Connection.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kcedra/webserver/Connection.cpp > CMakeFiles/webserver.dir/Connection.cpp.i
+CMakeFiles/webserver.dir/ConnectionClass.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/webserver.dir/ConnectionClass.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kcedra/webserver/ConnectionClass.cpp > CMakeFiles/webserver.dir/ConnectionClass.cpp.i
 
-CMakeFiles/webserver.dir/Connection.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/webserver.dir/Connection.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kcedra/webserver/Connection.cpp -o CMakeFiles/webserver.dir/Connection.cpp.s
+CMakeFiles/webserver.dir/ConnectionClass.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/webserver.dir/ConnectionClass.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kcedra/webserver/ConnectionClass.cpp -o CMakeFiles/webserver.dir/ConnectionClass.cpp.s
 
 # Object files for target webserver
 webserver_OBJECTS = \
@@ -161,7 +161,7 @@ webserver_OBJECTS = \
 "CMakeFiles/webserver.dir/ResponseHeaders.cpp.o" \
 "CMakeFiles/webserver.dir/methods.cpp.o" \
 "CMakeFiles/webserver.dir/utils.cpp.o" \
-"CMakeFiles/webserver.dir/Connection.cpp.o"
+"CMakeFiles/webserver.dir/ConnectionClass.cpp.o"
 
 # External object files for target webserver
 webserver_EXTERNAL_OBJECTS =
@@ -171,7 +171,7 @@ webserver: CMakeFiles/webserver.dir/RequestHeaders.cpp.o
 webserver: CMakeFiles/webserver.dir/ResponseHeaders.cpp.o
 webserver: CMakeFiles/webserver.dir/methods.cpp.o
 webserver: CMakeFiles/webserver.dir/utils.cpp.o
-webserver: CMakeFiles/webserver.dir/Connection.cpp.o
+webserver: CMakeFiles/webserver.dir/ConnectionClass.cpp.o
 webserver: CMakeFiles/webserver.dir/build.make
 webserver: ../config_parser_v.0.1/libconfpar.a
 webserver: CMakeFiles/webserver.dir/link.txt

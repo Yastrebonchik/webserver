@@ -12,7 +12,7 @@
 #include <sys/select.h>
 #include "methods.h"
 #include <vector>
-#include "Connection.hpp"
+#include "ConnectionClass.hpp"
 
 //struct in_addr {
 //	unsigned long s_addr;
@@ -24,10 +24,6 @@
 //	struct in_addr     sin_addr;    // IP-адрес
 //	unsigned char      sin_zero[8]; // "Дополнение" до размера структуры sockaddr
 //};
-
-std::vector<int> 			listener;
-std::vector<int>			connection;
-int							sock;
 
 //void	sigquit(int sig)
 //{
@@ -61,8 +57,8 @@ int							sock;
 //	exit(sig);
 //}
 
-int	selectSet(fd_set *readfds, fd_set *writefds) {
-	int maxfd;
+int	selectSet(fd_set *readfds, fd_set *writefds, std::vector<int> &listener, std::vector<ConnectionClass> &connections) {
+	int maxfd = 0;
 
 	FD_ZERO(readfds);
 	FD_ZERO(writefds);
@@ -71,22 +67,20 @@ int	selectSet(fd_set *readfds, fd_set *writefds) {
 		if (listener[i] > maxfd)
 			maxfd = listener[i];
 		FD_SET(listener[i], readfds);
-		FD_SET(listener[i], writefds);
+		//FD_SET(listener[i], writefds);
 	}
-	for (size_t i = 0; i < connection.size(); ++i) {
-		if (connection[i] > maxfd)
-			maxfd = connection[i];
-		FD_SET(connection[i], readfds);
-		FD_SET(connection[i], writefds);
+	for (size_t i = 0; i < connections.size(); ++i) {
+		if (connections[i].getConnectionfd() > maxfd)
+			maxfd = connections[i].getConnectionfd();
+		FD_SET(connections[i].getConnectionfd(), readfds);
+		FD_SET(connections[i].getConnectionfd(), writefds);
 	}
 	return (maxfd);
 }
 
-void	makeConnection(int i, char *buf, std::vector<Connection> &c, std::vector<ConfigClass> &config) {
-	int 			bytes_read;
-	ResponseHeaders	resp;
-	RequestHeaders	request;
-	ConfigClass		server;
+void	makeConnection(int i, std::vector<ConnectionClass> &connections, std::vector<ConfigClass> &config,
+		std::vector<int> &listener) {
+	int 			sock;
 
 	sock = accept(listener[i], NULL, NULL);
 	if (sock < 0) {
@@ -94,54 +88,75 @@ void	makeConnection(int i, char *buf, std::vector<Connection> &c, std::vector<Co
 		exit(3);
 	}
 	fcntl(sock, F_SETFL, O_NONBLOCK);
+	connections.push_back(ConnectionClass(sock, config[i]));
+}
 
-	bytes_read = recv(sock, buf, 100000 - 1, 0);
-	if (bytes_read == 0) {
-		close(sock);
-	}
-	else if (bytes_read < -1) {
+void	recieveData(int i, std::vector<ConnectionClass> &connections) {
+	int 			bytes_read;
+	char			buf[100000];
+	ResponseHeaders	resp;
+	RequestHeaders	request;
+
+	bytes_read = recv(connections[i].getConnectionfd(), buf, 100000 - 1, 0);
+	if (bytes_read == -1) {
 		perror("recv");
 		exit(3);
 	}
-	else {
-		connection.push_back(sock);
+//	else if (bytes_read == 0) {
+//		connections[i].setSendFlag(1);
+//	}
+	else if (bytes_read > 0) {
 		request.setSource(buf);
 		request.setInfo();
 		ft_bzero(buf, 100000);
-		resp = generateAnswer(request, server);
+		connections[i].setAnswer(generateAnswer(request, connections[i].getServer()));
+		connections[i].setCloseFlag(0);
+		if (request.get_connection() == "close")
+			connections[i].setCloseFlag(1);
+		request.clear();
+		connections[i].setSendFlag(1);
 	}
 }
 
-void	recieveData() {
+void	sendData(int i, std::vector<ConnectionClass> &connections) {
 
+	if (connections[i].getSendFlag()) {
+		connections[i].setSendFlag(0);
+		if (send(connections[i].getConnectionfd(), connections[i].getAnswer(),
+			 ft_strlen(connections[i].getAnswer()) + 1, 0) < 0) {
+			std::cerr << "Error while sending data" << std::endl;
+		}
+	}
+	if (connections[i].getCloseFlag()) {
+		close(connections[i].getConnectionfd()); // Удаляем соединение, закрываем сокет
+		connections[i].clearAnswer();
+		connections.erase(connections.begin() + i);
+	}
 }
 
-void	sendData() {
-
-}
-
-void 	dropConnections() {
-
+void 	dropConnections(std::vector<ConnectionClass> &connections) {
+	for (size_t i = 0; i < connections.size(); ++i) {
+		close(connections[i].getConnectionfd()); // Удаляем соединение, закрываем сокет
+		connections[i].clearAnswer();
+		connections.erase(connections.begin() + i);
+	}
 }
 
 int main() {
-	int 							check = 0;
-	RequestHeaders					request;
-	std::vector<ResponseHeaders>	response;
+	std::vector<ConnectionClass>	connections;
 	std::vector<ConfigClass>		config;
+	std::vector<int> 				listener;
 	ConfigClass						server;
 	std::string 					line;
 	fd_set 							readfds;
 	fd_set							writefds;
-	int 							maxfd = 0;
 	size_t 							i = 0;
 	struct							sockaddr_in addr;
 	struct 							timeval timeout;
-	char							buf[100000];
-	char 							*ret;
-	int								bytes_read;
+	int 							maxfd;
+	int 							selectRes;
 
-	ret = NULL;
+	//ret = NULL;
 //	signal(SIGINT, sigint);
 //	signal(SIGQUIT, sigquit);
 //	signal(SIGTERM, sigterm);
@@ -169,62 +184,31 @@ int main() {
 
 	i = 0;
 	while(1) {
-		maxfd = selectSet(&readfds, &writefds);
-		if (select(maxfd + 1, &readfds, &writefds, NULL, &timeout) > 0) {
+		maxfd = selectSet(&readfds, &writefds, listener, connections);
+		if ((selectRes = select(maxfd + 1, &readfds, &writefds, NULL, &timeout)) > 0) {
 			i = 0;
 			while (i < listener.size()) {
 				if (FD_ISSET(listener[i], &readfds))
-					makeConnection(i, buf, response);
+					makeConnection(i, connections, config, listener);
 				i++;
 			}
 			i = 0;
-			while (i < connection.size()) {
-				if (FD_ISSET(connection[i], &readfds))
-					recieveData();
-				if (FD_ISSET(connection[i], &writefds))
-					sendData();
+			while (i < connections.size()) {
+				if (FD_ISSET(connections[i].getConnectionfd(), &readfds))
+					recieveData(i, connections);
+				if (FD_ISSET(connections[i].getConnectionfd(), &writefds))
+					sendData(i, connections);
 				i++;
 			}
-			//sock = accept(listener[i], NULL, NULL);
-			//int opt = 1;
-			//setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)); // Возможно придется убрать (позволяет избежать попаболи с bind)
-			//FD_SET(sock, &readfds);
-			//FD_SET()
-			//fcntl(listener[i], F_SETFL, O_NONBLOCK);
-			server = config[i];
-			//std::cout << "I'm here" << std::endl;
-			if (sock < 0) {
-				perror("accept");
-				exit(3);
-			}
-
-			while (1) {
-				check++;
-
-				bytes_read = recv(sock, buf, 100000 - 1, 0);
-				if (bytes_read < 1) {
-					std::cout << check << std::endl;
-					close(sock);
-					break;
-				}
-				request.setSource(buf);
-				request.setInfo();
-				ft_bzero(buf, 100000);
-				ret = generateAnswer(request, server);
-				if (send(sock, ret, ft_strlen(ret) + 1, 0) < 0)
-					std::cout << "Error number = " << errno << std::endl;
-				free(ret);
-				ret = NULL;
-				request.clear();
-				//close(sock);
-			//if (request.get_connection() == "close")
-			}
-			//close(sock);
 		}
-		else {
-			dropConnections();
+		else if (selectRes == 0) {
+			dropConnections(connections);
 			continue; //Нужно добавлять sock в перечень читаемых fd и удалять его при истечении времени (FD_CLR и close)
 		}
+		else {
+			perror("select");
+			exit(errno);
+		}
 	}
-    return 0;
+    //return 0;
 }

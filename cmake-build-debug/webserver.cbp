@@ -82,10 +82,10 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/kcedra/webserver/Connection.cpp">
+		<Unit filename="/Users/kcedra/webserver/ConnectionClass.cpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/kcedra/webserver/Connection.hpp">
+		<Unit filename="/Users/kcedra/webserver/ConnectionClass.hpp">
 			<Option target="webserver"/>
 		</Unit>
 		<Unit filename="/Users/kcedra/webserver/RequestHeaders.cpp">

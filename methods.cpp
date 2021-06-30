@@ -13,7 +13,8 @@ char 	*returnError(RequestHeaders request, size_t statusC, std::string reason) {
 	char 			*line;
 	int 			fd;
 
-	fd = open(std::string("error" + std::to_string(statusC) + ".html").c_str(), O_RDONLY);
+	fd = open(std::string("/Users/kcedra/webserver/default_errors/error" +
+			std::to_string(statusC) + ".html").c_str(), O_RDONLY); // Убрать косталь с моим абсоютным путем
 	while (get_next_line(fd, &line) > 0) {
 		fileline = line;
 		free(line);
@@ -26,7 +27,7 @@ char 	*returnError(RequestHeaders request, size_t statusC, std::string reason) {
 	response.setReasonPhrase(reason);
 	if (statusC == 405 || statusC == 501)
 		response.setAllow();
-	response.setConnection("close");
+	response.setConnection("keep-alive");
 	response.setContentLength(response.getPage().length());
 	response.setContentType("text/html");
 	response.setDate(request);
@@ -127,7 +128,7 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 	response.setVersion();
 	response.setStatusCode(200);
 	response.setReasonPhrase("OK");
-	response.setConnection("close");
+	response.setConnection("keep-alive");
 	//if (response.getBinaryPage() != nullptr)
 	//	response.setContentLength(ft_strlen(response.getBinaryPage()));
 	//else

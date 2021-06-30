@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 98)
 include_directories(libft)
 include_directories(config_parser_v.0.1/includes)
 
-add_executable(webserver main.cpp RequestHeaders.cpp RequestHeaders.hpp ResponseHeaders.cpp ResponseHeaders.hpp methods.cpp methods.h utils.cpp utils.hpp Connection.cpp Connection.hpp)
+add_executable(webserver main.cpp RequestHeaders.cpp RequestHeaders.hpp ResponseHeaders.cpp ResponseHeaders.hpp methods.cpp methods.h utils.cpp utils.hpp ConnectionClass.cpp ConnectionClass.hpp)
 
 #find_library(LIBFT ft libft)
 #target_link_libraries(webserver LINK_PUBLIC ${LIBFT})
