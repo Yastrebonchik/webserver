@@ -68,6 +68,8 @@ void	RequestHeaders::detectHeader(std::string header){
 		this->setTransferEncoding();
 	else if (header == "User-Agent")
 		this->setUserAgent();
+	else if (header == "POST_BODY")
+		this->setPostBody();
 }
 
 void 	RequestHeaders::setStartLine() {
@@ -259,6 +261,13 @@ void 	RequestHeaders::setUserAgent(){
 	this->_userAgent = token;
 }
 
+void 	RequestHeaders::setPostBody() {
+	char 	*postBody;
+
+	postBody = this->_tokens.front();
+	this->_body = postBody;
+}
+
 void 	RequestHeaders::setInfo(){
 	std::string header;
 	char 		*token;
@@ -272,6 +281,11 @@ void 	RequestHeaders::setInfo(){
 	while(this->_tokens.size() != 0){
 		header = this->getSourceHeader();
 		detectHeader(header);
+		if (!(this->_method == "POST" && this->_tokens.size() == 1))
+			this->_tokens.pop_front();
+	}
+	if (this->_method == "POST") {
+		detectHeader("POST_BODY");
 		this->_tokens.pop_front();
 	}
 }
@@ -346,6 +360,10 @@ std::list<std::string>			RequestHeaders::get_transferEncoding() const{
 
 std::string						RequestHeaders::get_userAgent() const{
 	return (this->_userAgent);
+}
+
+std::string 					RequestHeaders::getBody() {
+	return (this->_body);
 }
 
 void 							RequestHeaders::clear() {

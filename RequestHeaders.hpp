@@ -35,8 +35,27 @@ private:
 	std::string 								_referer;
 	std::list<std::string>						_transferEncoding;
 	std::string									_userAgent;
+	std::string 								_body;
 	char										*_source;
 	std::list<char*> 							_tokens;
+
+	/* Методы для извлечения данных */
+	void										setAccept();
+	void 										setAcceptCharset();
+	void 										setAcceptLanguage();
+	void 										setAuthorization();
+	void					 					setConnection();
+	void 										setContentLanguage();
+	void 										setContentLength();
+	void 										setContentLocation();
+	void 										setContentType();
+	void 										setDate();
+	void 										setHost();
+	void 										setLastModified();
+	void 										setReferer();
+	void 										setTransferEncoding();
+	void 										setUserAgent();
+	void 										setPostBody();
 public:
 	RequestHeaders();
 	RequestHeaders(char *source);
@@ -60,25 +79,11 @@ public:
 	std::list<std::string>						get_transferEncoding() const;
 	std::string									get_userAgent() const;
 	std::string									getSourceHeader();
+	std::string 								getBody();
 	void 										detectHeader(std::string header);
 	void										setSource(char *source);
 	void 										setInfo();
 	void 										setStartLine();
-	void										setAccept();
-	void 										setAcceptCharset();
-	void 										setAcceptLanguage();
-	void 										setAuthorization();
-	void					 					setConnection();
-	void 										setContentLanguage();
-	void 										setContentLength();
-	void 										setContentLocation();
-	void 										setContentType();
-	void 										setDate();
-	void 										setHost();
-	void 										setLastModified();
-	void 										setReferer();
-	void 										setTransferEncoding();
-	void 										setUserAgent();
 	void 										clear();
 };
 

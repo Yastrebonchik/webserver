@@ -54,14 +54,6 @@ LocationClass.hpp
 config.hpp
 ../config_parser_v.0.1/includes/config.hpp
 
-/Users/kcedra/webserver/ConnectionClass.hpp
-unistd.h
--
-stdlib.h
--
-config_parser.hpp
-/Users/kcedra/webserver/config_parser.hpp
-
 /Users/kcedra/webserver/RequestHeaders.hpp
 string
 -
@@ -94,37 +86,9 @@ time.h
 sys/time.h
 -
 
-/Users/kcedra/webserver/main.cpp
-iostream
--
-sys/socket.h
--
-sys/types.h
--
-unistd.h
--
-fstream
--
-netinet/in.h
--
-arpa/inet.h
--
-RequestHeaders.hpp
-/Users/kcedra/webserver/RequestHeaders.hpp
-errno.h
--
-ctime
--
-fcntl.h
--
-sys/select.h
--
+/Users/kcedra/webserver/methods.cpp
 methods.h
 /Users/kcedra/webserver/methods.h
-vector
--
-ConnectionClass.hpp
-/Users/kcedra/webserver/ConnectionClass.hpp
 
 /Users/kcedra/webserver/methods.h
 ResponseHeaders.hpp

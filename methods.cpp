@@ -45,7 +45,7 @@ char 	*returnError(RequestHeaders request, size_t statusC, std::string reason) {
 }
 
 char 	*GET(RequestHeaders request, ConfigClass server) {
-	ResponseHeaders	response;
+	ResponseHeaders			response;
 	std::string 			ret;
 	std::string 			statusCode;
 	std::string				contentLength;
@@ -155,8 +155,21 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 }
 
 char 	*POST(RequestHeaders request, ConfigClass server) {
-	request.get_uri();
+	ResponseHeaders			response;
+	std::fstream			file;
+	std::string 			ret;
+
 	server.getRoot();
+	if (request.getBody().length() == 0) {
+		response.setVersion();
+		//response.setStatusCode(204);
+		response.setReasonPhrase("No Content");
+		response.setConnection("keep-alive");
+		ret = response.getVersion() + " 204 " + response.getReasonPhrase();
+		ret += "\nConnection: " + response.getConnection();
+		ret += "\nServer: " + response.getServer() + "\n";
+		return (ft_strdup(ret.c_str()));
+	}
 	return nullptr;
 }
 
