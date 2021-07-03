@@ -33,6 +33,10 @@ void 		ConnectionClass::setSendFlag(bool flag) {
 	this->_sendFlag = flag;
 }
 
+void 		ConnectionClass::setAddr(sockaddr addr) {
+	this->_addr = addr;
+}
+
 int 		ConnectionClass::getConnectionfd() {
 	return (this->_connectionfd);
 }
@@ -52,3 +56,7 @@ bool 		ConnectionClass::getSendFlag() {
 ConfigClass	ConnectionClass::getServer() {
 	return (this->_server);
 };
+
+sockaddr	ConnectionClass::getAddr() {
+	return (this->_addr);
+}

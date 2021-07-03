@@ -80,9 +80,18 @@ int	selectSet(fd_set *readfds, fd_set *writefds, std::vector<int> &listener, std
 
 void	makeConnection(int i, std::vector<ConnectionClass> &connections, std::vector<ConfigClass> &config,
 		std::vector<int> &listener) {
-	int 			sock;
+	int 						sock;
+//	size_t 						j = 0;
+//	struct sockaddr				address;
+//	socklen_t 					address_len;
 
-	sock = accept(listener[i], NULL, NULL);
+	sock = accept(listener[i], nullptr, nullptr);
+//	sock = accept(listener[i], &address, &address_len);
+//	if (connections[i].getAddr() == address)
+	//std::cout << address.sa_data << std::endl;
+//	while (j < config.size()) {
+//		j++;
+//	}
 	if (sock < 0) {
 		perror("accept");
 		exit(3);
@@ -93,6 +102,7 @@ void	makeConnection(int i, std::vector<ConnectionClass> &connections, std::vecto
 
 void	recieveData(int i, std::vector<ConnectionClass> &connections) {
 	int 			bytes_read;
+	//char 			*source = (char *)malloc(1);
 	char			buf[100000];
 	ResponseHeaders	resp;
 	RequestHeaders	request;
@@ -106,6 +116,10 @@ void	recieveData(int i, std::vector<ConnectionClass> &connections) {
 //		connections[i].setSendFlag(1);
 //	}
 	else if (bytes_read > 0) {
+	//	while (bytes_read > 0) {
+		//	source = ft_strjoin(source, buf);
+		//	bytes_read = recv(connections[i].getConnectionfd(), buf, 100000 - 1, 0);
+		//}
 		request.setSource(buf);
 		request.setInfo();
 		ft_bzero(buf, 100000);
@@ -115,6 +129,8 @@ void	recieveData(int i, std::vector<ConnectionClass> &connections) {
 			connections[i].setCloseFlag(1);
 		request.clear();
 		connections[i].setSendFlag(1);
+		//free(source);
+		//source = nullptr;
 	}
 }
 

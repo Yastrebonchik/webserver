@@ -16,6 +16,7 @@ private:
 	bool 			_sendFlag;
 	char 			*_answer;
 	ConfigClass		_server;
+	sockaddr		_addr;
 
 public:
 	ConnectionClass();
@@ -26,11 +27,13 @@ public:
 	void 		clearAnswer();
 	void 		setCloseFlag(bool flag);
 	void 		setSendFlag(bool flag);
+	void 		setAddr(sockaddr addr);
 	int 		getConnectionfd();
 	char 		*getAnswer();
 	bool 		getCloseFlag();
 	bool 		getSendFlag();
 	ConfigClass	getServer();
+	sockaddr	getAddr();
 };
 
 

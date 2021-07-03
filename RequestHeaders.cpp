@@ -284,7 +284,7 @@ void 	RequestHeaders::setInfo(){
 		if (!(this->_method == "POST" && this->_tokens.size() == 1))
 			this->_tokens.pop_front();
 	}
-	if (this->_method == "POST") {
+	if (this->_method == "POST" && this->_tokens.size() != 0) {
 		detectHeader("POST_BODY");
 		this->_tokens.pop_front();
 	}

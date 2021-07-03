@@ -159,12 +159,14 @@ char 	*POST(RequestHeaders request, ConfigClass server) {
 	std::fstream			file;
 	std::string 			ret;
 
-	server.getRoot();
 	if (request.getBody().length() == 0) {
 		response.setVersion();
-		//response.setStatusCode(204);
+		file.open(server.getRoot() + request.get_uri(), std::fstream::out);
+		if (file.is_open())
+			file.close();
 		response.setReasonPhrase("No Content");
 		response.setConnection("keep-alive");
+		response.setServer();
 		ret = response.getVersion() + " 204 " + response.getReasonPhrase();
 		ret += "\nConnection: " + response.getConnection();
 		ret += "\nServer: " + response.getServer() + "\n";
