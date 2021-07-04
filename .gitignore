@@ -1,0 +1,6 @@
+.vscode
+obj
+cmake-build-debug
+webserver
+config_parser_v.0.1/a.out
+config_parser_v.0.1/obj

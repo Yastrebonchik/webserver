@@ -82,37 +82,37 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/kcedra/webserver/ConnectionClass.cpp">
+		<Unit filename="/Users/kcedra/webserver/includes/ConnectionClass.hpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/kcedra/webserver/ConnectionClass.hpp">
+		<Unit filename="/Users/kcedra/webserver/includes/RequestHeaders.hpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/kcedra/webserver/RequestHeaders.cpp">
+		<Unit filename="/Users/kcedra/webserver/includes/ResponseHeaders.hpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/kcedra/webserver/RequestHeaders.hpp">
+		<Unit filename="/Users/kcedra/webserver/includes/methods.h">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/kcedra/webserver/ResponseHeaders.cpp">
+		<Unit filename="/Users/kcedra/webserver/includes/utils.hpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/kcedra/webserver/ResponseHeaders.hpp">
+		<Unit filename="/Users/kcedra/webserver/srcs/ConnectionClass.cpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/kcedra/webserver/main.cpp">
+		<Unit filename="/Users/kcedra/webserver/srcs/RequestHeaders.cpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/kcedra/webserver/methods.cpp">
+		<Unit filename="/Users/kcedra/webserver/srcs/ResponseHeaders.cpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/kcedra/webserver/methods.h">
+		<Unit filename="/Users/kcedra/webserver/srcs/main.cpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/kcedra/webserver/utils.cpp">
+		<Unit filename="/Users/kcedra/webserver/srcs/methods.cpp">
 			<Option target="webserver"/>
 		</Unit>
-		<Unit filename="/Users/kcedra/webserver/utils.hpp">
+		<Unit filename="/Users/kcedra/webserver/srcs/utils.cpp">
 			<Option target="webserver"/>
 		</Unit>
 		<Unit filename="/Users/kcedra/webserver/CMakeLists.txt">

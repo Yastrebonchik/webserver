@@ -5,14 +5,14 @@
 #include <fstream>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "RequestHeaders.hpp"
+#include "../includes/RequestHeaders.hpp"
 #include <errno.h>
 #include <ctime>
 #include <fcntl.h>
 #include <sys/select.h>
-#include "methods.h"
+#include "../includes/methods.h"
 #include <vector>
-#include "ConnectionClass.hpp"
+#include "../includes/ConnectionClass.hpp"
 
 //struct in_addr {
 //	unsigned long s_addr;

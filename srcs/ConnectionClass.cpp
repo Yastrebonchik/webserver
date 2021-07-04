@@ -2,7 +2,7 @@
 // Created by Karyn Cedra on 6/29/21.
 //
 
-#include "ConnectionClass.hpp"
+#include "../includes/ConnectionClass.hpp"
 
 ConnectionClass::ConnectionClass() {
 }

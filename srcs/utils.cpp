@@ -2,7 +2,7 @@
 // Created by Karyn Cedra on 6/23/21.
 //
 
-#include "utils.hpp"
+#include "../includes/utils.hpp"
 
 void	ft_bzero(void *s, size_t n)
 {

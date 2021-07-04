@@ -142,167 +142,167 @@ webserver/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/build
 .PHONY : webserver/fast
 
-ConnectionClass.o: ConnectionClass.cpp.o
+srcs/ConnectionClass.o: srcs/ConnectionClass.cpp.o
 
-.PHONY : ConnectionClass.o
-
-# target to build an object file
-ConnectionClass.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ConnectionClass.cpp.o
-.PHONY : ConnectionClass.cpp.o
-
-ConnectionClass.i: ConnectionClass.cpp.i
-
-.PHONY : ConnectionClass.i
-
-# target to preprocess a source file
-ConnectionClass.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ConnectionClass.cpp.i
-.PHONY : ConnectionClass.cpp.i
-
-ConnectionClass.s: ConnectionClass.cpp.s
-
-.PHONY : ConnectionClass.s
-
-# target to generate assembly for a file
-ConnectionClass.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ConnectionClass.cpp.s
-.PHONY : ConnectionClass.cpp.s
-
-RequestHeaders.o: RequestHeaders.cpp.o
-
-.PHONY : RequestHeaders.o
+.PHONY : srcs/ConnectionClass.o
 
 # target to build an object file
-RequestHeaders.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/RequestHeaders.cpp.o
-.PHONY : RequestHeaders.cpp.o
+srcs/ConnectionClass.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/ConnectionClass.cpp.o
+.PHONY : srcs/ConnectionClass.cpp.o
 
-RequestHeaders.i: RequestHeaders.cpp.i
+srcs/ConnectionClass.i: srcs/ConnectionClass.cpp.i
 
-.PHONY : RequestHeaders.i
+.PHONY : srcs/ConnectionClass.i
 
 # target to preprocess a source file
-RequestHeaders.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/RequestHeaders.cpp.i
-.PHONY : RequestHeaders.cpp.i
+srcs/ConnectionClass.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/ConnectionClass.cpp.i
+.PHONY : srcs/ConnectionClass.cpp.i
 
-RequestHeaders.s: RequestHeaders.cpp.s
+srcs/ConnectionClass.s: srcs/ConnectionClass.cpp.s
 
-.PHONY : RequestHeaders.s
+.PHONY : srcs/ConnectionClass.s
 
 # target to generate assembly for a file
-RequestHeaders.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/RequestHeaders.cpp.s
-.PHONY : RequestHeaders.cpp.s
+srcs/ConnectionClass.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/ConnectionClass.cpp.s
+.PHONY : srcs/ConnectionClass.cpp.s
 
-ResponseHeaders.o: ResponseHeaders.cpp.o
+srcs/RequestHeaders.o: srcs/RequestHeaders.cpp.o
 
-.PHONY : ResponseHeaders.o
+.PHONY : srcs/RequestHeaders.o
 
 # target to build an object file
-ResponseHeaders.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ResponseHeaders.cpp.o
-.PHONY : ResponseHeaders.cpp.o
+srcs/RequestHeaders.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/RequestHeaders.cpp.o
+.PHONY : srcs/RequestHeaders.cpp.o
 
-ResponseHeaders.i: ResponseHeaders.cpp.i
+srcs/RequestHeaders.i: srcs/RequestHeaders.cpp.i
 
-.PHONY : ResponseHeaders.i
+.PHONY : srcs/RequestHeaders.i
 
 # target to preprocess a source file
-ResponseHeaders.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ResponseHeaders.cpp.i
-.PHONY : ResponseHeaders.cpp.i
+srcs/RequestHeaders.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/RequestHeaders.cpp.i
+.PHONY : srcs/RequestHeaders.cpp.i
 
-ResponseHeaders.s: ResponseHeaders.cpp.s
+srcs/RequestHeaders.s: srcs/RequestHeaders.cpp.s
 
-.PHONY : ResponseHeaders.s
+.PHONY : srcs/RequestHeaders.s
 
 # target to generate assembly for a file
-ResponseHeaders.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/ResponseHeaders.cpp.s
-.PHONY : ResponseHeaders.cpp.s
+srcs/RequestHeaders.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/RequestHeaders.cpp.s
+.PHONY : srcs/RequestHeaders.cpp.s
 
-main.o: main.cpp.o
+srcs/ResponseHeaders.o: srcs/ResponseHeaders.cpp.o
 
-.PHONY : main.o
+.PHONY : srcs/ResponseHeaders.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/main.cpp.o
-.PHONY : main.cpp.o
+srcs/ResponseHeaders.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o
+.PHONY : srcs/ResponseHeaders.cpp.o
 
-main.i: main.cpp.i
+srcs/ResponseHeaders.i: srcs/ResponseHeaders.cpp.i
 
-.PHONY : main.i
+.PHONY : srcs/ResponseHeaders.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/main.cpp.i
-.PHONY : main.cpp.i
+srcs/ResponseHeaders.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.i
+.PHONY : srcs/ResponseHeaders.cpp.i
 
-main.s: main.cpp.s
+srcs/ResponseHeaders.s: srcs/ResponseHeaders.cpp.s
 
-.PHONY : main.s
+.PHONY : srcs/ResponseHeaders.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/main.cpp.s
-.PHONY : main.cpp.s
+srcs/ResponseHeaders.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.s
+.PHONY : srcs/ResponseHeaders.cpp.s
 
-methods.o: methods.cpp.o
+srcs/main.o: srcs/main.cpp.o
 
-.PHONY : methods.o
+.PHONY : srcs/main.o
 
 # target to build an object file
-methods.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/methods.cpp.o
-.PHONY : methods.cpp.o
+srcs/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/main.cpp.o
+.PHONY : srcs/main.cpp.o
 
-methods.i: methods.cpp.i
+srcs/main.i: srcs/main.cpp.i
 
-.PHONY : methods.i
+.PHONY : srcs/main.i
 
 # target to preprocess a source file
-methods.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/methods.cpp.i
-.PHONY : methods.cpp.i
+srcs/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/main.cpp.i
+.PHONY : srcs/main.cpp.i
 
-methods.s: methods.cpp.s
+srcs/main.s: srcs/main.cpp.s
 
-.PHONY : methods.s
+.PHONY : srcs/main.s
 
 # target to generate assembly for a file
-methods.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/methods.cpp.s
-.PHONY : methods.cpp.s
+srcs/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/main.cpp.s
+.PHONY : srcs/main.cpp.s
 
-utils.o: utils.cpp.o
+srcs/methods.o: srcs/methods.cpp.o
 
-.PHONY : utils.o
+.PHONY : srcs/methods.o
 
 # target to build an object file
-utils.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/utils.cpp.o
-.PHONY : utils.cpp.o
+srcs/methods.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/methods.cpp.o
+.PHONY : srcs/methods.cpp.o
 
-utils.i: utils.cpp.i
+srcs/methods.i: srcs/methods.cpp.i
 
-.PHONY : utils.i
+.PHONY : srcs/methods.i
 
 # target to preprocess a source file
-utils.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/utils.cpp.i
-.PHONY : utils.cpp.i
+srcs/methods.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/methods.cpp.i
+.PHONY : srcs/methods.cpp.i
 
-utils.s: utils.cpp.s
+srcs/methods.s: srcs/methods.cpp.s
 
-.PHONY : utils.s
+.PHONY : srcs/methods.s
 
 # target to generate assembly for a file
-utils.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/utils.cpp.s
-.PHONY : utils.cpp.s
+srcs/methods.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/methods.cpp.s
+.PHONY : srcs/methods.cpp.s
+
+srcs/utils.o: srcs/utils.cpp.o
+
+.PHONY : srcs/utils.o
+
+# target to build an object file
+srcs/utils.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/utils.cpp.o
+.PHONY : srcs/utils.cpp.o
+
+srcs/utils.i: srcs/utils.cpp.i
+
+.PHONY : srcs/utils.i
+
+# target to preprocess a source file
+srcs/utils.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/utils.cpp.i
+.PHONY : srcs/utils.cpp.i
+
+srcs/utils.s: srcs/utils.cpp.s
+
+.PHONY : srcs/utils.s
+
+# target to generate assembly for a file
+srcs/utils.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/utils.cpp.s
+.PHONY : srcs/utils.cpp.s
 
 # Help Target
 help:
@@ -313,24 +313,24 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... webserver"
-	@echo "... ConnectionClass.o"
-	@echo "... ConnectionClass.i"
-	@echo "... ConnectionClass.s"
-	@echo "... RequestHeaders.o"
-	@echo "... RequestHeaders.i"
-	@echo "... RequestHeaders.s"
-	@echo "... ResponseHeaders.o"
-	@echo "... ResponseHeaders.i"
-	@echo "... ResponseHeaders.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
-	@echo "... methods.o"
-	@echo "... methods.i"
-	@echo "... methods.s"
-	@echo "... utils.o"
-	@echo "... utils.i"
-	@echo "... utils.s"
+	@echo "... srcs/ConnectionClass.o"
+	@echo "... srcs/ConnectionClass.i"
+	@echo "... srcs/ConnectionClass.s"
+	@echo "... srcs/RequestHeaders.o"
+	@echo "... srcs/RequestHeaders.i"
+	@echo "... srcs/RequestHeaders.s"
+	@echo "... srcs/ResponseHeaders.o"
+	@echo "... srcs/ResponseHeaders.i"
+	@echo "... srcs/ResponseHeaders.s"
+	@echo "... srcs/main.o"
+	@echo "... srcs/main.i"
+	@echo "... srcs/main.s"
+	@echo "... srcs/methods.o"
+	@echo "... srcs/methods.i"
+	@echo "... srcs/methods.s"
+	@echo "... srcs/utils.o"
+	@echo "... srcs/utils.i"
+	@echo "... srcs/utils.s"
 .PHONY : help
 
 

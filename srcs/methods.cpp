@@ -2,7 +2,7 @@
 // Created by Karyn Cedra on 4/5/21.
 //
 
-#include "methods.h"
+#include "../includes/methods.h"
 
 char 	*returnError(RequestHeaders request, size_t statusC, std::string reason) {
 	ResponseHeaders	response;

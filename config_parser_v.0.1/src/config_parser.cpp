@@ -174,11 +174,11 @@ static void list_word_fuller(std::string line, std::list<std::list<std::string> 
 
 	std::replace( line.begin(), line.end(), '	', ' ');
 	ss << line;
-	while ((std::getline(ss, word, ' ')))
-	{
+	while ((std::getline(ss, word, ' '))) {
 		if (word.length())
 			words.push_back(word);
-	config->push_back(words);
+		config->push_back(words);
+	}
 }
 
 static int open_read(char *file, std::list<std::list<std::string> > *config)

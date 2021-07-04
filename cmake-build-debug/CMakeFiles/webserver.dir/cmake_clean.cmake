@@ -1,10 +1,10 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/webserver.dir/ConnectionClass.cpp.o"
-  "CMakeFiles/webserver.dir/RequestHeaders.cpp.o"
-  "CMakeFiles/webserver.dir/ResponseHeaders.cpp.o"
-  "CMakeFiles/webserver.dir/main.cpp.o"
-  "CMakeFiles/webserver.dir/methods.cpp.o"
-  "CMakeFiles/webserver.dir/utils.cpp.o"
+  "CMakeFiles/webserver.dir/srcs/ConnectionClass.cpp.o"
+  "CMakeFiles/webserver.dir/srcs/RequestHeaders.cpp.o"
+  "CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o"
+  "CMakeFiles/webserver.dir/srcs/main.cpp.o"
+  "CMakeFiles/webserver.dir/srcs/methods.cpp.o"
+  "CMakeFiles/webserver.dir/srcs/utils.cpp.o"
   "webserver"
   "webserver.pdb"
 )

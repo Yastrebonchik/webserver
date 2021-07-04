@@ -4,12 +4,12 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/kcedra/webserver/ConnectionClass.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/ConnectionClass.cpp.o"
-  "/Users/kcedra/webserver/RequestHeaders.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/RequestHeaders.cpp.o"
-  "/Users/kcedra/webserver/ResponseHeaders.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/ResponseHeaders.cpp.o"
-  "/Users/kcedra/webserver/main.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/main.cpp.o"
-  "/Users/kcedra/webserver/methods.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/methods.cpp.o"
-  "/Users/kcedra/webserver/utils.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/utils.cpp.o"
+  "/Users/kcedra/webserver/srcs/ConnectionClass.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/ConnectionClass.cpp.o"
+  "/Users/kcedra/webserver/srcs/RequestHeaders.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/RequestHeaders.cpp.o"
+  "/Users/kcedra/webserver/srcs/ResponseHeaders.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o"
+  "/Users/kcedra/webserver/srcs/main.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/main.cpp.o"
+  "/Users/kcedra/webserver/srcs/methods.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/methods.cpp.o"
+  "/Users/kcedra/webserver/srcs/utils.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/utils.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
 

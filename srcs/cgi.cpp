@@ -1,4 +1,4 @@
-#include "CGI.hpp"
+#include "../includes/cgi.hpp"
 
 std::string positiveNumberToString(size_t num)
 {
