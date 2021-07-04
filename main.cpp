@@ -73,7 +73,8 @@ int	selectSet(fd_set *readfds, fd_set *writefds, std::vector<int> &listener, std
 		if (connections[i].getConnectionfd() > maxfd)
 			maxfd = connections[i].getConnectionfd();
 		FD_SET(connections[i].getConnectionfd(), readfds);
-		FD_SET(connections[i].getConnectionfd(), writefds);
+		if (connections[i].getSendFlag())
+			FD_SET(connections[i].getConnectionfd(), writefds);
 	}
 	return (maxfd);
 }
@@ -112,9 +113,11 @@ void	recieveData(int i, std::vector<ConnectionClass> &connections) {
 		perror("recv");
 		exit(3);
 	}
-//	else if (bytes_read == 0) {
-//		connections[i].setSendFlag(1);
-//	}
+	else if (bytes_read == 0) {
+		close(connections[i].getConnectionfd()); // Удаляем соединение, закрываем сокет
+		connections[i].clearAnswer();
+		connections.erase(connections.begin() + i);
+	}
 	else if (bytes_read > 0) {
 	//	while (bytes_read > 0) {
 		//	source = ft_strjoin(source, buf);
@@ -203,17 +206,17 @@ int main() {
 		maxfd = selectSet(&readfds, &writefds, listener, connections);
 		if ((selectRes = select(maxfd + 1, &readfds, &writefds, NULL, &timeout)) > 0) {
 			i = 0;
-			while (i < listener.size()) {
-				if (FD_ISSET(listener[i], &readfds))
-					makeConnection(i, connections, config, listener);
-				i++;
-			}
-			i = 0;
 			while (i < connections.size()) {
 				if (FD_ISSET(connections[i].getConnectionfd(), &readfds))
 					recieveData(i, connections);
 				if (FD_ISSET(connections[i].getConnectionfd(), &writefds))
 					sendData(i, connections);
+				i++;
+			}
+			i = 0;
+			while (i < listener.size()) {
+				if (FD_ISSET(listener[i], &readfds))
+					makeConnection(i, connections, config, listener);
 				i++;
 			}
 		}
