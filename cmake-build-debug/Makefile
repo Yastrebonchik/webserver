@@ -169,6 +169,33 @@ srcs/ConnectionClass.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/ConnectionClass.cpp.s
 .PHONY : srcs/ConnectionClass.cpp.s
 
+srcs/ConnectionHandling.o: srcs/ConnectionHandling.cpp.o
+
+.PHONY : srcs/ConnectionHandling.o
+
+# target to build an object file
+srcs/ConnectionHandling.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.o
+.PHONY : srcs/ConnectionHandling.cpp.o
+
+srcs/ConnectionHandling.i: srcs/ConnectionHandling.cpp.i
+
+.PHONY : srcs/ConnectionHandling.i
+
+# target to preprocess a source file
+srcs/ConnectionHandling.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.i
+.PHONY : srcs/ConnectionHandling.cpp.i
+
+srcs/ConnectionHandling.s: srcs/ConnectionHandling.cpp.s
+
+.PHONY : srcs/ConnectionHandling.s
+
+# target to generate assembly for a file
+srcs/ConnectionHandling.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.s
+.PHONY : srcs/ConnectionHandling.cpp.s
+
 srcs/RequestHeaders.o: srcs/RequestHeaders.cpp.o
 
 .PHONY : srcs/RequestHeaders.o
@@ -316,6 +343,9 @@ help:
 	@echo "... srcs/ConnectionClass.o"
 	@echo "... srcs/ConnectionClass.i"
 	@echo "... srcs/ConnectionClass.s"
+	@echo "... srcs/ConnectionHandling.o"
+	@echo "... srcs/ConnectionHandling.i"
+	@echo "... srcs/ConnectionHandling.s"
 	@echo "... srcs/RequestHeaders.o"
 	@echo "... srcs/RequestHeaders.i"
 	@echo "... srcs/RequestHeaders.s"

@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/Users/kcedra/webserver/srcs/ConnectionClass.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/ConnectionClass.cpp.o"
+  "/Users/kcedra/webserver/srcs/ConnectionHandling.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.o"
   "/Users/kcedra/webserver/srcs/RequestHeaders.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/RequestHeaders.cpp.o"
   "/Users/kcedra/webserver/srcs/ResponseHeaders.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o"
   "/Users/kcedra/webserver/srcs/main.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/main.cpp.o"
@@ -15,8 +16,8 @@ set(CMAKE_CXX_COMPILER_ID "AppleClang")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "../libft"
   "../config_parser_v.0.1/includes"
+  "../includes"
   )
 
 # Targets to which this target links.

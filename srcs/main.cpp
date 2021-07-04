@@ -1,29 +1,13 @@
-#include <iostream>
 #include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <fstream>
 #include <netinet/in.h>
-#include <arpa/inet.h>
-#include "../includes/RequestHeaders.hpp"
 #include <errno.h>
 #include <ctime>
-#include <fcntl.h>
 #include <sys/select.h>
-#include "../includes/methods.h"
 #include <vector>
-#include "../includes/ConnectionClass.hpp"
+#include "ConnectionClass.hpp"
+#include "ConnectionHandling.h"
 
-//struct in_addr {
-//	unsigned long s_addr;
-//};
-//
-//struct sockaddr_in {
-//	short int          sin_family;  // Семейство адресов
-//	unsigned short int sin_port;    // Номер порта
-//	struct in_addr     sin_addr;    // IP-адрес
-//	unsigned char      sin_zero[8]; // "Дополнение" до размера структуры sockaddr
-//};
+# define CONNECTION_DROP_TIME 5
 
 //void	sigquit(int sig)
 //{
@@ -57,110 +41,6 @@
 //	exit(sig);
 //}
 
-int	selectSet(fd_set *readfds, fd_set *writefds, std::vector<int> &listener, std::vector<ConnectionClass> &connections) {
-	int maxfd = 0;
-
-	FD_ZERO(readfds);
-	FD_ZERO(writefds);
-
-	for (size_t i = 0; i < listener.size(); ++i) {
-		if (listener[i] > maxfd)
-			maxfd = listener[i];
-		FD_SET(listener[i], readfds);
-		//FD_SET(listener[i], writefds);
-	}
-	for (size_t i = 0; i < connections.size(); ++i) {
-		if (connections[i].getConnectionfd() > maxfd)
-			maxfd = connections[i].getConnectionfd();
-		FD_SET(connections[i].getConnectionfd(), readfds);
-		if (connections[i].getSendFlag())
-			FD_SET(connections[i].getConnectionfd(), writefds);
-	}
-	return (maxfd);
-}
-
-void	makeConnection(int i, std::vector<ConnectionClass> &connections, std::vector<ConfigClass> &config,
-		std::vector<int> &listener) {
-	int 						sock;
-//	size_t 						j = 0;
-//	struct sockaddr				address;
-//	socklen_t 					address_len;
-
-	sock = accept(listener[i], nullptr, nullptr);
-//	sock = accept(listener[i], &address, &address_len);
-//	if (connections[i].getAddr() == address)
-	//std::cout << address.sa_data << std::endl;
-//	while (j < config.size()) {
-//		j++;
-//	}
-	if (sock < 0) {
-		perror("accept");
-		exit(3);
-	}
-	fcntl(sock, F_SETFL, O_NONBLOCK);
-	connections.push_back(ConnectionClass(sock, config[i]));
-}
-
-void	recieveData(int i, std::vector<ConnectionClass> &connections) {
-	int 			bytes_read;
-	//char 			*source = (char *)malloc(1);
-	char			buf[100000];
-	ResponseHeaders	resp;
-	RequestHeaders	request;
-
-	bytes_read = recv(connections[i].getConnectionfd(), buf, 100000 - 1, 0);
-	if (bytes_read == -1) {
-		perror("recv");
-		exit(3);
-	}
-	else if (bytes_read == 0) {
-		close(connections[i].getConnectionfd()); // Удаляем соединение, закрываем сокет
-		connections[i].clearAnswer();
-		connections.erase(connections.begin() + i);
-	}
-	else if (bytes_read > 0) {
-	//	while (bytes_read > 0) {
-		//	source = ft_strjoin(source, buf);
-		//	bytes_read = recv(connections[i].getConnectionfd(), buf, 100000 - 1, 0);
-		//}
-		request.setSource(buf);
-		request.setInfo();
-		ft_bzero(buf, 100000);
-		connections[i].setAnswer(generateAnswer(request, connections[i].getServer()));
-		connections[i].setCloseFlag(0);
-		if (request.get_connection() == "close")
-			connections[i].setCloseFlag(1);
-		request.clear();
-		connections[i].setSendFlag(1);
-		//free(source);
-		//source = nullptr;
-	}
-}
-
-void	sendData(int i, std::vector<ConnectionClass> &connections) {
-
-	if (connections[i].getSendFlag()) {
-		connections[i].setSendFlag(0);
-		if (send(connections[i].getConnectionfd(), connections[i].getAnswer(),
-			 ft_strlen(connections[i].getAnswer()) + 1, 0) < 0) {
-			std::cerr << "Error while sending data" << std::endl;
-		}
-	}
-	if (connections[i].getCloseFlag()) {
-		close(connections[i].getConnectionfd()); // Удаляем соединение, закрываем сокет
-		connections[i].clearAnswer();
-		connections.erase(connections.begin() + i);
-	}
-}
-
-void 	dropConnections(std::vector<ConnectionClass> &connections) {
-	for (size_t i = 0; i < connections.size(); ++i) {
-		close(connections[i].getConnectionfd()); // Удаляем соединение, закрываем сокет
-		connections[i].clearAnswer();
-		connections.erase(connections.begin() + i);
-	}
-}
-
 int main() {
 	std::vector<ConnectionClass>	connections;
 	std::vector<ConfigClass>		config;
@@ -175,12 +55,11 @@ int main() {
 	int 							maxfd;
 	int 							selectRes;
 
-	//ret = NULL;
 //	signal(SIGINT, sigint);
 //	signal(SIGQUIT, sigquit);
 //	signal(SIGTERM, sigterm);
 	config_parser((char*)"config_parser_v.0.1/config/config_file", config);
-	timeout.tv_sec = 5;
+	timeout.tv_sec = CONNECTION_DROP_TIME;
 	timeout.tv_usec = 0;
 	for (std::vector<ConfigClass>::iterator it = config.begin(); it != config.end(); ++it) {
 		listener.push_back(socket(AF_INET, SOCK_STREAM, 0));
@@ -219,15 +98,18 @@ int main() {
 					makeConnection(i, connections, config, listener);
 				i++;
 			}
+			timeout.tv_sec = CONNECTION_DROP_TIME;
+			timeout.tv_usec = 0;
 		}
 		else if (selectRes == 0) {
+			timeout.tv_sec = CONNECTION_DROP_TIME;
+			timeout.tv_usec = 0;
 			dropConnections(connections);
-			continue; //Нужно добавлять sock в перечень читаемых fd и удалять его при истечении времени (FD_CLR и close)
+			continue;
 		}
 		else {
 			perror("select");
 			exit(errno);
 		}
 	}
-    //return 0;
 }

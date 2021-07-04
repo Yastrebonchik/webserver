@@ -92,6 +92,8 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 			}
 		}
 		if (dir == NULL || entry == NULL) {
+			if (dir != NULL)
+				closedir(dir);
 			return (returnError(request, 404, "Not Found"));
 		}
 		file = directory + file;

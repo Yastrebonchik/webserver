@@ -44,8 +44,8 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/Users/kcedra/webserver/libft"/>
 					<Add directory="/Users/kcedra/webserver/config_parser_v.0.1/includes"/>
+					<Add directory="/Users/kcedra/webserver/includes"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.0/include"/>
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
@@ -66,8 +66,8 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/Users/kcedra/webserver/libft"/>
 					<Add directory="/Users/kcedra/webserver/config_parser_v.0.1/includes"/>
+					<Add directory="/Users/kcedra/webserver/includes"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/11.0.0/include"/>
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
@@ -85,6 +85,9 @@
 		<Unit filename="/Users/kcedra/webserver/includes/ConnectionClass.hpp">
 			<Option target="webserver"/>
 		</Unit>
+		<Unit filename="/Users/kcedra/webserver/includes/ConnectionHandling.h">
+			<Option target="webserver"/>
+		</Unit>
 		<Unit filename="/Users/kcedra/webserver/includes/RequestHeaders.hpp">
 			<Option target="webserver"/>
 		</Unit>
@@ -98,6 +101,9 @@
 			<Option target="webserver"/>
 		</Unit>
 		<Unit filename="/Users/kcedra/webserver/srcs/ConnectionClass.cpp">
+			<Option target="webserver"/>
+		</Unit>
+		<Unit filename="/Users/kcedra/webserver/srcs/ConnectionHandling.cpp">
 			<Option target="webserver"/>
 		</Unit>
 		<Unit filename="/Users/kcedra/webserver/srcs/RequestHeaders.cpp">
