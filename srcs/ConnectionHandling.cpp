@@ -45,6 +45,7 @@ void	recieveData(int i, std::vector<ConnectionClass> &connections) {
 	ResponseHeaders	resp;
 	RequestHeaders	request;
 
+	ft_bzero(buf, RECIEVE_SIZE);
 	bytes_read = recv(connections[i].getConnectionfd(), buf, RECIEVE_SIZE - 1, 0);
 	if (bytes_read == -1) {
 		perror("recv");
@@ -57,8 +58,10 @@ void	recieveData(int i, std::vector<ConnectionClass> &connections) {
 	}
 	else if (bytes_read > 0) {
 		while (bytes_read > 0) {
+			buf[bytes_read] = '\0';
 			source = ft_strjoin(source, buf);
 			ft_bzero(buf, RECIEVE_SIZE);
+			usleep(10000);
 			bytes_read = recv(connections[i].getConnectionfd(), buf, RECIEVE_SIZE - 1, 0);
 		}
 		ft_bzero(buf, RECIEVE_SIZE);

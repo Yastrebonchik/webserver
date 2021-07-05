@@ -10,7 +10,8 @@ ConnectionClass::ConnectionClass() {
 ConnectionClass::~ConnectionClass() {
 }
 
-ConnectionClass::ConnectionClass(int connectionfd, ConfigClass server) : _connectionfd(connectionfd), _answer(NULL), _server(server) {
+ConnectionClass::ConnectionClass(int connectionfd, ConfigClass server) : _connectionfd(connectionfd), _closeFlag(0), \
+	_sendFlag(0), _answer(NULL), _server(server) {
 }
 
 void 		ConnectionClass::setAnswer(char *answer) {
@@ -33,9 +34,9 @@ void 		ConnectionClass::setSendFlag(bool flag) {
 	this->_sendFlag = flag;
 }
 
-void 		ConnectionClass::setAddr(sockaddr addr) {
-	this->_addr = addr;
-}
+//void 		ConnectionClass::setAddr(sockaddr addr) {
+//	this->_addr = addr;
+//}
 
 int 		ConnectionClass::getConnectionfd() {
 	return (this->_connectionfd);
@@ -57,6 +58,6 @@ ConfigClass	ConnectionClass::getServer() {
 	return (this->_server);
 };
 
-sockaddr	ConnectionClass::getAddr() {
-	return (this->_addr);
-}
+//sockaddr	ConnectionClass::getAddr() {
+//	return (this->_addr);
+//}

@@ -58,7 +58,7 @@ int main() {
 //	signal(SIGINT, sigint);
 //	signal(SIGQUIT, sigquit);
 //	signal(SIGTERM, sigterm);
-	config_parser((char*)"config_parser_v.0.1/config/config_file", config);
+	config_parser((char*)"configs/tester_config", config);
 	timeout.tv_sec = CONNECTION_DROP_TIME;
 	timeout.tv_usec = 0;
 	for (std::vector<ConfigClass>::iterator it = config.begin(); it != config.end(); ++it) {
@@ -80,7 +80,6 @@ int main() {
 		i++;
 	}
 
-	i = 0;
 	while(1) {
 		maxfd = selectSet(&readfds, &writefds, listener, connections);
 		if ((selectRes = select(maxfd + 1, &readfds, &writefds, NULL, &timeout)) > 0) {

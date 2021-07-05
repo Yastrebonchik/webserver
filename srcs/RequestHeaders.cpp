@@ -283,9 +283,13 @@ void 	RequestHeaders::setInfo(){
 		detectHeader(header);
 		if (!(this->_method == "POST" && this->_tokens.size() == 1))
 			this->_tokens.pop_front();
+		else
+			break;
 	}
 	if (this->_method == "POST" && this->_tokens.size() != 0) {
-		detectHeader("POST_BODY");
+		if (!(this->_tokens.front()[0] == '0' && ft_strlen(this->_tokens.front()) == 1)) {
+			detectHeader("POST_BODY");
+		}
 		this->_tokens.pop_front();
 	}
 }

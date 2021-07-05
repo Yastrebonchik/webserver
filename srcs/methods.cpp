@@ -44,7 +44,7 @@ char 	*returnError(RequestHeaders request, size_t statusC, std::string reason) {
 	return (line);
 }
 
-char 	*GET(RequestHeaders request, ConfigClass server) {
+char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
 	ResponseHeaders			response;
 	std::string 			ret;
 	std::string 			statusCode;
@@ -58,7 +58,7 @@ char 	*GET(RequestHeaders request, ConfigClass server) {
 	struct stat 			*buf = (struct stat*)malloc(sizeof(struct stat));
 	struct dirent			*entry;
 	std::string     		seekfilename;
-	std::string 			root;
+	//std::string 			root;
 	//size_t					binaryLen = 0;
 	size_t 					bufRead;
 	char 					*line;
@@ -177,19 +177,37 @@ char 	*POST(RequestHeaders request, ConfigClass server) {
 	return nullptr;
 }
 
+char 	*methodNotAllowed(RequestHeaders request) {
+	return (returnError(request, 405, "Method Not Allowed"));
+}
+
 char 	*noSuchMethod(RequestHeaders request) {
 	return (returnError(request, 501, "Not Implemented"));
 }
 
+std::string	chooseRoot(RequestHeaders request, ConfigClass config) {
+	std::string	uri = request.get_uri();
+	std::string location;
+	std::string root;
+
+	for (std::list<LocationClass>::iterator it = config.getLocations()->begin(); it != config.getLocations()->end(); ++it) {
+		location = it->getLocation();
+		if (uri.find(location) != std::string::npos && location.size() > root.size())
+			root = config.getRoot() + location;
+	}
+	return (root);
+}
+
 char 	*generateAnswer(RequestHeaders request, ConfigClass config) {
-	//ConfigClass					server;
 	std::string 				method;
+	std::string 				root;
 	char 						*ret;
 
-	chdir(config.getRoot().c_str());
+	root = chooseRoot(request, config);
+	chdir(root.c_str());
 	method = request.get_method();
 	if (method == "GET") {
-		ret = GET(request, config);
+		ret = GET(request, config, root);
 	}
 	else if (method == "POST") {
 		ret = POST(request, config);
