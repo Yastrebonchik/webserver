@@ -128,6 +128,13 @@ void 					ResponseHeaders::pageAdd(std::string line) {
 	this->_page += line;
 }
 
+void 					ResponseHeaders::setPage(std::string page) {
+	this->_page = page;
+}
+
+void 					ResponseHeaders::setBinaryPage(char *buffer) {
+	this->_binaryPage = buffer;
+}
 
 void 					ResponseHeaders::binaryPageAdd(char *line) {
 	//char 	*bubble;

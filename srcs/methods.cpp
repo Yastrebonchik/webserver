@@ -44,32 +44,36 @@ char 	*returnError(RequestHeaders request, size_t statusC, std::string reason) {
 	return (line);
 }
 
-char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
-	ResponseHeaders			response;
-	std::string 			ret;
-	std::string 			statusCode;
-	std::string				contentLength;
-	std::string 			fileline;
-	std::string 			file;
-	std::string 			directory;
-	std::string     		uri = request.get_uri();
-	std::string::iterator	it;
-	std::string::iterator	ite;
-	struct stat 			*buf = (struct stat*)malloc(sizeof(struct stat));
-	struct dirent			*entry;
-	std::string     		seekfilename;
-	//std::string 			root;
-	//size_t					binaryLen = 0;
-	size_t 					bufRead;
-	char 					*line;
-	DIR 					*dir;
-	int 					fd;
-	size_t 					pos;
+//char 	*HEAD(RequestHeaders request, std::string root, std::string index) {
+//	return (nullptr)
+//}
 
-	if (request.get_uri() == "/") {
-		file = server.getIndex(); // Нужно будет сделать выбор файла с опциям, по приоритету и т.п.
-	}
-	else {
+char 	*GET(RequestHeaders request, std::string root, std::string index) {
+	ResponseHeaders response;
+	std::string body;
+	std::string ret;
+	std::string statusCode;
+	std::string contentLength;
+	std::string fileline;
+	std::string file;
+	std::string directory;
+	std::string uri = request.get_uri();
+	std::string::iterator it;
+	std::string::iterator ite;
+	std::fstream fin;
+	std::stringstream strstream;
+	struct stat *buf = (struct stat *) malloc(sizeof(struct stat));
+	struct dirent *entry;
+	std::string seekfilename;
+	char *line;
+	DIR *dir;
+	int length;
+	char *buffer;
+	size_t pos;
+
+	if (*(--uri.end()) == '/') {
+		file = index; // Нужно будет сделать выбор файла с опциям, по приоритету и т.п.
+	} else {
 		if ((pos = uri.find("?")) != std::string::npos)
 			uri.erase(pos, uri.length() - 1);
 		it = uri.end();
@@ -77,7 +81,7 @@ char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
 		while (*it != '/') {
 			it--;
 		}
-		directory = (server.getRoot() + std::string(uri.begin(), it++)) + '/';
+		directory = (root + std::string(uri.begin(), it++)) + '/';
 		dir = opendir(directory.c_str());
 		it--;
 		while (++it != ite) {
@@ -100,49 +104,57 @@ char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
 	}
 	if ((pos = file.find("?")) != std::string::npos)
 		file.erase(pos, file.length() - 1);
-	fd = open(file.c_str(), O_RDONLY);
-	if (fd < 0)
+
+	if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg"
+		|| mimeDetect(file).find("font") != std::string::npos) {
+		fin.open(file, std::ios::binary | std::ios::in);
+	} else {
+		fin.open(file, std::ios::in);
+	}
+	if (!fin.is_open())
 		return (returnError(request, 404, "Not Found"));
 	else {
 		if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg"
-		|| mimeDetect(file).find("font") != std::string::npos) {
-			line = (char *)malloc(128);
-			while ((bufRead = read(fd, line, 127)) > 0) {
-				line[bufRead] = '\0';
-				fileline = line;
-				response.pageAdd(fileline);
-				//binaryLen += bufRead;
-				//ft_bzero(line, 128);
-				//response.binaryPageAdd(line);
-			}
+			|| mimeDetect(file).find("font") != std::string::npos) {
+			fin.seekg(0, fin.end);
+			length = fin.tellg();
+			fin.seekg(0, fin.beg);
+			buffer = new char[length];
+			fin.read(buffer, length);
+			response.setBinaryPage(buffer);
+			fin.close();
+		} else {
+			strstream << fin.rdbuf();
+			body = strstream.str();
+			response.setPage(std::string(body.begin(), body.end()));
+			fin.close();
+			response.setBinaryPage(nullptr);
 		}
-		else {
-			while (get_next_line(fd, &line)) {
-				fileline = line;
-				free(line);
-				line = nullptr;
-				response.pageAdd(fileline + "\n");
-			}
-			response.binaryPageAdd(nullptr);
-		}
-		close(fd);
 	}
 	response.setVersion();
 	response.setStatusCode(200);
 	response.setReasonPhrase("OK");
-	response.setConnection("keep-alive");
-	//if (response.getBinaryPage() != nullptr)
-	//	response.setContentLength(ft_strlen(response.getBinaryPage()));
-	//else
-	response.setContentLength(response.getPage().length());
+	if (request.get_connection() == "close") {
+		response.setConnection("close");
+	}
+	else {
+		response.setConnection("keep-alive");
+	}
+	if (response.getBinaryPage() != nullptr) {
+		response.setContentLength(ft_strlen(response.getBinaryPage()));
+	}
+	else {
+		response.setContentLength(response.getPage().length());
+	}
 	response.setContentType(mimeDetect(file));
 	response.setDate(request);
 	response.setServer();
 	statusCode = std::to_string(response.getStatusCode()); //Добавить сюда свой итоа
 	contentLength = std::to_string(response.getContentLength());
 	ret = response.getVersion() + " " + statusCode + " " + response.getReasonPhrase();
-	ret += "\nConnection: " + response.getConnection() + "\nContent-Length: " + contentLength + "\nContent-Type: " + response.getContentType();
-	ret += "\nServer: " + response.getServer();
+	ret += "\r\nConnection: " + response.getConnection() + "\r\nContent-Length: " + contentLength;
+	ret += "\r\nContent-Type: " + response.getContentType();
+	ret += "\r\nServer: " + response.getServer();
 	ret += "\r\n\r\n";
 	if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg"
 	|| mimeDetect(file).find("font") != std::string::npos) {
@@ -152,7 +164,7 @@ char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
 		ret += response.getPage();
 		line = ft_strdup(ret.c_str());
 	}
-	response.binaryPageAdd(nullptr);
+	response.setBinaryPage(nullptr);
 	return (line);
 }
 
@@ -170,8 +182,8 @@ char 	*POST(RequestHeaders request, ConfigClass server) {
 		response.setConnection("keep-alive");
 		response.setServer();
 		ret = response.getVersion() + " 204 " + response.getReasonPhrase();
-		ret += "\nConnection: " + response.getConnection();
-		ret += "\nServer: " + response.getServer() + "\n";
+		ret += "\r\nConnection: " + response.getConnection();
+		ret += "\r\nServer: " + response.getServer() + "\r\n";
 		return (ft_strdup(ret.c_str()));
 	}
 	return nullptr;
@@ -185,33 +197,68 @@ char 	*noSuchMethod(RequestHeaders request) {
 	return (returnError(request, 501, "Not Implemented"));
 }
 
-std::string	chooseRoot(RequestHeaders request, ConfigClass config) {
-	std::string	uri = request.get_uri();
-	std::string location;
-	std::string root;
+std::pair<std::string, std::string>	chooseRootgetIndexFindAllowed(RequestHeaders &request, ConfigClass config, \
+	std::string method) {
 
+	std::string							uri = request.get_uri();
+	std::string 						locationRoot;
+	std::string 						location;
+	std::pair<std::string, std::string>	root;
+	std::list<LocationClass>::iterator	allowIter;
+	std::list<std::string>				*allow;
+	bool 								flag = 0;
+	size_t 								result;
+
+	root = std::make_pair("", "");
 	for (std::list<LocationClass>::iterator it = config.getLocations()->begin(); it != config.getLocations()->end(); ++it) {
+		locationRoot = it->getRoot();
 		location = it->getLocation();
-		if (uri.find(location) != std::string::npos && location.size() > root.size())
-			root = config.getRoot() + location;
+//		if (location == request.get_uri()) {
+//			std::cout << location << std::endl;
+//			std::cout << locationRoot.size() << "            " << root.first.size() <<  std::endl;
+//		}
+		if (((result = request.get_uri().find(location)) != std::string::npos || request.get_uri() == location\
+		) && locationRoot.size() >= root.first.size()) {
+			uri	= request.get_uri();
+			uri.replace(0, location.size(), locationRoot);
+			flag = 1;
+			allowIter = it;
+		}
 	}
+	if (flag == 1)
+		root = std::make_pair(config.getRoot() + locationRoot, allowIter->getIndex());
+	if (root == std::pair<std::string, std::string>("", ""))
+		root = std::make_pair(config.getRoot(), config.getIndex());
+	if (flag == 1 && (method == "GET" || method == "POST" || method == "DELETE" || method == "HEAD")) {
+		allow = allowIter->getMethods();
+		if (std::find(allow->begin(), allow->end(), method) == allow->end())
+			root = std::make_pair("", "");
+	}
+	if (uri != request.get_uri())
+		request.setUri(uri);
 	return (root);
 }
 
 char 	*generateAnswer(RequestHeaders request, ConfigClass config) {
-	std::string 				method;
-	std::string 				root;
-	char 						*ret;
+	std::pair<std::string, std::string> 				root;
+	std::string 										method;
+	std::string 										index;
+	char 												*ret;
 
-	root = chooseRoot(request, config);
-	chdir(root.c_str());
 	method = request.get_method();
+	root = chooseRootgetIndexFindAllowed(request, config, method);
+	if (root.first == "" && root.second == "")
+		return (methodNotAllowed(request));
+	chdir(root.first.c_str());
 	if (method == "GET") {
-		ret = GET(request, config, root);
+		ret = GET(request,  root.first, root.second);
 	}
 	else if (method == "POST") {
 		ret = POST(request, config);
 	}
+//	else if (method == "HEAD") {
+//		ret = HEAD(GET(request,  root.first, root.second));
+//	}
 	else {
 		ret = noSuchMethod(request);
 	}

@@ -33,7 +33,7 @@ CMAKE_CODEBLOCKS_EXECUTABLE:FILEPATH=CMAKE_CODEBLOCKS_EXECUTABLE-NOTFOUND
 
 //Additional command line arguments when CodeBlocks invokes make.
 // Enter e.g. -j<some_number> to get parallel builds
-CMAKE_CODEBLOCKS_MAKE_ARGUMENTS:STRING=-j4
+CMAKE_CODEBLOCKS_MAKE_ARGUMENTS:STRING=-j6
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
@@ -42,7 +42,7 @@ CMAKE_COLOR_MAKEFILE:BOOL=ON
 CMAKE_CXX_COMPILER:FILEPATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++
 
 //Flags used by the CXX compiler during all build types.
-CMAKE_CXX_FLAGS:STRING=-Wall -Wextra -Werror -std==c++98
+CMAKE_CXX_FLAGS:STRING=-Wall -Wextra -Werror -std==c++98 -g
 
 //Flags used by the CXX compiler during DEBUG builds.
 CMAKE_CXX_FLAGS_DEBUG:STRING=-g

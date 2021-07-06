@@ -18,7 +18,7 @@
 # include <fstream>
 
 char	*generateAnswer(RequestHeaders request, ConfigClass config);
-char 	*GET(RequestHeaders request, ConfigClass server, std::string root);
+char 	*GET(RequestHeaders request, std::string root, std::string index);
 char 	*POST(RequestHeaders request, ConfigClass server);
 char 	*noSuchMethod(RequestHeaders request);
 char	*returnError(RequestHeaders request);

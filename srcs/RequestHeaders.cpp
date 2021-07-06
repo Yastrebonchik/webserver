@@ -22,7 +22,7 @@ std::string	RequestHeaders::getSourceHeader(){
 	int 		i = 0;
 	std::string	ret;
 
-	while (this->_tokens.front()[i] != ':')
+	while (this->_tokens.front()[i] != ':' && this->_tokens.front()[i] != '\0')
 		i++;
 	header = ft_substr(this->_tokens.front(), 0, i);
 	if (header != NULL) {
@@ -368,6 +368,10 @@ std::string						RequestHeaders::get_userAgent() const{
 
 std::string 					RequestHeaders::getBody() {
 	return (this->_body);
+}
+
+void 							RequestHeaders::setUri(std::string uri) {
+	this->_uri = uri;
 }
 
 void 							RequestHeaders::clear() {

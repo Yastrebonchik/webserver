@@ -62,6 +62,8 @@ public:
 	void 					setContentType(std::string type);
 	void 					setDate(RequestHeaders request);
 	void 					setServer();
+	void 					setBinaryPage(char* buffer);
+	void 					setPage(std::string page);
 	void 					pageAdd(std::string line);
 	void 					binaryPageAdd(char *line);
 };

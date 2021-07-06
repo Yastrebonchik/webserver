@@ -80,6 +80,7 @@ public:
 	std::string									get_userAgent() const;
 	std::string									getSourceHeader();
 	std::string 								getBody();
+	void 										setUri(std::string);
 	void 										detectHeader(std::string header);
 	void										setSource(char *source);
 	void 										setInfo();
