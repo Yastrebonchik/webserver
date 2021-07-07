@@ -22,7 +22,7 @@ void	*ft_calloc(size_t count, size_t size)
 {
 	void	*memory;
 
-	if (!(memory = malloc(count * size)))
+	if (!(memory = operator new(count * size)))
 		return (NULL);
 	ft_bzero(memory, count * size);
 	return (memory);
@@ -37,10 +37,10 @@ static char	**free_memory(char **words_ptr, int cur_word)
 	ptr = words_ptr;
 	while (i < cur_word)
 	{
-		free(ptr[i]);
+		delete(ptr[i]);
 		i++;
 	}
-	free(ptr);
+	delete(ptr);
 	return (NULL);
 }
 
@@ -109,7 +109,7 @@ char		**ft_split(char const *s, char c)
 
 	i = 0;
 	cur_word = 0;
-	if (!s || !(words = (char**)malloc(sizeof(char*) * (cnt_wrd(s, c) + 1))))
+	if (!s || !(words = (char**)operator new(sizeof(char*) * (cnt_wrd(s, c) + 1))))
 		return (NULL);
 	while (s[i] != '\0')
 	{
@@ -118,7 +118,7 @@ char		**ft_split(char const *s, char c)
 		chr_quan = cnt_chr(s, i, c);
 		if (!chr_quan)
 			break ;
-		if (!(words[cur_word] = (char*)malloc(sizeof(char) * (chr_quan + 1))))
+		if (!(words[cur_word] = (char*)operator new(sizeof(char) * (chr_quan + 1))))
 			return (free_memory(words, cur_word));
 		cr_word(s, words[cur_word], i, chr_quan);
 		cur_word++;
@@ -184,7 +184,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 	if (!s)
 		return (NULL);
-	if (!(substr = ((char*)malloc((len + 1) * (sizeof(char))))))
+	if (!(substr = ((char*)operator new((len + 1) * (sizeof(char))))))
 		return (NULL);
 	if (ft_strlen(s) < start + 1 || len == 0)
 	{
@@ -229,27 +229,6 @@ int		ft_atoi(const char *str)
 	return (number);
 }
 
-static int	newstr_len(char const *s1, char const *s2)
-{
-	int		len;
-	int		ctr;
-
-	ctr = 0;
-	len = 0;
-	while (s1[ctr] != '\0')
-	{
-		len++;
-		ctr++;
-	}
-	ctr = 0;
-	while (s2[ctr] != '\0')
-	{
-		len++;
-		ctr++;
-	}
-	return (len);
-}
-
 char		*ft_strjoin(char const *s1, char const *s2)
 {
 	int		i;
@@ -260,7 +239,7 @@ char		*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	i = 0;
 	cur_i = 0;
-	if (!(new_str = (char*)malloc(newstr_len(s1, s2) * (sizeof(char) + 1))))
+	if (!(new_str = (char*)operator new((ft_strlen(s1) + ft_strlen(s2)) * (sizeof(char) + 1))))
 		return (NULL);
 	while (s1[i] != '\0')
 	{
@@ -277,140 +256,6 @@ char		*ft_strjoin(char const *s1, char const *s2)
 	}
 	new_str[cur_i] = '\0';
 	return (new_str);
-}
-
-static int		add_first_buf(char **text, char *buffer, int size)
-{
-	char	*substr;
-
-	substr = ft_substr(buffer, 0, size);
-	*text = ft_strjoin(substr, "\0");
-	if (substr)
-		free(substr);
-	if (*text == NULL)
-		return (-1);
-	return (0);
-}
-
-static int		ft_strchrnum(const char *s, int c)
-{
-	int		i;
-	char	*ptr;
-
-	ptr = (char*)s;
-	i = 0;
-	while (ptr[i] != '\0')
-	{
-		if (ptr[i] == c)
-			return (i);
-		i++;
-	}
-	if (c == 0)
-		return (i);
-	return (0);
-}
-
-static void	free_text(char **text)
-{
-	free(*text);
-	*text = NULL;
-}
-
-static int	sub_str_join(char **text, char *buffer, int size)
-{
-	char	*substr;
-	char	*collat;
-
-	substr = ft_substr(buffer, 0, size);
-	collat = ft_strjoin(*text, substr);
-	free(*text);
-	*text = ft_substr(collat, 0, ft_strlen(collat));
-	if (substr)
-		free(substr);
-	if (collat)
-		free(collat);
-	if (*text == NULL)
-		return (-1);
-	return (0);
-}
-
-static int	if_text_slash_n(char **line, char **text, char *buffer, int fd)
-{
-	int		size;
-	char	*collat;
-
-	size = BUFFER_SIZE;
-	if (*text[0] == '\n')
-		*line = ft_substr(*text, 0, 0);
-	else
-		*line = ft_substr(*text, 0, ft_strchrnum(*text, '\n'));
-	collat = ft_substr(*text, ft_strchrnum(*text, '\n') + 1, ft_strlen(*text)
-															 - ft_strchrnum(*text, '\n') - 1);
-	free(*text);
-	*text = ft_strjoin(collat, "\0");
-	if (collat)
-		free(collat);
-	if (*text[0] == '\0' && text != NULL && fd != 0)
-	{
-		size = read(fd, buffer, BUFFER_SIZE);
-		if (size == 0)
-			free_text(text);
-		else
-			fd = sub_str_join(text, buffer, size);
-	}
-	return ((fd == -1 || (text == NULL && size != 0)) ? -1 : 0);
-}
-
-static int	main_loop(char **line, char **text, char *buffer, int fd)
-{
-	int		size;
-	int		error;
-
-	error = 0;
-	size = BUFFER_SIZE;
-	while (error != -1 && ft_strchrnum(*text, '\n') == 0 && size == BUFFER_SIZE
-		   && *text[0] != '\n')
-	{
-		size = read(fd, buffer, BUFFER_SIZE);
-		if (size != 0)
-			error = sub_str_join(text, buffer, size);
-	}
-	if (error != -1 && ft_strchrnum(*text, '\n') == 0 && size != BUFFER_SIZE)
-	{
-		*line = ft_strjoin(*text, "\0");
-		free_text(text);
-		return (0);
-	}
-	else if (error != -1 && (ft_strchrnum(*text, '\n') != 0 ||
-							 *text[0] == '\n'))
-		error = if_text_slash_n(line, text, buffer, fd);
-	if (*line == NULL || error == -1)
-		return (-1);
-	return (1);
-}
-
-int			get_next_line(int fd, char **line)
-{
-	static char *text = NULL;
-	int			size;
-	char		buffer[BUFFER_SIZE + 1];
-
-	if (fd < 0 || line == NULL || BUFFER_SIZE <= 0)
-		return (-1);
-	if (text == NULL)
-	{
-		size = read(fd, buffer, BUFFER_SIZE);
-		if (size <= 0)
-		{
-			*line = ft_strjoin("\0", "\0");
-			return (size);
-		}
-		if (add_first_buf(&text, buffer, size) == -1)
-			return (-1);
-		return (main_loop(line, &text, buffer, fd));
-	}
-	else
-		return (main_loop(line, &text, buffer, fd));
 }
 
 std::string	mimeDetect(std::string file) {
@@ -443,5 +288,35 @@ std::string	mimeDetect(std::string file) {
 		ret = "text/plain";
 	else
 		ret = "text/plain";
+	return (ret);
+}
+
+std::string	listing(std::string directory) {
+	struct stat		*buf = (struct stat *) operator new(sizeof(struct stat));
+	struct dirent 	*entry;
+	std::string 	file;
+	std::string 	ret;
+	DIR 			*dir;
+
+	dir = opendir(directory.c_str());
+	if (dir == NULL)
+		return ("");
+	ret += "<html>\n"
+		   "<head><title>Index of /</title></head>\n"
+		   "<body bgcolor=\"white\">\n"
+		   "<h1>Index of /</h1><hr><pre><a " + directory + "</a>\n";
+	while ((entry = readdir(dir)) != NULL) {
+		ret += "<a href=\"";
+		file = entry->d_name;
+		stat(file.c_str(), buf);
+		if (S_ISDIR(buf->st_mode)) {
+			ret += file + "/\">" + file + "/" + "</a>\n";
+		}
+		else {
+			ret += file + "\">" + file + "</a>\n";
+		}
+	}
+	ret += "</pre><hr></body>\n"
+		   "</html>";
 	return (ret);
 }

@@ -24,11 +24,11 @@ CGI::~CGI()
 	std::map<std::string, std::string>::iterator it;
 
 	for(it = envMap_.begin(); it != envMap_.end(); it++)
-		free(env_[i++]);
-	free(env_);
+		delete(env_[i++]);
+	delete(env_);
 	unlink((*ptrCgiFile).c_str());
-	free(args_[0]);
-	free(args_[1]);
+	delete(args_[0]);
+	delete(args_[1]);
 	delete ptrFile;
 	delete ptrCgiFile;
 }
@@ -111,7 +111,7 @@ void CGI::createCgiEnv()
 	int i = 0;
 	std::map<std::string, std::string>::iterator it;
 
-	env_ = (char **)malloc(sizeof(char *) * (envMap_.size() + 1));
+	env_ = (char **)operator new(sizeof(char *) * (envMap_.size() + 1));
 	if (env_ == NULL)
 		throw(std::runtime_error(strerror(errno)));
 	for (it = envMap_.begin(); it != envMap_.end(); it++)

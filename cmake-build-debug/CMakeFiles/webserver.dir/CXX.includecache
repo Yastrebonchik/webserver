@@ -54,7 +54,7 @@ LocationClass.hpp
 config.hpp
 ../config_parser_v.0.1/includes/config.hpp
 
-/Users/kcedra/webserver/includes/RequestHeaders.hpp
+../includes/RequestHeaders.hpp
 string
 -
 list
@@ -70,29 +70,29 @@ algorithm
 iostream
 -
 utils.hpp
-/Users/kcedra/webserver/includes/utils.hpp
+../includes/utils.hpp
 
-/Users/kcedra/webserver/includes/ResponseHeaders.hpp
+../includes/ResponseHeaders.hpp
 string
 -
 list
 -
 RequestHeaders.hpp
-/Users/kcedra/webserver/includes/RequestHeaders.hpp
+../includes/RequestHeaders.hpp
 utils.hpp
-/Users/kcedra/webserver/includes/utils.hpp
+../includes/utils.hpp
 time.h
 -
 sys/time.h
 -
 
-/Users/kcedra/webserver/includes/methods.h
+../includes/methods.h
 ResponseHeaders.hpp
-/Users/kcedra/webserver/includes/ResponseHeaders.hpp
+../includes/ResponseHeaders.hpp
 RequestHeaders.hpp
-/Users/kcedra/webserver/includes/RequestHeaders.hpp
+../includes/RequestHeaders.hpp
 ConfigClass.hpp
-/Users/kcedra/webserver/includes/ConfigClass.hpp
+../includes/ConfigClass.hpp
 unistd.h
 -
 fcntl.h
@@ -104,25 +104,29 @@ sys/stat.h
 time.h
 -
 config_parser.hpp
-/Users/kcedra/webserver/includes/config_parser.hpp
+../includes/config_parser.hpp
 utils.hpp
-/Users/kcedra/webserver/includes/utils.hpp
+../includes/utils.hpp
 fstream
 -
 
-/Users/kcedra/webserver/includes/utils.hpp
+../includes/utils.hpp
 stdlib.h
 -
 unistd.h
 -
 sys/types.h
 -
+sys/stat.h
+-
 sys/uio.h
 -
 string
 -
+dirent.h
+-
 
 /Users/kcedra/webserver/srcs/methods.cpp
-../includes/methods.h
-/Users/kcedra/webserver/includes/methods.h
+methods.h
+/Users/kcedra/webserver/srcs/methods.h
 

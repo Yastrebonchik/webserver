@@ -46,10 +46,10 @@ CMakeFiles/webserver.dir/srcs/methods.cpp.o
  ../config_parser_v.0.1/includes/LocationClass.hpp
  ../config_parser_v.0.1/includes/config.hpp
  ../config_parser_v.0.1/includes/config_parser.hpp
- /Users/kcedra/webserver/includes/RequestHeaders.hpp
- /Users/kcedra/webserver/includes/ResponseHeaders.hpp
- /Users/kcedra/webserver/includes/methods.h
- /Users/kcedra/webserver/includes/utils.hpp
+ ../includes/RequestHeaders.hpp
+ ../includes/ResponseHeaders.hpp
+ ../includes/methods.h
+ ../includes/utils.hpp
  /Users/kcedra/webserver/srcs/methods.cpp
 CMakeFiles/webserver.dir/srcs/utils.cpp.o
  /Users/kcedra/webserver/includes/utils.hpp

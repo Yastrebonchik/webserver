@@ -9,38 +9,6 @@
 
 # define CONNECTION_DROP_TIME 5
 
-//void	sigquit(int sig)
-//{
-//	std::cout << "\b\b\033SIGQUIT\033[0m" << std::endl;
-//	for (std::vector<int>::iterator it = listener.begin(); it != listener.end(); ++it) {
-//		close(*it);
-//	}
-//	close(sock);
-//	exit(sig);
-//}
-//
-//void	sigint(int sig)
-//{
-//	std::cout << "\b\b\033[31mSIGINT\033[0m" << std::endl;
-//	for (std::vector<int>::iterator it = listener.begin(); it != listener.end(); ++it) {
-//		close(*it);
-//	}
-//	close(sock);
-//	exit(sig);
-//}
-//
-//void	sigterm(int sig)
-//{
-//	std::cout << "\b\b\033[31mSIGTERM\033[0m" << std::endl;
-//	for (std::vector<int>::iterator it = listener.begin(); it != listener.end(); ++it) {
-//		std::cout << "Inside SIGTERM" << std::endl;
-//		close(*it);
-//	}
-//	close(sock);
-//	usleep(1000);
-//	exit(sig);
-//}
-
 int main() {
 	std::vector<ConnectionClass>	connections;
 	std::vector<ConfigClass>		config;
@@ -55,9 +23,6 @@ int main() {
 	int 							maxfd;
 	int 							selectRes;
 
-//	signal(SIGINT, sigint);
-//	signal(SIGQUIT, sigquit);
-//	signal(SIGTERM, sigterm);
 	config_parser((char*)"configs/tester_config", config);
 	timeout.tv_sec = CONNECTION_DROP_TIME;
 	timeout.tv_usec = 0;
@@ -76,6 +41,7 @@ int main() {
 			exit(2);
 		}
 		listen(listener[i], SOMAXCONN);
+		setsockopt(listener[i], SOL_SOCKET, SO_REUSEADDR, &listener.back(), sizeof(int));
 		fcntl(listener[i], F_SETFL, O_NONBLOCK);
 		i++;
 	}

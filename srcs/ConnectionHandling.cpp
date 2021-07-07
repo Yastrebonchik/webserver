@@ -35,12 +35,13 @@ void	makeConnection(int i, std::vector<ConnectionClass> &connections, std::vecto
 		exit(3);
 	}
 	fcntl(sock, F_SETFL, O_NONBLOCK);
+	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &sock, sizeof(int));
 	connections.push_back(ConnectionClass(sock, config[i]));
 }
 
 void	recieveData(int i, std::vector<ConnectionClass> &connections) {
 	int 			bytes_read;
-	char 			*source = (char *)malloc(1);
+	static char 	*source = (char *)ft_calloc(1, sizeof(char));
 	char			buf[RECIEVE_SIZE];
 	ResponseHeaders	resp;
 	RequestHeaders	request;
@@ -48,8 +49,9 @@ void	recieveData(int i, std::vector<ConnectionClass> &connections) {
 	ft_bzero(buf, RECIEVE_SIZE);
 	bytes_read = recv(connections[i].getConnectionfd(), buf, RECIEVE_SIZE - 1, 0);
 	if (bytes_read == -1) {
-		perror("recv");
-		exit(3);
+		close(connections[i].getConnectionfd()); // Удаляем соединение, закрываем сокет
+		connections[i].clearAnswer();
+		connections.erase(connections.begin() + i);
 	}
 	else if (bytes_read == 0) {
 		close(connections[i].getConnectionfd()); // Удаляем соединение, закрываем сокет
@@ -57,24 +59,25 @@ void	recieveData(int i, std::vector<ConnectionClass> &connections) {
 		connections.erase(connections.begin() + i);
 	}
 	else if (bytes_read > 0) {
-		while (bytes_read > 0) {
+		if (bytes_read == RECIEVE_SIZE - 1) {
 			buf[bytes_read] = '\0';
 			source = ft_strjoin(source, buf);
-			ft_bzero(buf, RECIEVE_SIZE);
-			usleep(10000);
-			bytes_read = recv(connections[i].getConnectionfd(), buf, RECIEVE_SIZE - 1, 0);
 		}
-		ft_bzero(buf, RECIEVE_SIZE);
-		request.setSource(source);
-		request.setInfo();
-		connections[i].setAnswer(generateAnswer(request, connections[i].getServer()));
-		connections[i].setCloseFlag(0);
-		if (request.get_connection() == "close")
-			connections[i].setCloseFlag(1);
-		request.clear();
-		connections[i].setSendFlag(1);
-		free(source);
-		source = nullptr;
+		else {
+			buf[bytes_read] = '\0';
+			source = ft_strjoin(source, buf);
+			request.setSource(source);
+			request.setInfo();
+			if (!connections[i].getSendFlag())
+				connections[i].setAnswer(generateAnswer(request, connections[i].getServer()));
+			connections[i].setCloseFlag(0);
+			if (request.get_connection() == "close")
+				connections[i].setCloseFlag(1);
+			request.clear();
+			connections[i].setSendFlag(1);
+			delete(source);
+			source = (char *)ft_calloc(1, sizeof(char));
+		}
 	}
 }
 
@@ -82,14 +85,16 @@ void	sendData(int i, std::vector<ConnectionClass> &connections) {
 
 	if (connections[i].getSendFlag()) {
 		connections[i].setSendFlag(0);
-		std::cout << connections[i].getAnswer() << std::endl;
-		std::cout << "------------------------" << std::endl;
+		if (connections[i].getAnswer() != nullptr) {
+			std::cout << connections[i].getAnswer() << std::endl;
+			std::cout << "------------------------" << std::endl;
+		}
 		if (connections[i].getAnswer() != nullptr && send(connections[i].getConnectionfd(), connections[i].getAnswer(),
 				 ft_strlen(connections[i].getAnswer()), 0) < 0) {
 			std::cerr << "Error while sending data" << std::endl;
 		}
 	}
-	if (connections[i].getCloseFlag()) {
+	if (connections.size() > 0 && connections[i].getCloseFlag()) {
 		close(connections[i].getConnectionfd()); // Удаляем соединение, закрываем сокет
 		connections[i].clearAnswer();
 		connections.erase(connections.begin() + i);

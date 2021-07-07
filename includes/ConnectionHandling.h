@@ -5,7 +5,7 @@
 #ifndef WEBSERVER_CONNECTIONHANDLING_H
 # define WEBSERVER_CONNECTIONHANDLING_H
 
-# define RECIEVE_SIZE 100
+# define RECIEVE_SIZE 100000
 
 # include "methods.h"
 # include "ConnectionClass.hpp"

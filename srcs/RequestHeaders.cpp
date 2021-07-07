@@ -27,7 +27,7 @@ std::string	RequestHeaders::getSourceHeader(){
 	header = ft_substr(this->_tokens.front(), 0, i);
 	if (header != NULL) {
 		ret = header;
-		free(header);
+		delete (header);
 		header = NULL;
 	}
 	return (ret);
@@ -103,12 +103,12 @@ void 	RequestHeaders::setAccept(){
 		if (values[1] != NULL)
 			q = atof(ft_strchr(values[1], '=') + 1);
 		this->_accept.push_back(std::pair<std::string, float>(format, q));
-		free(values[0]);
+		delete (values[0]);
 		values[0] = NULL;
 		if (values[1] != NULL)
-			free(values[1]);
+			delete(values[1]);
 		values[1] = NULL;
-		free(values);
+		delete(values);
 		values = NULL;
 		token = strtok(NULL, ",");
 	}
@@ -129,12 +129,12 @@ void 	RequestHeaders::setAcceptLanguage(){
 		if (values[1] != NULL)
 			q = atof(ft_strchr(values[1], '=') + 1);
 		this->_acceptLanguage.push_back(std::pair<std::string, float>(language, q));
-		free(values[0]);
+		delete(values[0]);
 		values[0] = NULL;
 		if (values[1] != NULL)
-			free(values[1]);
+			delete(values[1]);
 		values[1] = NULL;
-		free(values);
+		delete(values);
 		values = NULL;
 		token = strtok(NULL, ",");
 	}
@@ -155,12 +155,12 @@ void 	RequestHeaders::setAcceptCharset(){
 		if (values[1] != NULL)
 			q = atof(ft_strchr(values[1], '=') + 1);
 		this->_acceptCharset.push_back(std::pair<std::string, float>(charset, q));
-		free(values[0]);
+		delete(values[0]);
 		values[0] = NULL;
 		if (values[1] != NULL)
-			free(values[1]);
+			delete(values[1]);
 		values[1] = NULL;
-		free(values);
+		delete(values);
 		values = NULL;
 		token = strtok(NULL, ",");
 	}

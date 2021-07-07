@@ -2,26 +2,26 @@
 // Created by Karyn Cedra on 4/5/21.
 //
 
-#include "../includes/methods.h"
+#include "methods.h"
 
 char 	*returnError(RequestHeaders request, size_t statusC, std::string reason) {
-	ResponseHeaders	response;
-	std::string 	statusCode;
-	std::string 	contentLength;
-	std::string 	fileline;
-	std::string 	ret;
-	char 			*line;
-	int 			fd;
+	ResponseHeaders		response;
+	std::stringstream	strstream;
+	std::fstream 		fin;
+	std::string 		body;
+	std::string 		statusCode;
+	std::string 		contentLength;
+	std::string 		fileline;
+	std::string 		ret;
+	char 				*line;
 
-	fd = open(std::string("/Users/kcedra/webserver/default_errors/error" +
-			std::to_string(statusC) + ".html").c_str(), O_RDONLY); // Убрать косталь с моим абсоютным путем
-	while (get_next_line(fd, &line) > 0) {
-		fileline = line;
-		free(line);
-		line = nullptr;
-		response.pageAdd(fileline + "\n");
-	}
-	close(fd);
+
+	fin.open(std::string("/Users/kcedra/webserver/default_errors/error" +
+						 std::to_string(statusC) + ".html"), std::ios::in); // Убрать косталь с моим абсоютным путем
+	strstream << fin.rdbuf();
+	body = strstream.str();
+	response.setPage(std::string(body.begin(), body.end()));
+	fin.close();
 	response.setVersion();
 	response.setStatusCode(statusC);
 	response.setReasonPhrase(reason);
@@ -32,8 +32,8 @@ char 	*returnError(RequestHeaders request, size_t statusC, std::string reason) {
 	response.setContentType("text/html");
 	response.setDate(request);
 	response.setServer();
-	statusCode = std::to_string(response.getStatusCode()); //Добавить сюда свой итоа
-	contentLength = std::to_string(response.getContentLength()); //Добавить сюда свой итоа
+	statusCode = std::to_string(response.getStatusCode());
+	contentLength = std::to_string(response.getContentLength());
 	ret = response.getVersion() + " " + statusCode + " " + response.getReasonPhrase();
 	if (statusC == 501 || statusC == 405)
 		ret += "\r\nAllow: " + response.getAllow();
@@ -62,7 +62,7 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 	std::string::iterator ite;
 	std::fstream fin;
 	std::stringstream strstream;
-	struct stat *buf = (struct stat *) malloc(sizeof(struct stat));
+	struct stat *buf = (struct stat *) operator new(sizeof(struct stat));
 	struct dirent *entry;
 	std::string seekfilename;
 	char *line;
@@ -70,10 +70,13 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 	int length;
 	char *buffer;
 	size_t pos;
+	size_t result;
 
 	if (*(--uri.end()) == '/') {
 		file = index; // Нужно будет сделать выбор файла с опциям, по приоритету и т.п.
-	} else {
+		directory = root + uri;
+	}
+	else {
 		if ((pos = uri.find("?")) != std::string::npos)
 			uri.erase(pos, uri.length() - 1);
 		it = uri.end();
@@ -82,6 +85,9 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 			it--;
 		}
 		directory = (root + std::string(uri.begin(), it++)) + '/';
+		if ((result = directory.find("//")) != std::string::npos) {
+			directory.replace(result, 2, std::string("/"));
+		}
 		dir = opendir(directory.c_str());
 		it--;
 		while (++it != ite) {
@@ -90,45 +96,56 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 		while (dir != NULL && (entry = readdir(dir)) != NULL) {
 			seekfilename = entry->d_name;
 			stat(file.c_str(), buf);
-			if (seekfilename == file && !S_ISDIR(buf->st_mode)) {
+			if (seekfilename == file) {
+				if (S_ISDIR(buf->st_mode)) {
+					file = uri + "/" + index;
+				}
 				closedir(dir);
 				break;
 			}
 		}
 		if (dir == NULL || entry == NULL) {
-			if (dir != NULL)
+			if (dir != NULL) {
 				closedir(dir);
+			}
 			return (returnError(request, 404, "Not Found"));
 		}
 		file = directory + file;
 	}
-	if ((pos = file.find("?")) != std::string::npos)
+	if ((pos = file.find("?")) != std::string::npos) {
 		file.erase(pos, file.length() - 1);
-
-	if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg"
-		|| mimeDetect(file).find("font") != std::string::npos) {
-		fin.open(file, std::ios::binary | std::ios::in);
-	} else {
-		fin.open(file, std::ios::in);
 	}
-	if (!fin.is_open())
-		return (returnError(request, 404, "Not Found"));
+	if (index == "" && directory == uri) {
+		response.setPage(listing(directory));
+		response.setBinaryPage(nullptr);
+	}
 	else {
 		if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg"
 			|| mimeDetect(file).find("font") != std::string::npos) {
-			fin.seekg(0, fin.end);
-			length = fin.tellg();
-			fin.seekg(0, fin.beg);
-			buffer = new char[length];
-			fin.read(buffer, length);
-			response.setBinaryPage(buffer);
-			fin.close();
-		} else {
-			strstream << fin.rdbuf();
-			body = strstream.str();
-			response.setPage(std::string(body.begin(), body.end()));
-			fin.close();
-			response.setBinaryPage(nullptr);
+			fin.open(file, std::ios::binary | std::ios::in);
+		}
+		else {
+			fin.open(file, std::ios::in);
+		}
+		if (!fin.is_open())
+			return (returnError(request, 404, "Not Found"));
+		else {
+			if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg"
+				|| mimeDetect(file).find("font") != std::string::npos) {
+				fin.seekg(0, fin.end);
+				length = fin.tellg();
+				fin.seekg(0, fin.beg);
+				buffer = new char[length];
+				fin.read(buffer, length);
+				response.setBinaryPage(buffer);
+				fin.close();
+			} else {
+				strstream << fin.rdbuf();
+				body = strstream.str();
+				response.setPage(std::string(body.begin(), body.end()));
+				fin.close();
+				response.setBinaryPage(nullptr);
+			}
 		}
 	}
 	response.setVersion();
@@ -146,7 +163,10 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 	else {
 		response.setContentLength(response.getPage().length());
 	}
-	response.setContentType(mimeDetect(file));
+	if (index == "")
+		response.setContentType("text/html");
+	else
+		response.setContentType(mimeDetect(file));
 	response.setDate(request);
 	response.setServer();
 	statusCode = std::to_string(response.getStatusCode()); //Добавить сюда свой итоа
@@ -213,11 +233,7 @@ std::pair<std::string, std::string>	chooseRootgetIndexFindAllowed(RequestHeaders
 	for (std::list<LocationClass>::iterator it = config.getLocations()->begin(); it != config.getLocations()->end(); ++it) {
 		locationRoot = it->getRoot();
 		location = it->getLocation();
-//		if (location == request.get_uri()) {
-//			std::cout << location << std::endl;
-//			std::cout << locationRoot.size() << "            " << root.first.size() <<  std::endl;
-//		}
-		if (((result = request.get_uri().find(location)) != std::string::npos || request.get_uri() == location\
+		if ((request.get_uri().find(location) != std::string::npos || request.get_uri() == location\
 		) && locationRoot.size() >= root.first.size()) {
 			uri	= request.get_uri();
 			uri.replace(0, location.size(), locationRoot);
@@ -225,17 +241,25 @@ std::pair<std::string, std::string>	chooseRootgetIndexFindAllowed(RequestHeaders
 			allowIter = it;
 		}
 	}
-	if (flag == 1)
+	if (flag == 1) {
 		root = std::make_pair(config.getRoot() + locationRoot, allowIter->getIndex());
-	if (root == std::pair<std::string, std::string>("", ""))
+		if (allowIter->getListing()) {
+			root.second = "";
+		}
+	}
+	if (root == std::pair<std::string, std::string>("", "")) {
 		root = std::make_pair(config.getRoot(), config.getIndex());
+	}
 	if (flag == 1 && (method == "GET" || method == "POST" || method == "DELETE" || method == "HEAD")) {
 		allow = allowIter->getMethods();
 		if (std::find(allow->begin(), allow->end(), method) == allow->end())
 			root = std::make_pair("", "");
 	}
-	if (uri != request.get_uri())
+	if (uri != request.get_uri()) {
+		if ((result = uri.find("//")) != std::string::npos)
+			uri.replace(result, 2,std::string("/"));
 		request.setUri(uri);
+	}
 	return (root);
 }
 

@@ -140,7 +140,7 @@ void 					ResponseHeaders::binaryPageAdd(char *line) {
 	//char 	*bubble;
 
 	if (!this->_binaryPage)
-		this->_binaryPage = (char*)malloc(1);
+		this->_binaryPage = (char*)operator new(1);
 	//bubble = this->_binaryPage;
 	this->_binaryPage = ft_strjoin(this->_binaryPage, line);
 	if (line == nullptr)
