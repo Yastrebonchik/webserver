@@ -71,10 +71,12 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 	char *buffer;
 	size_t pos;
 	size_t result;
+	bool	listingFlag = 0;
 
 	if (*(--uri.end()) == '/') {
 		file = index; // Нужно будет сделать выбор файла с опциям, по приоритету и т.п.
 		directory = root + uri;
+		listingFlag = 1;
 	}
 	else {
 		if ((pos = uri.find("?")) != std::string::npos)
@@ -115,7 +117,7 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 	if ((pos = file.find("?")) != std::string::npos) {
 		file.erase(pos, file.length() - 1);
 	}
-	if (index == "" && directory == uri) {
+	if (index == "" && listingFlag) {
 		response.setPage(listing(directory));
 		response.setBinaryPage(nullptr);
 	}
