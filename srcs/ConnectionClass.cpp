@@ -11,18 +11,18 @@ ConnectionClass::~ConnectionClass() {
 }
 
 ConnectionClass::ConnectionClass(int connectionfd, ConfigClass server) : _connectionfd(connectionfd), _closeFlag(0), \
-	_sendFlag(0), _answer(NULL), _server(server) {
+	_sendFlag(0), _answer(nullptr), _server(server) {
 }
 
 void 		ConnectionClass::setAnswer(char *answer) {
-	//if (this->_answer != nullptr)
-		//free(this->_answer);
+	if (this->_answer != nullptr)
+		free(this->_answer);
 	this->_answer = answer;
 }
 
 void 		ConnectionClass::clearAnswer() {
-	//if (this->_answer != nullptr)
-		//free(this->_answer);
+	if (this->_answer != nullptr)
+		free(this->_answer);
 	this->_answer = nullptr;
 }
 

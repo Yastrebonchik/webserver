@@ -8,11 +8,18 @@
 #include "ConnectionHandling.h"
 
 # define CONNECTION_DROP_TIME 5
+std::vector<ConnectionClass>	connections;
+std::vector<int> 				listener;
+
+void	sigint(int) {
+	for (std::vector<int>::iterator it = listener.begin(); it != listener.end(); ++it) {
+		close(*it);
+	}
+	dropConnections(connections);
+}
 
 int main() {
-	std::vector<ConnectionClass>	connections;
 	std::vector<ConfigClass>		config;
-	std::vector<int> 				listener;
 	ConfigClass						server;
 	std::string 					line;
 	fd_set 							readfds;
@@ -22,8 +29,13 @@ int main() {
 	struct 							timeval timeout;
 	int 							maxfd;
 	int 							selectRes;
+	int								opt = 1;
 
-	config_parser((char*)"configs/tester_config", config);
+	signal(SIGINT, sigint);
+	if (config_parser((char*)"configs/tester_config", config) != 0) {
+		perror("config");
+		exit(10);
+	}
 	timeout.tv_sec = CONNECTION_DROP_TIME;
 	timeout.tv_usec = 0;
 	for (std::vector<ConfigClass>::iterator it = config.begin(); it != config.end(); ++it) {
@@ -41,7 +53,7 @@ int main() {
 			exit(2);
 		}
 		listen(listener[i], SOMAXCONN);
-		setsockopt(listener[i], SOL_SOCKET, SO_REUSEADDR, &listener.back(), sizeof(int));
+		setsockopt(listener[i], SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 		fcntl(listener[i], F_SETFL, O_NONBLOCK);
 		i++;
 	}

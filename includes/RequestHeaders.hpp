@@ -38,6 +38,7 @@ private:
 	std::string 								_body;
 	char										*_source;
 	std::list<char*> 							_tokens;
+	short 										responseFlags;
 
 	/* Методы для извлечения данных */
 	void										setAccept();
@@ -80,12 +81,14 @@ public:
 	std::string									get_userAgent() const;
 	std::string									getSourceHeader();
 	std::string 								getBody();
+	short 										getResponseFlag();
 	void 										setUri(std::string);
 	void 										detectHeader(std::string header);
 	void										setSource(char *source);
 	void 										setInfo();
 	void 										setStartLine();
 	void 										clear();
+	void 										setResponseFlag();
 };
 
 #endif //WEBSERVER_REQUESTHEADERS_HPP

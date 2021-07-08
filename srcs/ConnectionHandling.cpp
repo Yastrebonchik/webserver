@@ -28,6 +28,7 @@ int	selectSet(fd_set *readfds, fd_set *writefds, std::vector<int> &listener, std
 void	makeConnection(int i, std::vector<ConnectionClass> &connections, std::vector<ConfigClass> &config,
 					   std::vector<int> &listener) {
 	int 						sock;
+	int 						opt = 1;
 
 	sock = accept(listener[i], nullptr, nullptr);
 	if (sock < 0) {
@@ -35,13 +36,14 @@ void	makeConnection(int i, std::vector<ConnectionClass> &connections, std::vecto
 		exit(3);
 	}
 	fcntl(sock, F_SETFL, O_NONBLOCK);
-	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &sock, sizeof(int));
+	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 	connections.push_back(ConnectionClass(sock, config[i]));
 }
 
 void	recieveData(int i, std::vector<ConnectionClass> &connections) {
 	int 			bytes_read;
-	static char 	*source = (char *)ft_calloc(1, sizeof(char));
+	static char 	*source = nullptr;
+	char 			*line;
 	char			buf[RECIEVE_SIZE];
 	ResponseHeaders	resp;
 	RequestHeaders	request;
@@ -61,11 +63,21 @@ void	recieveData(int i, std::vector<ConnectionClass> &connections) {
 	else if (bytes_read > 0) {
 		if (bytes_read == RECIEVE_SIZE - 1) {
 			buf[bytes_read] = '\0';
-			source = ft_strjoin(source, buf);
+			line = source;
+			if (source != nullptr) {
+				free(source);
+			}
+			source = ft_strjoin(line, buf);
+			free(line);
 		}
 		else {
 			buf[bytes_read] = '\0';
-			source = ft_strjoin(source, buf);
+			line = source;
+			if (source != nullptr) {
+				free(source);
+			}
+			source = ft_strjoin(line, buf);
+			free(line);
 			request.setSource(source);
 			request.setInfo();
 			if (!connections[i].getSendFlag())
@@ -76,7 +88,7 @@ void	recieveData(int i, std::vector<ConnectionClass> &connections) {
 			request.clear();
 			connections[i].setSendFlag(1);
 			delete(source);
-			source = (char *)ft_calloc(1, sizeof(char));
+			source = nullptr;
 		}
 	}
 }

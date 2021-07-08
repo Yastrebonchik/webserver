@@ -44,10 +44,6 @@ char 	*returnError(RequestHeaders request, size_t statusC, std::string reason) {
 	return (line);
 }
 
-//char 	*HEAD(RequestHeaders request, std::string root, std::string index) {
-//	return (nullptr)
-//}
-
 char 	*GET(RequestHeaders request, std::string root, std::string index) {
 	ResponseHeaders response;
 	std::string body;
@@ -62,7 +58,7 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 	std::string::iterator ite;
 	std::fstream fin;
 	std::stringstream strstream;
-	struct stat *buf = (struct stat *) operator new(sizeof(struct stat));
+	struct stat buf;
 	struct dirent *entry;
 	std::string seekfilename;
 	char *line;
@@ -75,7 +71,6 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 
 	if (*(--uri.end()) == '/') {
 		file = index; // Нужно будет сделать выбор файла с опциям, по приоритету и т.п.
-		directory = root + uri;
 		listingFlag = 1;
 	}
 	else {
@@ -97,9 +92,9 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 		}
 		while (dir != NULL && (entry = readdir(dir)) != NULL) {
 			seekfilename = entry->d_name;
-			stat(file.c_str(), buf);
+			stat(file.c_str(), &buf);
 			if (seekfilename == file) {
-				if (S_ISDIR(buf->st_mode)) {
+				if (S_ISDIR(buf.st_mode)) {
 					file = uri + "/" + index;
 				}
 				closedir(dir);
@@ -118,6 +113,10 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 		file.erase(pos, file.length() - 1);
 	}
 	if (index == "" && listingFlag) {
+		directory = root + uri;
+		if ((result = directory.find("//")) != std::string::npos) {
+			directory.replace(result, 2, std::string("/"));
+		}
 		response.setPage(listing(directory));
 		response.setBinaryPage(nullptr);
 	}
@@ -193,11 +192,17 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 char 	*POST(RequestHeaders request, ConfigClass server) {
 	ResponseHeaders			response;
 	std::fstream			file;
+	std::string 			openfile;
 	std::string 			ret;
+	size_t 					result;
 
 	if (request.getBody().length() == 0) {
 		response.setVersion();
-		file.open(server.getRoot() + request.get_uri(), std::fstream::out);
+		openfile = server.getRoot() + "/" + request.get_uri();
+		if ((result = openfile.find("//")) != std::string::npos) {
+			openfile.replace(result, 2, std::string("/"));
+		}
+		file.open(openfile, std::fstream::out);
 		if (file.is_open())
 			file.close();
 		response.setReasonPhrase("No Content");
@@ -208,7 +213,52 @@ char 	*POST(RequestHeaders request, ConfigClass server) {
 		ret += "\r\nServer: " + response.getServer() + "\r\n";
 		return (ft_strdup(ret.c_str()));
 	}
-	return nullptr;
+	else {
+		response.setVersion();
+		openfile = server.getRoot() + "/" + request.get_uri();
+		if ((result = openfile.find("//")) != std::string::npos) {
+			openfile.replace(result, 2, std::string("/"));
+		}
+		file.open(openfile, std::fstream::out);
+		if (file.is_open()) {
+			file << request.getBody();
+			response.setReasonPhrase("Created");
+			response.setConnection("keep-alive");
+			response.setServer();
+			ret = response.getVersion() + " 201 " + response.getReasonPhrase();
+			ret += "\r\nConnection: " + response.getConnection();
+			ret += "\r\nServer: " + response.getServer() + "\r\n";
+			return (ft_strdup(ret.c_str()));
+		}
+		else {
+			return (returnError(request, 500, "Server Error"));
+		}
+	}
+}
+
+char 	*DELETE(RequestHeaders request, ConfigClass server) {
+	ResponseHeaders response;
+	std::string file;
+	std::string ret;
+	size_t 		result;
+
+	file = server.getRoot() + "/" + request.get_uri();
+	if ((result = file.find("//")) != std::string::npos) {
+		file.replace(result, 2, std::string("/"));
+	}
+	if (std::remove(file.c_str()) == 0) {
+		response.setVersion();
+		response.setReasonPhrase("OK");
+		response.setConnection("keep-alive");
+		response.setServer();
+		ret = response.getVersion() + " 200 " + response.getReasonPhrase();
+		ret += "\r\nConnection: " + response.getConnection();
+		ret += "\r\nServer: " + response.getServer() + "\r\n";
+		return (ft_strdup(ret.c_str()));
+	}
+	else {
+		return (returnError(request, 400, "Bad Request"));
+	}
 }
 
 char 	*methodNotAllowed(RequestHeaders request) {
@@ -244,7 +294,7 @@ std::pair<std::string, std::string>	chooseRootgetIndexFindAllowed(RequestHeaders
 		}
 	}
 	if (flag == 1) {
-		root = std::make_pair(config.getRoot() + locationRoot, allowIter->getIndex());
+		root = std::make_pair(config.getRoot() + allowIter->getRoot(), allowIter->getIndex());
 		if (allowIter->getListing()) {
 			root.second = "";
 		}
@@ -282,9 +332,9 @@ char 	*generateAnswer(RequestHeaders request, ConfigClass config) {
 	else if (method == "POST") {
 		ret = POST(request, config);
 	}
-//	else if (method == "HEAD") {
-//		ret = HEAD(GET(request,  root.first, root.second));
-//	}
+	else if (method == "DELETE") {
+		ret = DELETE(request, config);
+	}
 	else {
 		ret = noSuchMethod(request);
 	}

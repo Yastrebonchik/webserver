@@ -34,7 +34,6 @@ server {
 	error_page custom_error
 	client_body_size 	50
 	allow_methods GET POST
-
 }
 
 server {
@@ -48,7 +47,7 @@ server {
 server {
 	server_name      fourth_server
 	listen 0.0.0.0:8004
-	root /Users/kcedra/webserver/directory_for_tests
+	root /Users/kcedra/webserver/directory_for_tests/newsfeed
 
 	index index.html
 }
@@ -64,8 +63,12 @@ server {
         root /
         index index.html
         listing yes
-        allow_methods GET
+        allow_methods GET POST
+    }
+    location /delete {
+        root /delete_dir
+        allow_methods GET POST DELETE
     }
 	error_page custom_error
-	allow_methods GET
+	allow_methods GET POST
 }

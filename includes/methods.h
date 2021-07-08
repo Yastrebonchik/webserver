@@ -20,6 +20,7 @@
 char	*generateAnswer(RequestHeaders request, ConfigClass config);
 char 	*GET(RequestHeaders request, std::string root, std::string index);
 char 	*POST(RequestHeaders request, ConfigClass server);
+char 	*DELETE(RequestHeaders request, ConfigClass server);
 char 	*noSuchMethod(RequestHeaders request);
 char	*returnError(RequestHeaders request);
 

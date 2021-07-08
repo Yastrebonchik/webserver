@@ -232,20 +232,26 @@ int		ft_atoi(const char *str)
 char		*ft_strjoin(char const *s1, char const *s2)
 {
 	int		i;
+	int 	s1len;
 	int		cur_i;
 	char	*new_str;
 
-	if (!s1 || !s2)
+	if (!s2)
 		return (NULL);
 	i = 0;
 	cur_i = 0;
-	if (!(new_str = (char*)operator new((ft_strlen(s1) + ft_strlen(s2)) * (sizeof(char) + 1))))
+	if (s1 == nullptr)
+		s1len = 0;
+	else
+		s1len = ft_strlen(s1);
+	if (!(new_str = (char*)operator new((s1len + ft_strlen(s2)) * (sizeof(char) + 1))))
 		return (NULL);
-	while (s1[i] != '\0')
-	{
-		new_str[cur_i] = s1[i];
-		i++;
-		cur_i++;
+	if (s1 !=nullptr) {
+		while (s1[i] != '\0') {
+			new_str[cur_i] = s1[i];
+			i++;
+			cur_i++;
+		}
 	}
 	i = 0;
 	while (s2[i] != '\0')
@@ -292,7 +298,7 @@ std::string	mimeDetect(std::string file) {
 }
 
 std::string	listing(std::string directory) {
-	struct stat		*buf = (struct stat *) operator new(sizeof(struct stat));
+	struct stat		buf;
 	struct dirent 	*entry;
 	std::string 	file;
 	std::string 	ret;
@@ -308,8 +314,8 @@ std::string	listing(std::string directory) {
 	while ((entry = readdir(dir)) != NULL) {
 		ret += "<a href=\"";
 		file = entry->d_name;
-		stat(file.c_str(), buf);
-		if (S_ISDIR(buf->st_mode)) {
+		stat(file.c_str(), &buf);
+		if (S_ISDIR(buf.st_mode)) {
 			ret += file + "/\">" + file + "/" + "</a>\n";
 		}
 		else {
