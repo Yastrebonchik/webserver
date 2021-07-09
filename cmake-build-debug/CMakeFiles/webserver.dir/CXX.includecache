@@ -7,15 +7,17 @@
 #IncludeRegexTransform: 
 
 ../config_parser_v.0.1/includes/ConfigClass.hpp
-list
+vector
 -
 string
+-
+stdint.h
 -
 
 ../config_parser_v.0.1/includes/LocationClass.hpp
 ConfigClass.hpp
 ../config_parser_v.0.1/includes/ConfigClass.hpp
-list
+vector
 -
 string
 -
@@ -53,6 +55,12 @@ LocationClass.hpp
 ../config_parser_v.0.1/includes/config_parser.hpp
 config.hpp
 ../config_parser_v.0.1/includes/config.hpp
+cstring
+-
+cstdlib
+-
+algorithm
+-
 
 ../includes/ConnectionClass.hpp
 unistd.h
@@ -61,12 +69,6 @@ stdlib.h
 -
 config_parser.hpp
 ../includes/config_parser.hpp
-
-../includes/ConnectionHandling.h
-methods.h
-../includes/methods.h
-ConnectionClass.hpp
-../includes/ConnectionClass.hpp
 
 ../includes/RequestHeaders.hpp
 string
@@ -123,6 +125,8 @@ utils.hpp
 ../includes/utils.hpp
 fstream
 -
+ConnectionClass.hpp
+../includes/ConnectionClass.hpp
 
 ../includes/utils.hpp
 stdlib.h
@@ -140,21 +144,7 @@ string
 dirent.h
 -
 
-/Users/kcedra/webserver/srcs/main.cpp
-sys/socket.h
--
-netinet/in.h
--
-errno.h
--
-ctime
--
-sys/select.h
--
-vector
--
-ConnectionClass.hpp
-/Users/kcedra/webserver/srcs/ConnectionClass.hpp
-ConnectionHandling.h
-/Users/kcedra/webserver/srcs/ConnectionHandling.h
+/Users/kcedra/webserver/srcs/methods.cpp
+methods.h
+/Users/kcedra/webserver/srcs/methods.h
 

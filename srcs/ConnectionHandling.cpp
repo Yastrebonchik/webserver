@@ -25,10 +25,11 @@ int	selectSet(fd_set *readfds, fd_set *writefds, std::vector<int> &listener, std
 	return (maxfd);
 }
 
-void	makeConnection(int i, std::vector<ConnectionClass> &connections, std::vector<ConfigClass> &config,
-					   std::vector<int> &listener) {
+void	makeConnection(int i, std::vector<ConnectionClass> &connections, std::vector<int> &listener) {
 	int 						sock;
 	int 						opt = 1;
+	struct sockaddr_in			myAddr;
+	socklen_t 					len = sizeof(myAddr);
 
 	sock = accept(listener[i], nullptr, nullptr);
 	if (sock < 0) {
@@ -37,10 +38,11 @@ void	makeConnection(int i, std::vector<ConnectionClass> &connections, std::vecto
 	}
 	fcntl(sock, F_SETFL, O_NONBLOCK);
 	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
-	connections.push_back(ConnectionClass(sock, config[i]));
+	getsockname(listener[i], (struct sockaddr *) &myAddr, &len);
+	connections.push_back(ConnectionClass(sock, myAddr.sin_addr.s_addr, myAddr.sin_port));
 }
 
-void	recieveData(int i, std::vector<ConnectionClass> &connections) {
+void	recieveData(int i, std::vector<ConnectionClass> &connections, std::vector<ConfigClass> config) {
 	int 			bytes_read;
 	static char 	*source = nullptr;
 	char 			*line;
@@ -81,7 +83,7 @@ void	recieveData(int i, std::vector<ConnectionClass> &connections) {
 			request.setSource(source);
 			request.setInfo();
 			if (!connections[i].getSendFlag())
-				connections[i].setAnswer(generateAnswer(request, connections[i].getServer()));
+				connections[i].setAnswer(generateAnswer(request, config, connections[i]));
 			connections[i].setCloseFlag(0);
 			if (request.get_connection() == "close")
 				connections[i].setCloseFlag(1);

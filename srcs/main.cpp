@@ -64,7 +64,7 @@ int main() {
 			i = 0;
 			while (i < connections.size()) {
 				if (FD_ISSET(connections[i].getConnectionfd(), &readfds))
-					recieveData(i, connections);
+					recieveData(i, connections, config);
 				if (FD_ISSET(connections[i].getConnectionfd(), &writefds))
 					sendData(i, connections);
 				i++;
@@ -72,7 +72,7 @@ int main() {
 			i = 0;
 			while (i < listener.size()) {
 				if (FD_ISSET(listener[i], &readfds))
-					makeConnection(i, connections, config, listener);
+					makeConnection(i, connections, listener);
 				i++;
 			}
 			timeout.tv_sec = CONNECTION_DROP_TIME;

@@ -6,7 +6,7 @@
 #    By: rbeach <rbeach@student.21-school.ru>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/10 14:22:17 by rbeach            #+#    #+#              #
-#    Updated: 2021/06/26 14:02:46 by rbeach           ###   ########.fr        #
+#    Updated: 2021/07/09 18:38:43 by rbeach           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,10 @@ all: $(NAME)
 
 $(NAME): $(OBJECTS) main.cpp
 	ar rcs $(NAME) $(OBJECTS)
-	#clang++ main.cpp libconfpar.a
+	
+
+main: $(NAME)
+	$(CC) main.cpp libconfpar.a
 
 $(O_DIR)/%.o: $(S_DIR)/%.cpp
 	mkdir -p $(O_DIR)

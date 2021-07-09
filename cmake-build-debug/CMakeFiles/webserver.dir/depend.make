@@ -45,6 +45,7 @@ CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../config_parser_v.0.1/includes/Con
 CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../config_parser_v.0.1/includes/LocationClass.hpp
 CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../config_parser_v.0.1/includes/config.hpp
 CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../config_parser_v.0.1/includes/config_parser.hpp
+CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../includes/ConnectionClass.hpp
 CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../includes/RequestHeaders.hpp
 CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../includes/ResponseHeaders.hpp
 CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../includes/methods.h

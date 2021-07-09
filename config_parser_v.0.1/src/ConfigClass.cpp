@@ -1,5 +1,5 @@
-#include "../includes/ConfigClass.hpp"
-#include "../includes/LocationClass.hpp"
+#include "ConfigClass.hpp"
+#include "LocationClass.hpp"
 
 ConfigClass::ConfigClass(){
 	this->locations = NULL;
@@ -35,7 +35,7 @@ void ConfigClass::setClientBodySize(int x)
 {
 	this->client_body_size = x;
 };
-void ConfigClass::setLocations(std::list<LocationClass> *locations)
+void ConfigClass::setLocations(std::vector<LocationClass> *locations)
 {
 	this->locations = locations;
 }
@@ -69,7 +69,7 @@ int ConfigClass::getClientBodySize() const
 	return this->client_body_size;
 };
 
-std::list<LocationClass> *ConfigClass::getLocations() const{
+std::vector<LocationClass> *ConfigClass::getLocations() const{
 	return this->locations;
 }
 

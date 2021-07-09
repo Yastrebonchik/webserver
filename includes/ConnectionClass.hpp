@@ -12,6 +12,8 @@
 class ConnectionClass {
 private:
 	int 			_connectionfd;
+	uint32_t		_listenIp;
+	uint16_t		_listenPort;
 	bool 			_closeFlag;
 	bool 			_sendFlag;
 	char 			*_answer;
@@ -19,20 +21,21 @@ private:
 
 public:
 	ConnectionClass();
-	ConnectionClass(int connectionfd, ConfigClass server);
+	ConnectionClass(int connectionfd, uint32_t listenIp, uint16_t listenPort);
 	~ConnectionClass();
 
 	void 		setAnswer(char *answer);
 	void 		clearAnswer();
 	void 		setCloseFlag(bool flag);
 	void 		setSendFlag(bool flag);
-//	void 		setAddr(sockaddr addr);
+	void 		setServer(ConfigClass server);
 	int 		getConnectionfd();
+	uint32_t	getListenIp();
+	uint16_t	getListenPort();
 	char 		*getAnswer();
 	bool 		getCloseFlag();
 	bool 		getSendFlag();
 	ConfigClass	getServer();
-//	sockaddr	getAddr();
 };
 
 

@@ -1,47 +1,54 @@
 server {
-	server_name      default_server
-	listen 0.0.0.0:8002
+	server_name      localhost
+	listen 0.0.0.0:80
+	root /Users/kcedra/webserver/directory_for_tests/devAid-v1.1
+
+    location / {
+       index index.html
+       error_page custom_error
+       client_body_size 	50
+    }
+}
+
+server {
+    server_name      second
+	listen 0.0.0.0:8000
+
 	root /Users/kcedra/webserver/YoupiBanane
 
     location / {
-        root /
+        root ./
         index youpi.bad_extension
         allow_methods GET
     }
     location /post_body {
-        root /post_directory
+        root ./post_directory
         index index.html
         allow_methods GET POST
         client_body_size    100
     }
     location /directory {
-        root /
+        root ./
         index youpi.bad_extension
-        redirection /
         allow_methods GET
+    }
+    location /directory/test {
+        root ./tournament/delete_dir
+        index   test3.json
+        allow_methods GET POST DELETE
     }
 }
 
 server {
-
-	listen 0.0.0.0:80
-
-	server_name      second
-
-	root /Users/kcedra/webserver/directory_for_tests/devAid-v1.1
-
-	index index.html
-	error_page custom_error
-	client_body_size 	50
-	allow_methods GET POST
-}
-
-server {
-	server_name      third_server
-	listen 0.0.0.0:8000
+	server_name      localhost:8002
+	listen 0.0.0.0:8002
 	root /Users/kcedra/webserver/directory_for_tests/tournament
 
-	index compete.html
+    location / {
+       index compete.html
+       error_page custom_error
+       client_body_size 	50
+    }
 }
 
 server {
@@ -60,13 +67,13 @@ server {
 	root /Users/kcedra/webserver
 
     location / {
-        root /
+        root ./
         index index.html
         listing yes
         allow_methods GET POST
     }
     location /delete {
-        root /delete_dir
+        root ./delete_dir
         allow_methods GET POST DELETE
     }
 	error_page custom_error

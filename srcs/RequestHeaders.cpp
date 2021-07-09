@@ -2,7 +2,7 @@
 // Created by Alexandr Yastrebow on 4/25/21.
 //
 
-#include "../includes/RequestHeaders.hpp"
+#include "RequestHeaders.hpp"
 
 bool sortbyvalue(std::pair<std::string, float> &a, std::pair<std::string, float>& b){
 	return a.second > b.second;
@@ -14,7 +14,7 @@ RequestHeaders::RequestHeaders() {
 RequestHeaders::~RequestHeaders() {
 }
 
-RequestHeaders::RequestHeaders(char *source) : _source(source){
+RequestHeaders::RequestHeaders(char *source) : _source(source), _responseFlags(0), _location(-1), _CGILocation(-1) {
 }
 
 std::string	RequestHeaders::getSourceHeader(){
@@ -370,6 +370,18 @@ std::string 					RequestHeaders::getBody() {
 	return (this->_body);
 }
 
+unsigned int					RequestHeaders::getResponseFlags() {
+	return (this->_responseFlags);
+};
+
+size_t 							RequestHeaders::getLocation() {
+	return (this->_location);
+};
+
+size_t 							RequestHeaders::getCGILocation() {
+	return (this->_CGILocation);
+};
+
 void 							RequestHeaders::setUri(std::string uri) {
 	this->_uri = uri;
 }
@@ -400,3 +412,16 @@ void 							RequestHeaders::clear() {
 		std::cout << "Something went wrong while clearing request headers" << std::endl;
 	}
 }
+
+void 							RequestHeaders::setResponseFlag(unsigned int flag) {
+	if ((this->_responseFlags & flag) != flag)
+		this->_responseFlags += flag;
+};
+
+void 							RequestHeaders::setLocation(size_t location) {
+	this->_location = location;
+};
+
+void 							RequestHeaders::setCGILocation(size_t CGILocation) {
+	this->_CGILocation = CGILocation;
+};

@@ -1,12 +1,12 @@
-#include "../includes/config_parser.hpp"
+#include "config_parser.hpp"
 
-int class_add(std::map<std::string, std::string> &attributes, std::vector<ConfigClass> &conf, std::list<LocationClass> *locations)
+int class_add(std::map<std::string, std::string> &attributes, std::vector<ConfigClass> &conf, std::vector<LocationClass> *locations)
 {
 	ConfigClass *server;
 	int			ip[4];
 	int			port;
 	char		*nbrs;
-	char		*ip_str;
+
 	int			ip_len;
 	int			i;
 	uint32_t	x;
@@ -14,7 +14,7 @@ int class_add(std::map<std::string, std::string> &attributes, std::vector<Config
 
 	server = new ConfigClass();
 	ip_len = (attributes.find("listen")->second).length();
-	ip_str = (char*)malloc(ip_len);
+	char		ip_str[ip_len];
 	ip_str[ip_len] = 0;
 	strcpy(ip_str, (attributes.find("listen")->second).c_str());
 	nbrs = strtok(ip_str, ".:");
@@ -48,14 +48,16 @@ int class_add(std::map<std::string, std::string> &attributes, std::vector<Config
 static LocationClass *location_class_create(std::map<std::string, std::string> &attributes)
 {
 	LocationClass *location = new LocationClass();
-	std::list<std::string> *words = new std::list<std::string>();
+	std::vector<std::string> *words = new std::vector<std::string>();
 	std::stringstream ss;
 	std::string word;
 
 	if (attributes.find("listing")->second == "yes")
 		location->setListing(1);
-	else
+	else if (attributes.find("listing")->second == "no")
 		location->setListing(0);
+	else
+		location->setListing(-1);
 	location->setClientBodySize(atoi((char *)(attributes.find("client_body_size")->second).c_str()));
 	location->setRoot(attributes.find("root")->second);
 	location->setIndex(attributes.find("index")->second);
@@ -70,6 +72,7 @@ static LocationClass *location_class_create(std::map<std::string, std::string> &
 			words->push_back(word);
 	}
 	location->setMethods(words);
+	//delete words;
 	return (location);
 }
 
@@ -82,7 +85,7 @@ LocationClass *location_add(std::list<std::list<std::string> > &lines, std::list
 	attributes["listen"] = DEFAULT_LISTEN;
 	attributes["error_page"] = DEFAULT_ERROR_PAGE;
 	attributes["client_body_size"] = DEFAULT_CLIENT_BODY_SIZE;
-	attributes["root"] = DEFAULT_ROOT;
+	attributes["root"] = "";
 	attributes["index"] = DEFAULT_INDEX;
 	attributes["location"] = "";
 	attributes["redirection"] = "";
@@ -122,7 +125,7 @@ int server_add(std::list<std::list<std::string> > &lines, std::list<std::list<st
 	attributes["root"] = DEFAULT_ROOT;
 	attributes["index"] = DEFAULT_INDEX;
 	std::map<std::string, std::string>::iterator it_map;
-	std::list<LocationClass> *locations = new std::list<LocationClass>();
+	std::vector<LocationClass> *locations = new std::vector<LocationClass>();
 	while (it != lines.end())
 	{
 		if (*((*it).begin()) == "location")
@@ -174,11 +177,11 @@ static void list_word_fuller(std::string line, std::list<std::list<std::string> 
 
 	std::replace( line.begin(), line.end(), '	', ' ');
 	ss << line;
-	while ((std::getline(ss, word, ' '))) {
+	while ((std::getline(ss, word, ' ')))
 		if (word.length())
 			words.push_back(word);
+	if (words.size())
 		config->push_back(words);
-	}
 }
 
 static int open_read(char *file, std::list<std::list<std::string> > *config)

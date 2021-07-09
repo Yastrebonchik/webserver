@@ -16,9 +16,21 @@
 # include "config_parser.hpp"
 # include "utils.hpp"
 # include <fstream>
+# include "ConnectionClass.hpp"
 
-char	*generateAnswer(RequestHeaders request, ConfigClass config);
-char 	*GET(RequestHeaders request, std::string root, std::string index);
+# define SERVER_NAME 1
+# define REDIRECTION 2
+# define DEFAULT_ERRORS 4
+# define ALLOW_METHODS 8
+# define ROOT_EXISTS 16
+# define LISTING 32
+# define LISTING_RESULT_YES 64
+# define INDEX 128
+# define CLIENT_BODY_SIZE_EXIST 256
+# define CGI_FLAG 512
+
+char	*generateAnswer(RequestHeaders &request, std::vector<ConfigClass> config, ConnectionClass &connection);
+char 	*GET(RequestHeaders request, ConfigClass server, std::string root);
 char 	*POST(RequestHeaders request, ConfigClass server);
 char 	*DELETE(RequestHeaders request, ConfigClass server);
 char 	*noSuchMethod(RequestHeaders request);

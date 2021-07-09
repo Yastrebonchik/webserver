@@ -38,7 +38,9 @@ private:
 	std::string 								_body;
 	char										*_source;
 	std::list<char*> 							_tokens;
-	short 										responseFlags;
+	unsigned int								_responseFlags;
+	size_t 										_location;
+	size_t 										_CGILocation;
 
 	/* Методы для извлечения данных */
 	void										setAccept();
@@ -81,14 +83,18 @@ public:
 	std::string									get_userAgent() const;
 	std::string									getSourceHeader();
 	std::string 								getBody();
-	short 										getResponseFlag();
+	unsigned int								getResponseFlags();
+	size_t 										getLocation();
+	size_t 										getCGILocation();
 	void 										setUri(std::string);
 	void 										detectHeader(std::string header);
 	void										setSource(char *source);
 	void 										setInfo();
 	void 										setStartLine();
 	void 										clear();
-	void 										setResponseFlag();
+	void 										setResponseFlag(unsigned int flag);
+	void 										setLocation(size_t location);
+	void 										setCGILocation(size_t CGILocation);
 };
 
 #endif //WEBSERVER_REQUESTHEADERS_HPP

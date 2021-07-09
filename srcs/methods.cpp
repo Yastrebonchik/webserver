@@ -44,13 +44,12 @@ char 	*returnError(RequestHeaders request, size_t statusC, std::string reason) {
 	return (line);
 }
 
-char 	*GET(RequestHeaders request, std::string root, std::string index) {
+char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
 	ResponseHeaders response;
 	std::string body;
 	std::string ret;
 	std::string statusCode;
 	std::string contentLength;
-	std::string fileline;
 	std::string file;
 	std::string directory;
 	std::string uri = request.get_uri();
@@ -67,11 +66,20 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 	char *buffer;
 	size_t pos;
 	size_t result;
-	bool	listingFlag = 0;
+	std::string index = "";
 
 	if (*(--uri.end()) == '/') {
-		file = index; // Нужно будет сделать выбор файла с опциям, по приоритету и т.п.
-		listingFlag = 1;
+		if ((request.getResponseFlags() & INDEX) == INDEX) {
+			//Выбираю индекс из локейшена
+			file = (*server.getLocations())[request.getLocation()].getIndex();
+		}
+		else {
+			if ((request.getResponseFlags() & LISTING) == LISTING) {
+				if ((request.getResponseFlags() & LISTING_RESULT_YES) != LISTING_RESULT_YES) {
+					return (returnError(request, 403, "Forbidden"));
+				}
+			}
+		}
 	}
 	else {
 		if ((pos = uri.find("?")) != std::string::npos)
@@ -82,6 +90,9 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 			it--;
 		}
 		directory = (root + std::string(uri.begin(), it++)) + '/';
+		if (directory.find("./") == 0 || directory == "./") {
+			directory.replace(0, 2, "/");
+		}
 		if ((result = directory.find("//")) != std::string::npos) {
 			directory.replace(result, 2, std::string("/"));
 		}
@@ -112,13 +123,15 @@ char 	*GET(RequestHeaders request, std::string root, std::string index) {
 	if ((pos = file.find("?")) != std::string::npos) {
 		file.erase(pos, file.length() - 1);
 	}
-	if (index == "" && listingFlag) {
-		directory = root + uri;
-		if ((result = directory.find("//")) != std::string::npos) {
-			directory.replace(result, 2, std::string("/"));
+	if ((request.getResponseFlags() & LISTING) == LISTING) {
+		if ((request.getResponseFlags() & LISTING_RESULT_YES) == LISTING_RESULT_YES) {
+			directory = root + uri;
+			if ((result = directory.find("//")) != std::string::npos) {
+				directory.replace(result, 2, std::string("/"));
+			}
+			response.setPage(listing(directory));
+			response.setBinaryPage(nullptr);
 		}
-		response.setPage(listing(directory));
-		response.setBinaryPage(nullptr);
 	}
 	else {
 		if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg"
@@ -261,82 +274,199 @@ char 	*DELETE(RequestHeaders request, ConfigClass server) {
 	}
 }
 
-char 	*methodNotAllowed(RequestHeaders request) {
+char 		*methodNotAllowed(RequestHeaders request) {
 	return (returnError(request, 405, "Method Not Allowed"));
 }
 
-char 	*noSuchMethod(RequestHeaders request) {
+char 		*noSuchMethod(RequestHeaders request) {
 	return (returnError(request, 501, "Not Implemented"));
 }
 
-std::pair<std::string, std::string>	chooseRootgetIndexFindAllowed(RequestHeaders &request, ConfigClass config, \
-	std::string method) {
-
-	std::string							uri = request.get_uri();
-	std::string 						locationRoot;
-	std::string 						location;
-	std::pair<std::string, std::string>	root;
-	std::list<LocationClass>::iterator	allowIter;
-	std::list<std::string>				*allow;
-	bool 								flag = 0;
-	size_t 								result;
-
-	root = std::make_pair("", "");
-	for (std::list<LocationClass>::iterator it = config.getLocations()->begin(); it != config.getLocations()->end(); ++it) {
-		locationRoot = it->getRoot();
-		location = it->getLocation();
-		if ((request.get_uri().find(location) != std::string::npos || request.get_uri() == location\
-		) && locationRoot.size() >= root.first.size()) {
-			uri	= request.get_uri();
-			uri.replace(0, location.size(), locationRoot);
-			flag = 1;
-			allowIter = it;
-		}
-	}
-	if (flag == 1) {
-		root = std::make_pair(config.getRoot() + allowIter->getRoot(), allowIter->getIndex());
-		if (allowIter->getListing()) {
-			root.second = "";
-		}
-	}
-	if (root == std::pair<std::string, std::string>("", "")) {
-		root = std::make_pair(config.getRoot(), config.getIndex());
-	}
-	if (flag == 1 && (method == "GET" || method == "POST" || method == "DELETE" || method == "HEAD")) {
-		allow = allowIter->getMethods();
-		if (std::find(allow->begin(), allow->end(), method) == allow->end())
-			root = std::make_pair("", "");
-	}
-	if (uri != request.get_uri()) {
-		if ((result = uri.find("//")) != std::string::npos)
-			uri.replace(result, 2,std::string("/"));
-		request.setUri(uri);
-	}
-	return (root);
+static		std::string	extensionDetect(std::string file) {
+	if (file.rfind(".") != std::string::npos)
+		return (std::string(file.begin() + file.find("."), file.end()));
+	else
+		return ("none");
 }
 
-char 	*generateAnswer(RequestHeaders request, ConfigClass config) {
-	std::pair<std::string, std::string> 				root;
-	std::string 										method;
-	std::string 										index;
-	char 												*ret;
+static bool	checkServer(RequestHeaders &request, std::vector<ConfigClass> config, ConnectionClass &connection) {
+	uint32_t	ip;
+	uint16_t	port;
+	std::string serverName;
+	bool 		flag = 0;
 
-	method = request.get_method();
-	root = chooseRootgetIndexFindAllowed(request, config, method);
-	if (root.first == "" && root.second == "")
-		return (methodNotAllowed(request));
-	chdir(root.first.c_str());
-	if (method == "GET") {
-		ret = GET(request,  root.first, root.second);
-	}
-	else if (method == "POST") {
-		ret = POST(request, config);
-	}
-	else if (method == "DELETE") {
-		ret = DELETE(request, config);
+	if (request.get_host() != "") {
+		for (size_t i = 0; i < config.size(); ++i) {
+			ip = config[i].getIp();
+			port = config[i].getPort();
+			serverName = config[i].getServer_name();
+			if (serverName == request.get_host() && ip == connection.getListenIp() && port == connection.getListenPort()) {
+				connection.setServer(config[i]);
+				request.setResponseFlag(SERVER_NAME);
+				flag = 1;
+				break;
+			}
+		}
 	}
 	else {
-		ret = noSuchMethod(request);
+		for (size_t i = 0; i < config.size(); ++i) {
+			ip = config[i].getIp();
+			port = config[i].getPort();
+			if (ip == connection.getListenIp() && port == connection.getListenPort()) {
+				connection.setServer(config[i]);
+				request.setResponseFlag(SERVER_NAME);
+				flag = 1;
+				break;
+			}
+		}
+	}
+	return (flag);
+}
+
+void		setFlags(RequestHeaders &request, ConfigClass server) {
+	std::string 							fileExtension;
+	std::string								uri;
+	std::string 							locationRoot;
+	std::string 							location;
+	std::pair<std::string, std::string>		root;
+	std::vector<LocationClass>::iterator	allowIter;
+	bool 									flag = 0;
+	size_t 									result;
+	size_t 									locationNumber = 0;
+	size_t 									locationSize = 0;
+
+	fileExtension = extensionDetect(uri);
+	for (std::vector<LocationClass>::iterator it = server.getLocations()->begin(); it != server.getLocations()->end(); ++it) {
+		locationRoot = it->getRoot();
+		location = it->getLocation();
+		if (fileExtension != "none" && location == fileExtension) {
+			request.setResponseFlag(CGI_FLAG);
+			request.setCGILocation(locationNumber);
+		}
+		else if ((request.get_uri().find(location) == 0 || request.get_uri() == location) \
+		&& ((flag == 1 && location.size() > locationSize) || flag == 0)) {
+			locationSize = location.size();
+			request.setLocation(locationNumber);
+			allowIter = it;
+			flag = 1;
+		}
+		locationNumber++;
+	}
+	if (flag == 1) {
+		uri	= request.get_uri();
+		if (allowIter->getRoot() != "") {
+			request.setResponseFlag(ROOT_EXISTS);
+			uri.replace(0, location.size(), server.getRoot());
+			uri += "/";
+		}
+		else {
+			uri.replace(0, location.size(), locationRoot);
+			uri += "/";
+		}
+		if (uri != request.get_uri()) {
+			if ((result = uri.find("//")) != std::string::npos)
+				uri.replace(result, 2,std::string("/"));
+			request.setUri(uri);
+		}
+		if (allowIter->getListing() != -1) {
+			request.setResponseFlag(LISTING);
+			if (allowIter->getListing() == 1) {
+				request.setResponseFlag(LISTING_RESULT_YES);
+			}
+		}
+		if (allowIter->getMethods()->size() > 0)
+			request.setResponseFlag(ALLOW_METHODS);
+		if (allowIter->getClientBodySize() != -1)
+			request.setResponseFlag(CLIENT_BODY_SIZE_EXIST);
+		if (allowIter->getIndex() != "")
+			request.setResponseFlag(INDEX);
+		if (allowIter->getRedirection() != "")
+			request.setResponseFlag(REDIRECTION);
+//		if (allowIter->getErrorPage()) Добавить error page когда Серега завезет
+	}
+	else {
+		request.setLocation(-1);
+		if (server.getClientBodySize() != -1)
+			request.setResponseFlag(CLIENT_BODY_SIZE_EXIST);
+//		if (allowIter->getErrorPage()) Добавить error page когда Серега завезет
+	}
+}
+
+static bool checkAllow(RequestHeaders &request, std::string method, ConfigClass server) {
+	size_t 	locationNumber;
+
+	if ((request.getResponseFlags() & ALLOW_METHODS) == ALLOW_METHODS) {
+		locationNumber = request.getLocation();
+		// Создаю объект локации из той, что получил при парсе флагов
+		LocationClass	location((*server.getLocations())[locationNumber]);
+
+		// Создаю вектор доступных методов из полученного location
+		std::vector<std::string>	allow((*location.getMethods()));
+
+		if (std::find(allow.begin(), allow.end(), method) == allow.end()) {
+			return (0);
+		}
+	}
+	return (1);
+}
+
+static bool	chUriDir(RequestHeaders &request, ConfigClass server, std::string &GetRoot) {
+	std::string	root;
+	std::string locationRoot;
+	size_t 		locationNumber;
+	size_t 		result;
+
+	if ((request.getResponseFlags() & ROOT_EXISTS) == ROOT_EXISTS) {
+		locationNumber = request.getLocation();
+		// Создаю объект локации из той, что получил при парсе флагов
+		LocationClass	location((*server.getLocations())[locationNumber]);
+
+		locationRoot = location.getRoot();
+		if (locationRoot.find("./") == 0 || locationRoot == "./") {
+			locationRoot.replace(0, 2, "/");
+			root = server.getRoot() + "/" + locationRoot;
+			if ((result = root.find("//")) != std::string::npos)
+				root.replace(result, 2,"/");
+		}
+		else {
+			root = location.getRoot();
+		}
+		GetRoot = root;
+		if (chdir(root.c_str()) == -1)
+			return (0);
+	}
+	else {
+		if (chdir(GetRoot.c_str()) == -1)
+			return (0);
+	}
+	return (1);
+}
+
+char 		*generateAnswer(RequestHeaders &request, std::vector<ConfigClass> config, ConnectionClass &connection) {
+	std::string root;
+	std::string method;
+	std::string index;
+	char 		*ret;
+
+	if (!checkServer(request, config, connection))
+		return (returnError(request, 400, "Bad Request"));
+	method = request.get_method();
+	root = connection.getServer().getRoot();
+	if (method != "GET" && method != "POST" && method != "DELETE")
+		return (noSuchMethod(request));
+	setFlags(request, connection.getServer());
+	if (!checkAllow(request, method, connection.getServer()))
+		return (methodNotAllowed(request));
+	if (!chUriDir(request, connection.getServer(), root))
+		return (returnError(request, 500, "Server Error"));
+	if (method == "GET") {
+		ret = GET(request,  connection.getServer(), root);
+	}
+	else if (method == "POST") {
+		ret = POST(request, connection.getServer());
+	}
+	else {
+		ret = DELETE(request, connection.getServer());
 	}
 	return (ret);
 }

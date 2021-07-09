@@ -7,6 +7,10 @@
 #define DEFAULT_ROOT "./"
 #define DEFAULT_INDEX "index.html"
 # include "config.hpp"
+# include <cstring>
+# include <cstdlib>
+# include <algorithm>
+
 
 int config_parser(char *file, std::vector<ConfigClass> &conf);
 

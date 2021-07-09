@@ -1,6 +1,7 @@
 #include "includes/config_parser.hpp"
 #include <iostream>
 
+
 int main (int argc, char **argv)
 {
 	std::vector<ConfigClass> conf;
@@ -9,8 +10,8 @@ int main (int argc, char **argv)
 	int m;
 
 	int size;
-	std::list<LocationClass>::iterator it;
-	std::list<std::string>::iterator it_str;
+	std::vector<LocationClass>::iterator it;
+	std::vector<std::string>::iterator it_str;
 
 	config_parser(argv[1], conf);
 	i = 0;
