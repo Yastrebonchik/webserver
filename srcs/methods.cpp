@@ -270,6 +270,7 @@ char 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass connecti
 				ret += "\r\nContent-Type: " + response.getContentType();
 				ret += "\r\nServer: " + response.getServer();
 				ret += "\r\n\r\n";
+				ret += body;
 				line = ft_strdup(ret.c_str());
 				return (line);
 			}

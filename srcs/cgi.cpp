@@ -11,14 +11,15 @@ client_(client), location_(location), connection_(connection), ptrFile(NULL), pt
 {
 	char cwd[PATH_MAX + 1];
 	getcwd(cwd, sizeof(cwd));
-	std::string	scrypt;
+	// path = result.php
+	std::string executable; // php
 
-	ptrFile = new std::string(cwd + path.substr(1));
-	ptrCgiFile = new std::string(path);    //Директория для СиЖиАй
+	executable = location.getCgi_dir() + "/" + location.getIndex();
+	ptrFile = new std::string(executable); // php
+	ptrCgiFile = new std::string(path);    //path = result.php
 
-	scrypt = location.getCgi_dir() + "/" + location.getIndex();
-	args_[0] = ft_strdup(scrypt.c_str());        //FOR EXECVE,  - int execve(char *name, char *arv[], char *envp[])  - первый аргумент имя
-	args_[1] = ft_strdup((*ptrFile).c_str());
+	args_[0] = ft_strdup(executable.c_str());        //FOR EXECVE,  - int execve(char *name, char *arv[], char *envp[])  - первый аргумент имя
+	args_[1] = ft_strdup(path.c_str());
 	args_[2] = NULL;
 }
 
@@ -58,7 +59,7 @@ void CGI::createMetaVariables()
 	}
 	scrypt = this->location_.getCgi_dir() + "/" + this->location_.getIndex();
 	envMap_["GATEWAY_INTERFACE"] = "CGI/1.0";
-	envMap_["PATH_INFO"] = scrypt;   //Путь к запрошенному файлу - Директория СЖИ + Имя файла
+	envMap_["PATH_INFO"] = *ptrCgiFile;   //Путь к запрошенному файлу - Директория СЖИ + Имя файла
 	envMap_["PATH_TRANSLATED"] = *ptrFile;
 
 	if (client_.getBody().length() > 0)
@@ -93,8 +94,8 @@ void CGI::createCgiEnv()
 	for (it = envMap_.begin(); it != envMap_.end(); it++)
 	{
 		envir_ = (it->first + "=" + it->second);
-		//if (!(env_[i] = ft_strdup(envir_.c_str())))
-			//ошибка
+		if (!(env_[i] = ft_strdup(envir_.c_str())))
+			;//ошибка
 		i++;
 	}
 	env_[i] = NULL;
@@ -139,6 +140,7 @@ std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиА�
 		close(fd_cgiFile);
 		close(fd[0]);
 
+		//std::cout << "Inside execve" << std::endl;
 		int exec_res = execve(args_[0], args_, env_);      //например выполняется файл result.php а там просто идет замена и-мейл адреса клиента, или же можно возраст имя итд, Я Дима, Мне 55 лет итд.
 
 		write(1, "CGI: Execve error\n", 14);
@@ -177,7 +179,8 @@ std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиА�
 //		return "500";                    //500 если неудачно
 //
 //	body_.erase(0, pos + 4);             //вырезать эти символы
-	data = this->body_;                  //В ДАТА уже лежит финальная версия для отправки обратно клиенту через сервер
+	data = this->body_;              //В ДАТА уже лежит финальная версия для отправки обратно клиенту через сервер
+	std::cout << data;
 	return "200";                        //200 если все удачно
 }
 
