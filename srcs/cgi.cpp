@@ -89,8 +89,8 @@ void CGI::createCgiEnv()
 	std::map<std::string, std::string>::iterator it;
 
 	env_ = (char **)operator new(sizeof(char *) * (envMap_.size() + 1));
-	//if (env_ == NULL)
-		//ошибка
+	if (env_ == NULL)
+		;//ошибка
 	for (it = envMap_.begin(); it != envMap_.end(); it++)
 	{
 		envir_ = (it->first + "=" + it->second);
@@ -106,10 +106,10 @@ std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиА�
 	this->createMetaVariables();
 	this->createCgiEnv();
 
-	int fd_cgiFile = open((*ptrCgiFile).c_str(), O_RDWR | O_CREAT | O_TRUNC, 0644);
+	int fd_cgiFile = open((*ptrCgiFile).c_str(), O_RDONLY);
 	if (fd_cgiFile < 0)
 	{
-		write(1, "CGI: fail to open file\n", 23);
+		write(1, "CGI: fail to open file\n", 24);
 		return "500";
 	}
 	pid_t pid;
@@ -117,7 +117,7 @@ std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиА�
 
 	if (pipe(fd) != 0)
 	{
-		write(1, "CGI: Pipe error\n", 12);
+		write(1, "CGI: Pipe error\n", 17);
 		close(fd_cgiFile);
 		return "500";
 	}
@@ -125,7 +125,7 @@ std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиА�
 	pid = fork();
 	if (pid < 0)
 	{
-		write(1, "CGI: Fork error\n", 12);
+		write(1, "CGI: Fork error\n", 17);
 		close(fd_cgiFile);
 		return "500";
 	}
@@ -143,7 +143,7 @@ std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиА�
 		//std::cout << "Inside execve" << std::endl;
 		int exec_res = execve(args_[0], args_, env_);      //например выполняется файл result.php а там просто идет замена и-мейл адреса клиента, или же можно возраст имя итд, Я Дима, Мне 55 лет итд.
 
-		write(1, "CGI: Execve error\n", 14);
+		write(1, "CGI: Execve error\n", 19);
 		exit(exec_res);
 	}
 	else
@@ -152,7 +152,7 @@ std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиА�
 		if (client_.getBody().length() > 0)
 			if (write(fd[1], client_.getBody().c_str(), client_.getBody().length()) == -1)
 			{
-				write(1, "CGI: Write error\n", 13);
+				write(1, "CGI: Write error\n", 18);
 				kill(pid, SIGKILL);
 				close(fd[1]);
 				return "500";
@@ -161,12 +161,12 @@ std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиА�
 
 		if (waitpid(pid, &status, 0) == -1)
 		{
-			write(1, "CGI: Waitpid error\n", 15);
+			write(1, "CGI: Waitpid error\n", 20);
 			return "500";
 		}
 		if (WIFEXITED(status) && WIFSIGNALED(status) != 0)
 		{
-			write(1, "CGI: return\n", 12);
+			write(1, "CGI: return\n", 13);
 			return "500";
 		}
 	}
@@ -179,49 +179,35 @@ std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиА�
 //		return "500";                    //500 если неудачно
 //
 //	body_.erase(0, pos + 4);             //вырезать эти символы
-	data = this->body_;              //В ДАТА уже лежит финальная версия для отправки обратно клиенту через сервер
-	std::cout << data;
+	data = this->body_;                  //В ДАТА уже лежит финальная версия для отправки обратно клиенту через сервер
+
+	std::cout << "\n\n" << "                  !!!!!                  \n" << data << "                  !!!!!                  \n" << std::endl;
+
 	return "200";                        //200 если все удачно
 }
 
 bool CGI::readFile(std::string const &file, std::string &body)
 {
-	char buffer[BUFFER_SIZE + 1] = {0};
+	char buffer[1024 + 1] = {0};
 	int fd;
 	int ret;
 
 	fd = open(file.c_str(), O_RDONLY);
 	if (fd < -1)
 	{
-		write(1, "CGI: File not open\n", 15);
+		write(1, "CGI: File not open secondly\n", 29);
 		return false;
 	}
 
-	body = "";
-	while ((ret = read(fd, buffer, BUFFER_SIZE)) > 0)
-		body.append(buffer, ret);                   //В БОДИ перезаписывается видоизмененый файл
+	body = "";     //oblulenie
+	while ((ret = read(fd, buffer, 1024)) > 0)
+		body.append(buffer, ret);                   //В БОДИ перезаписывается видоизмененый файл after EXECVE
 
 	if (ret == -1)
 	{
 		body = "";
-		write(1, "CGI: Error in file reading\n", 23);
+		write(1, "CGI: Error in file reading\n", 28);
 		return false;
 	}
 	return true;
 }
-
-/*void CGI::createHttpMetaVariables()
-{
-	std::map<std::string, std::string>::const_iterator it = client_.getHeaders().begin();
-	std::string httpKey;
-
-	while (it != client_.getHeaders().end())
-	{
-		httpKey = it->first;
-		std::transform(httpKey.begin(), httpKey.end(), httpKey.begin(), ::toupper);
-		std::replace(httpKey.begin(), httpKey.end(), '-', '_');
-
-		envMap_["HTTP_" + httpKey] = it->second;    //[HTTP_ACCEPT], [HTTP_USER_AGENT], [HTTP_HOST], [HTTP_DNT], [HTTP_ORIGIN], etc,...
-		++it;
-	}
-}*/
