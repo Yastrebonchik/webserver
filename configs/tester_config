@@ -40,7 +40,7 @@ server {
 }
 
 server {
-	server_name      localhost:8002
+	server_name      tour
 	listen 0.0.0.0:8002
 	root /Users/kcedra/webserver/directory_for_tests/tournament
 
@@ -48,6 +48,15 @@ server {
        index compete.html
        error_page custom_error
        client_body_size 	50
+    }
+    location /cgi_test {
+        allow_methods POST
+        root ./cgi_test
+        index result.php
+    }
+    location .php {
+        index    php
+        cgi_dir  /usr/bin
     }
 }
 
@@ -62,7 +71,7 @@ server {
 server {
 	listen 0.0.0.0:443
 
-	server_name      fifth
+	server_name      localhost:443
 
 	root /Users/kcedra/webserver
 

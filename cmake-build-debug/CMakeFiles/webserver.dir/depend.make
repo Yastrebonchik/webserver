@@ -16,6 +16,7 @@ CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.o: ../includes/ConnectionCl
 CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.o: ../includes/ConnectionHandling.h
 CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.o: ../includes/RequestHeaders.hpp
 CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.o: ../includes/ResponseHeaders.hpp
+CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.o: ../includes/cgi.hpp
 CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.o: ../includes/methods.h
 CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.o: ../includes/utils.hpp
 CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.o: ../srcs/ConnectionHandling.cpp
@@ -29,6 +30,18 @@ CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o: ../includes/ResponseHeaders
 CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o: ../includes/utils.hpp
 CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o: ../srcs/ResponseHeaders.cpp
 
+CMakeFiles/webserver.dir/srcs/cgi.cpp.o: ../config_parser_v.0.1/includes/ConfigClass.hpp
+CMakeFiles/webserver.dir/srcs/cgi.cpp.o: ../config_parser_v.0.1/includes/LocationClass.hpp
+CMakeFiles/webserver.dir/srcs/cgi.cpp.o: ../config_parser_v.0.1/includes/config.hpp
+CMakeFiles/webserver.dir/srcs/cgi.cpp.o: ../config_parser_v.0.1/includes/config_parser.hpp
+CMakeFiles/webserver.dir/srcs/cgi.cpp.o: ../includes/ConnectionClass.hpp
+CMakeFiles/webserver.dir/srcs/cgi.cpp.o: ../includes/RequestHeaders.hpp
+CMakeFiles/webserver.dir/srcs/cgi.cpp.o: ../includes/ResponseHeaders.hpp
+CMakeFiles/webserver.dir/srcs/cgi.cpp.o: ../includes/cgi.hpp
+CMakeFiles/webserver.dir/srcs/cgi.cpp.o: ../includes/methods.h
+CMakeFiles/webserver.dir/srcs/cgi.cpp.o: ../includes/utils.hpp
+CMakeFiles/webserver.dir/srcs/cgi.cpp.o: ../srcs/cgi.cpp
+
 CMakeFiles/webserver.dir/srcs/main.cpp.o: ../config_parser_v.0.1/includes/ConfigClass.hpp
 CMakeFiles/webserver.dir/srcs/main.cpp.o: ../config_parser_v.0.1/includes/LocationClass.hpp
 CMakeFiles/webserver.dir/srcs/main.cpp.o: ../config_parser_v.0.1/includes/config.hpp
@@ -37,6 +50,7 @@ CMakeFiles/webserver.dir/srcs/main.cpp.o: ../includes/ConnectionClass.hpp
 CMakeFiles/webserver.dir/srcs/main.cpp.o: ../includes/ConnectionHandling.h
 CMakeFiles/webserver.dir/srcs/main.cpp.o: ../includes/RequestHeaders.hpp
 CMakeFiles/webserver.dir/srcs/main.cpp.o: ../includes/ResponseHeaders.hpp
+CMakeFiles/webserver.dir/srcs/main.cpp.o: ../includes/cgi.hpp
 CMakeFiles/webserver.dir/srcs/main.cpp.o: ../includes/methods.h
 CMakeFiles/webserver.dir/srcs/main.cpp.o: ../includes/utils.hpp
 CMakeFiles/webserver.dir/srcs/main.cpp.o: ../srcs/main.cpp
@@ -48,6 +62,7 @@ CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../config_parser_v.0.1/includes/con
 CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../includes/ConnectionClass.hpp
 CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../includes/RequestHeaders.hpp
 CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../includes/ResponseHeaders.hpp
+CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../includes/cgi.hpp
 CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../includes/methods.h
 CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../includes/utils.hpp
 CMakeFiles/webserver.dir/srcs/methods.cpp.o: ../srcs/methods.cpp

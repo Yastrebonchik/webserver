@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <string>
+#include <stdlib.h>
+#include <cstdlib>
 #include <vector>
 #include <list>
 #include <queue>
@@ -20,42 +22,45 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define DEFAULT_PATH "./config"
-#define DEFAULT_CONF "./config/default.conf"
-#define WEBSERV_NAME "webserv/1.0.0"
-#define WEBSERV_HTTP "HTTP/1.1"
-#define WEBSERV_AUTH "Basic"
+#define DEFAULT_PATH "./configs"
+#define DEFAULT_CONF "./configs/config_file"
+//#define WEBSERV_NAME "webserv/1.0.0"
+//#define WEBSERV_HTTP "HTTP/1.1"
+//#define WEBSERV_AUTH "Basic"
 #define RECV_BUFFER 16 * 1024
 #define SEND_BUFFER 10000000
 #define TIMEOUT_SEC 10
+#define BUFFER_SIZE 32
 
 #include "RequestHeaders.hpp"
-#include "ResponseHeaders.hpp"
-//#include "base64.hpp"     тут хз что
+//#include "ResponseHeaders.hpp"
+#include "LocationClass.hpp"
+#include "ConnectionClass.hpp"
+#include "methods.h"
+//#include "base64.hpp"   ENCODE / DECODE for Encryption and Safety 
 
-class Client;      //config location tut must be "RequestHeaders.hpp" or "ResponseHeaders.hpp"
+class RequestHeaders;
 
 class CGI
 {
 private:
-	Client client_;
-	ConfigLocation location_;    //config
+	RequestHeaders client_;
+	LocationClass location_;
+	ConnectionClass connection_;
 	std::string *ptrFile;
 	std::string *ptrCgiFile;
 	char *args_[4];
-	char **env_;            //закинуть енв сюда
+	char **env_;
 
 	std::map<std::string, std::string> envMap_;
-	std::string envir;
-
+	std::string envir_;                             //ENVIRONMENT VARIABLES
 	std::string body_;
 
 public:
-	CGI(Client const &client, ConfigLocation location, std::string const &path);
+	CGI(RequestHeaders const &client, LocationClass location, ConnectionClass connection, std::string const &path);
 	~CGI();
 
 	std::string const &getHeaders() const;
-
 	void createMetaVariables();
 	void createHttpMetaVariables();
 	void printMetaVariables();

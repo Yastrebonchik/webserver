@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/Users/kcedra/webserver/srcs/ConnectionHandling.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.o"
   "/Users/kcedra/webserver/srcs/RequestHeaders.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/RequestHeaders.cpp.o"
   "/Users/kcedra/webserver/srcs/ResponseHeaders.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o"
+  "/Users/kcedra/webserver/srcs/cgi.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/cgi.cpp.o"
   "/Users/kcedra/webserver/srcs/main.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/main.cpp.o"
   "/Users/kcedra/webserver/srcs/methods.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/methods.cpp.o"
   "/Users/kcedra/webserver/srcs/utils.cpp" "/Users/kcedra/webserver/cmake-build-debug/CMakeFiles/webserver.dir/srcs/utils.cpp.o"

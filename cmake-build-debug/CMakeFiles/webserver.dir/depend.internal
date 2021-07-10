@@ -17,6 +17,7 @@ CMakeFiles/webserver.dir/srcs/ConnectionHandling.cpp.o
  ../includes/ConnectionHandling.h
  ../includes/RequestHeaders.hpp
  ../includes/ResponseHeaders.hpp
+ ../includes/cgi.hpp
  ../includes/methods.h
  ../includes/utils.hpp
  /Users/kcedra/webserver/srcs/ConnectionHandling.cpp
@@ -29,6 +30,18 @@ CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o
  /Users/kcedra/webserver/includes/ResponseHeaders.hpp
  /Users/kcedra/webserver/includes/utils.hpp
  /Users/kcedra/webserver/srcs/ResponseHeaders.cpp
+CMakeFiles/webserver.dir/srcs/cgi.cpp.o
+ ../config_parser_v.0.1/includes/ConfigClass.hpp
+ ../config_parser_v.0.1/includes/LocationClass.hpp
+ ../config_parser_v.0.1/includes/config.hpp
+ ../config_parser_v.0.1/includes/config_parser.hpp
+ ../includes/ConnectionClass.hpp
+ ../includes/RequestHeaders.hpp
+ ../includes/ResponseHeaders.hpp
+ ../includes/cgi.hpp
+ ../includes/methods.h
+ ../includes/utils.hpp
+ /Users/kcedra/webserver/srcs/cgi.cpp
 CMakeFiles/webserver.dir/srcs/main.cpp.o
  ../config_parser_v.0.1/includes/ConfigClass.hpp
  ../config_parser_v.0.1/includes/LocationClass.hpp
@@ -38,6 +51,7 @@ CMakeFiles/webserver.dir/srcs/main.cpp.o
  ../includes/ConnectionHandling.h
  ../includes/RequestHeaders.hpp
  ../includes/ResponseHeaders.hpp
+ ../includes/cgi.hpp
  ../includes/methods.h
  ../includes/utils.hpp
  /Users/kcedra/webserver/srcs/main.cpp
@@ -49,6 +63,7 @@ CMakeFiles/webserver.dir/srcs/methods.cpp.o
  ../includes/ConnectionClass.hpp
  ../includes/RequestHeaders.hpp
  ../includes/ResponseHeaders.hpp
+ ../includes/cgi.hpp
  ../includes/methods.h
  ../includes/utils.hpp
  /Users/kcedra/webserver/srcs/methods.cpp

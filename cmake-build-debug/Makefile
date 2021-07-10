@@ -250,6 +250,33 @@ srcs/ResponseHeaders.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.s
 .PHONY : srcs/ResponseHeaders.cpp.s
 
+srcs/cgi.o: srcs/cgi.cpp.o
+
+.PHONY : srcs/cgi.o
+
+# target to build an object file
+srcs/cgi.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/cgi.cpp.o
+.PHONY : srcs/cgi.cpp.o
+
+srcs/cgi.i: srcs/cgi.cpp.i
+
+.PHONY : srcs/cgi.i
+
+# target to preprocess a source file
+srcs/cgi.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/cgi.cpp.i
+.PHONY : srcs/cgi.cpp.i
+
+srcs/cgi.s: srcs/cgi.cpp.s
+
+.PHONY : srcs/cgi.s
+
+# target to generate assembly for a file
+srcs/cgi.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/webserver.dir/build.make CMakeFiles/webserver.dir/srcs/cgi.cpp.s
+.PHONY : srcs/cgi.cpp.s
+
 srcs/main.o: srcs/main.cpp.o
 
 .PHONY : srcs/main.o
@@ -352,6 +379,9 @@ help:
 	@echo "... srcs/ResponseHeaders.o"
 	@echo "... srcs/ResponseHeaders.i"
 	@echo "... srcs/ResponseHeaders.s"
+	@echo "... srcs/cgi.o"
+	@echo "... srcs/cgi.i"
+	@echo "... srcs/cgi.s"
 	@echo "... srcs/main.o"
 	@echo "... srcs/main.i"
 	@echo "... srcs/main.s"

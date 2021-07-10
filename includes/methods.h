@@ -17,6 +17,7 @@
 # include "utils.hpp"
 # include <fstream>
 # include "ConnectionClass.hpp"
+# include "cgi.hpp"
 
 # define SERVER_NAME 1
 # define REDIRECTION 2
@@ -31,7 +32,7 @@
 
 char	*generateAnswer(RequestHeaders &request, std::vector<ConfigClass> config, ConnectionClass &connection);
 char 	*GET(RequestHeaders request, ConfigClass server, std::string root);
-char 	*POST(RequestHeaders request, ConfigClass server);
+char 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass connection);
 char 	*DELETE(RequestHeaders request, ConfigClass server);
 char 	*noSuchMethod(RequestHeaders request);
 char	*returnError(RequestHeaders request);

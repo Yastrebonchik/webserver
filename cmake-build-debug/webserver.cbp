@@ -96,6 +96,9 @@
 		<Unit filename="/Users/kcedra/webserver/includes/ResponseHeaders.hpp">
 			<Option target="webserver"/>
 		</Unit>
+		<Unit filename="/Users/kcedra/webserver/includes/cgi.hpp">
+			<Option target="webserver"/>
+		</Unit>
 		<Unit filename="/Users/kcedra/webserver/includes/methods.h">
 			<Option target="webserver"/>
 		</Unit>
@@ -112,6 +115,9 @@
 			<Option target="webserver"/>
 		</Unit>
 		<Unit filename="/Users/kcedra/webserver/srcs/ResponseHeaders.cpp">
+			<Option target="webserver"/>
+		</Unit>
+		<Unit filename="/Users/kcedra/webserver/srcs/cgi.cpp">
 			<Option target="webserver"/>
 		</Unit>
 		<Unit filename="/Users/kcedra/webserver/srcs/main.cpp">

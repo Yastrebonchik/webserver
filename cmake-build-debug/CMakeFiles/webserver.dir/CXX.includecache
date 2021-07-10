@@ -102,6 +102,56 @@ time.h
 sys/time.h
 -
 
+../includes/cgi.hpp
+iostream
+-
+string
+-
+stdlib.h
+-
+cstdlib
+-
+vector
+-
+list
+-
+queue
+-
+map
+-
+algorithm
+-
+ctime
+-
+cstring
+-
+exception
+-
+stack
+-
+signal.h
+-
+utils.hpp
+../includes/utils.hpp
+fcntl.h
+-
+sys/stat.h
+-
+sys/socket.h
+-
+netinet/in.h
+-
+arpa/inet.h
+-
+RequestHeaders.hpp
+../includes/RequestHeaders.hpp
+LocationClass.hpp
+../includes/LocationClass.hpp
+ConnectionClass.hpp
+../includes/ConnectionClass.hpp
+methods.h
+../includes/methods.h
+
 ../includes/methods.h
 ResponseHeaders.hpp
 ../includes/ResponseHeaders.hpp
@@ -127,6 +177,8 @@ fstream
 -
 ConnectionClass.hpp
 ../includes/ConnectionClass.hpp
+cgi.hpp
+../includes/cgi.hpp
 
 ../includes/utils.hpp
 stdlib.h
@@ -144,7 +196,7 @@ string
 dirent.h
 -
 
-/Users/kcedra/webserver/srcs/methods.cpp
-methods.h
-/Users/kcedra/webserver/srcs/methods.h
+/Users/kcedra/webserver/srcs/cgi.cpp
+cgi.hpp
+/Users/kcedra/webserver/srcs/cgi.hpp
 
