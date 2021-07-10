@@ -4,6 +4,7 @@ server {
 	root /Users/kcedra/webserver/directory_for_tests/devAid-v1.1
 
     location / {
+       root ./
        index index.html
        error_page custom_error
        client_body_size 	50
@@ -11,10 +12,10 @@ server {
 }
 
 server {
-    server_name      second
-	listen 0.0.0.0:8000
+    server_name     post_server
+	listen 0.0.0.0:80
 
-	root /Users/kcedra/webserver/YoupiBanane
+	root /Users/kcedra/webserver/directory_for_tests/tournament
 
     location / {
         root ./
@@ -33,9 +34,10 @@ server {
         allow_methods GET
     }
     location /directory/test {
-        root ./tournament/delete_dir
+        root ./delete_dir
         index   test3.json
         allow_methods GET POST DELETE
+        client_body_size 10
     }
 }
 

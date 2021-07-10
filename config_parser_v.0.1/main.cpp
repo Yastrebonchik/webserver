@@ -2,6 +2,10 @@
 #include <iostream>
 
 
+void free_conf(std::vector<ConfigClass> &conf) {
+
+}
+
 int main (int argc, char **argv)
 {
 	std::vector<ConfigClass> conf;
@@ -23,7 +27,7 @@ int main (int argc, char **argv)
 		std::cout << "Port:             " << conf[i].getPort() << std::endl;
 		std::cout << "Root:             " << conf[i].getRoot() << std::endl;
 		std::cout << "Index:            " << conf[i].getIndex() << std::endl;
-		std::cout << "Error page:       " << conf[i].getErrorPage() << std::endl;
+		//std::cout << "Error page:       " << conf[i].getErrorPage() << std::endl;
 		std::cout << "Client body size: " << conf[i].getClientBodySize() << std::endl;
 		std::cout << "Location number:  " << conf[i].getLocNum() << std::endl;
 		m = 1;
@@ -36,7 +40,7 @@ int main (int argc, char **argv)
 				std::cout << "	Location:			" << (*it).getLocation() << std::endl;
 				std::cout << "	Root:				" << (*it).getRoot() << std::endl;
 				std::cout << "	Index:				" << (*it).getIndex() << std::endl;
-				std::cout << "	Error page:			" << (*it).getErrorPage() << std::endl;
+				//std::cout << "	Error page:			" << (*it).getErrorPage() << std::endl;
 				std::cout << "	Client body size:		" << (*it).getClientBodySize() << std::endl;
 				std::cout << "	Listing:			" << (*it).getListing() << std::endl;
 				std::cout << "	Redirection:			" << (*it).getRedirection() << std::endl;
@@ -60,5 +64,6 @@ int main (int argc, char **argv)
 		std::cout << "-----------------------------------\n";
 		i++;
 	}
+	free_conf(conf);
 	return (1);
 }

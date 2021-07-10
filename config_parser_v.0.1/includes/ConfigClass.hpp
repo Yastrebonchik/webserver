@@ -2,6 +2,7 @@
 #define CONFIGCLASS_HPP
 #include <vector>
 #include <string>
+#include <map>
 #include <stdint.h>
 
 class LocationClass;
@@ -16,6 +17,7 @@ class ConfigClass {
 		std::string	error_page;
 		int			client_body_size;
 		std::vector<LocationClass> *locations;
+		std::map<int, std::string> error_pages;
 
 	public:
 		ConfigClass();
@@ -29,6 +31,7 @@ class ConfigClass {
 		void setErrorPage(std::string &x);
 		void setClientBodySize(int x);
 		void setLocations(std::vector<LocationClass> *locations);
+		void setErrorPages(std::map<int, std::string>);
 
 		std::string	getServer_name() const;
 		uint32_t	getIp() const;
@@ -39,6 +42,7 @@ class ConfigClass {
 		int			getClientBodySize() const;
 		std::vector<LocationClass> *getLocations() const;
 		int getLocNum() const;
+		std::map<int, std::string>getErrorPages();
 };
 
 #endif

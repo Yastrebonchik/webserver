@@ -418,6 +418,10 @@ void 							RequestHeaders::setResponseFlag(unsigned int flag) {
 		this->_responseFlags += flag;
 };
 
+void 							RequestHeaders::clearResponesFlag() {
+	this->_responseFlags = 0;
+}
+
 void 							RequestHeaders::setLocation(size_t location) {
 	this->_location = location;
 };

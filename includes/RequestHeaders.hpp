@@ -39,8 +39,8 @@ private:
 	char										*_source;
 	std::list<char*> 							_tokens;
 	unsigned int								_responseFlags;
-	size_t 										_location;
-	size_t 										_CGILocation;
+	int 										_location;
+	int 										_CGILocation;
 
 	/* Методы для извлечения данных */
 	void										setAccept();
@@ -93,6 +93,7 @@ public:
 	void 										setStartLine();
 	void 										clear();
 	void 										setResponseFlag(unsigned int flag);
+	void 										clearResponesFlag();
 	void 										setLocation(size_t location);
 	void 										setCGILocation(size_t CGILocation);
 };

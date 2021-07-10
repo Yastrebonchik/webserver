@@ -6,7 +6,7 @@
 #    By: rbeach <rbeach@student.21-school.ru>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/10 14:22:17 by rbeach            #+#    #+#              #
-#    Updated: 2021/07/09 18:38:43 by rbeach           ###   ########.fr        #
+#    Updated: 2021/07/10 19:07:07 by rbeach           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ $(NAME): $(OBJECTS) main.cpp
 main: $(NAME)
 	$(CC) main.cpp libconfpar.a
 
-$(O_DIR)/%.o: $(S_DIR)/%.cpp
+$(O_DIR)/%.o: $(S_DIR)/%.cpp $(HEADER_DIR)/*.hpp
 	mkdir -p $(O_DIR)
 	$(CC) $(FLAGS) -I$(HEADER_DIR) -I../libft -o $@ -c $<
 

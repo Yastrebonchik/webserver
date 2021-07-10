@@ -196,7 +196,7 @@ string
 dirent.h
 -
 
-/Users/kcedra/webserver/srcs/cgi.cpp
-cgi.hpp
-/Users/kcedra/webserver/srcs/cgi.hpp
+/Users/kcedra/webserver/srcs/methods.cpp
+methods.h
+/Users/kcedra/webserver/srcs/methods.h
 

@@ -1,8 +1,16 @@
 #include "../includes/LocationClass.hpp"
 
-LocationClass::LocationClass(){};
+LocationClass::LocationClass(){
+	this->allow_methods = NULL;
+};
 
-LocationClass::~LocationClass(){};
+LocationClass::~LocationClass(){
+	if (this->allow_methods)
+	{
+		//delete this->allow_methods;
+	//	this->allow_methods = NULL;
+	}
+};
 
 void LocationClass::setLocation(std::string str) {
 	this->location = str;

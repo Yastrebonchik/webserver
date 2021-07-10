@@ -243,7 +243,19 @@ char 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass connecti
 	else {
 		response.setVersion();
 		response.setServer();
-		openfile = server.getRoot() + "/" + request.get_uri();
+		if ((request.getResponseFlags() & CLIENT_BODY_SIZE_EXIST) == CLIENT_BODY_SIZE_EXIST) {
+			if (request.getLocation() < 0) {
+				if (static_cast<int>(request.getBody().size()) > server.getClientBodySize())
+					return (returnError(request, 413, "Payload Too Large"));
+			}
+			else {
+				if (static_cast<int>(request.getBody().size()) >
+				(*server.getLocations())[request.getLocation()].getClientBodySize()) {
+					return (returnError(request, 413, "Payload Too Large"));
+				}
+			}
+		}
+		openfile = request.get_uri();
 		if ((result = openfile.find("//")) != std::string::npos) {
 			openfile.replace(result, 2, std::string("/"));
 		}
@@ -287,7 +299,7 @@ char 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass connecti
 				ret += "\r\nServer: " + response.getServer() + "\r\n";
 				return (ft_strdup(ret.c_str()));
 			} else {
-				return (returnError(request, 500, "Server Error"));
+				return (returnError(request, 404, "Found"));
 			}
 		}
 	}
@@ -337,19 +349,31 @@ static bool	checkServer(RequestHeaders &request, std::vector<ConfigClass> config
 	uint32_t	ip;
 	uint16_t	port;
 	std::string serverName;
+	bool 		firstServerFlag = 0;
+	size_t 		firstServer = 0;
 	bool 		flag = 0;
 
+	request.clearResponesFlag();
 	if (request.get_host() != "") {
 		for (size_t i = 0; i < config.size(); ++i) {
 			ip = config[i].getIp();
 			port = config[i].getPort();
 			serverName = config[i].getServer_name();
+			if (firstServerFlag == 0 && ip == connection.getListenIp()) {
+				firstServer = i;
+				firstServerFlag = 1;
+			}
 			if (serverName == request.get_host() && ip == connection.getListenIp() && port == connection.getListenPort()) {
 				connection.setServer(config[i]);
 				request.setResponseFlag(SERVER_NAME);
 				flag = 1;
 				break;
 			}
+		}
+		if (firstServerFlag && !flag) {
+			connection.setServer(config[firstServer]);
+			request.setResponseFlag(SERVER_NAME);
+			flag = 1;
 		}
 	}
 	else {
@@ -397,18 +421,23 @@ void		setFlags(RequestHeaders &request, ConfigClass server) {
 		locationNumber++;
 	}
 	if (flag == 1) {
-		uri	= request.get_uri();
 		if (allowIter->getRoot() != "") {
 			request.setResponseFlag(ROOT_EXISTS);
-			uri = server.getRoot() + locationRoot + request.get_uri();
-			//uri.replace(0, location.size(), locationRoot);
-			//uri =  request.get_uri();
-			if ((result = uri.find("./")) == 0 || locationRoot == "./")
+			uri.replace(0, location.size(), locationRoot);
+			if (uri.find("./") != std::string::npos) {
+				uri = server.getRoot() + "/" + uri;
+			}
+			else {
+				uri = locationRoot + "/" + uri;
+			}
+			if ((result = uri.find("./")) != std::string::npos || locationRoot == "./")
 				uri.replace(result, 2, "/");
 		}
 		else {
-			uri = server.getRoot() + request.get_uri();
 			//uri.replace(0, location.size(), server.getRoot());
+			uri = server.getRoot() + request.get_uri();
+//			if ((result = uri.find("./")) != std::string::npos)
+//				uri.replace(result, 2, "/");
 			//uri += request.get_uri();
 		}
 		if (uri != request.get_uri()) {
@@ -451,7 +480,7 @@ static bool checkAllow(RequestHeaders &request, std::string method, ConfigClass 
 		// Создаю вектор доступных методов из полученного location
 		std::vector<std::string>	allow((*location.getMethods()));
 
-		if (std::find(allow.begin(), allow.end(), method) == allow.end()) {
+		if (allow.size() > 0 && (std::find(allow.begin(), allow.end(), method) == allow.end())) {
 			return (0);
 		}
 	}
@@ -506,7 +535,7 @@ char 		*generateAnswer(RequestHeaders &request, std::vector<ConfigClass> config,
 	if (!checkAllow(request, method, connection.getServer()))
 		return (methodNotAllowed(request));
 	if (!chUriDir(request, connection.getServer(), root))
-		return (returnError(request, 500, "Server Error"));
+		return (returnError(request, 404, "Not Found"));
 	if (method == "GET") {
 		ret = GET(request,  connection.getServer(), root);
 	}

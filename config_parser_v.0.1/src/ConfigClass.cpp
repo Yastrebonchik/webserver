@@ -3,9 +3,18 @@
 
 ConfigClass::ConfigClass(){
 	this->locations = NULL;
+	//this->error_pages = NULL;
 };
 
-ConfigClass::~ConfigClass() {};
+ConfigClass::~ConfigClass() {
+	//std::vector<LocationClass>::iterator it;
+	//it = (this->locations)->begin();
+	if (this->locations)
+	{
+		//delete this->locations;
+		
+	}
+};
 
 void ConfigClass::setServer_name(std::string &x)
 {
@@ -39,6 +48,10 @@ void ConfigClass::setLocations(std::vector<LocationClass> *locations)
 {
 	this->locations = locations;
 }
+void ConfigClass::setErrorPages(std::map<int, std::string> errorPages){
+	this->error_pages = errorPages;
+}
+
 
 std::string ConfigClass::getServer_name() const
 {
@@ -77,4 +90,7 @@ int ConfigClass::getLocNum() const {
 	if (this->locations)
 		return (this->locations->size());
 	return (0);
+}
+std::map<int, std::string> ConfigClass::getErrorPages() {
+		return this->error_pages;
 }

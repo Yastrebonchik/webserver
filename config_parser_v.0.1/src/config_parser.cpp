@@ -11,6 +11,7 @@ int class_add(std::map<std::string, std::string> &attributes, std::vector<Config
 	int			i;
 	uint32_t	x;
 	int			cbs;
+	char		*tmp_cbs;
 
 	server = new ConfigClass();
 	ip_len = (attributes.find("listen")->second).length();
@@ -28,7 +29,12 @@ int class_add(std::map<std::string, std::string> &attributes, std::vector<Config
 		nbrs = strtok(NULL, ".:");
 		i++;
 	}
-	cbs = atoi((char*)(attributes.find("client_body_size")->second).c_str());
+	
+	tmp_cbs = (char*)(attributes.find("client_body_size")->second).c_str();
+	if (strlen(tmp_cbs))
+		cbs = atoi(tmp_cbs);
+	else
+		cbs = -1;
 	x = (uint32_t)ip[3] << 24;
 	x += (uint32_t)ip[2] << 16;
 	x += (uint32_t)ip[1] << 8;
@@ -38,10 +44,11 @@ int class_add(std::map<std::string, std::string> &attributes, std::vector<Config
 	server->setPort(htons(port));
 	server->setRoot(attributes.find("root")->second);
 	server->setIndex(attributes.find("index")->second);
-	server->setErrorPage(attributes.find("error_page")->second);
+	//server->setErrorPage(attributes.find("error_page")->second);
 	server->setClientBodySize(cbs);
 	server->setLocations(locations);
 	conf.push_back(*server);
+	//delete server;
 	return (0);
 }
 
@@ -72,7 +79,6 @@ static LocationClass *location_class_create(std::map<std::string, std::string> &
 			words->push_back(word);
 	}
 	location->setMethods(words);
-	//delete words;
 	return (location);
 }
 
@@ -120,12 +126,16 @@ int server_add(std::list<std::list<std::string> > &lines, std::list<std::list<st
 	std::map<std::string, std::string> attributes;
 	attributes["server_name"] = DEFAULT_SERVER_NAME;
 	attributes["listen"] = DEFAULT_LISTEN;
-	attributes["error_page"] = DEFAULT_ERROR_PAGE;
+	//attributes["error_page"] = DEFAULT_ERROR_PAGE;
 	attributes["client_body_size"] = DEFAULT_CLIENT_BODY_SIZE;
 	attributes["root"] = DEFAULT_ROOT;
 	attributes["index"] = DEFAULT_INDEX;
 	std::map<std::string, std::string>::iterator it_map;
+
+	std::list<std::string>::iterator it_str;
 	std::vector<LocationClass> *locations = new std::vector<LocationClass>();
+	std::map<int, std::string> error_map;
+
 	while (it != lines.end())
 	{
 		if (*((*it).begin()) == "location")
@@ -133,6 +143,13 @@ int server_add(std::list<std::list<std::string> > &lines, std::list<std::list<st
 			locations->push_back(*location_add(lines, it));
 			if (it == lines.end() || *((*it).begin()) == "server")
 				break;
+		}
+		if (*((*it).begin()) == "error_page")
+		{
+			it_str = (*it).begin();
+			it_str++;
+			std::cout << (*it_str).c_str() << "\n";
+			error_map[atoi((*it_str).c_str())] = *(it_str++);
 		}
 		if ((it_map = attributes.find(*((*it).begin()))) != attributes.end())
 			{
@@ -144,6 +161,12 @@ int server_add(std::list<std::list<std::string> > &lines, std::list<std::list<st
 			break;
 	}
 	it_map = attributes.begin();
+
+//while(std::map<int, std::string>::const_iterator it = error_map.begin(); it != error_map.end(); it++)
+//{
+//	std::cout << "{" << it->first << ": " << it->second << "}\n";
+//}
+
 	if (class_add(attributes, conf, locations))
 		return (1);
 	return (0);
