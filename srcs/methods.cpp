@@ -242,18 +242,18 @@ void 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass &connect
 	else {
 		response.setVersion();
 		response.setServer();
-		if ((request.getResponseFlags() & CLIENT_BODY_SIZE_EXIST) == CLIENT_BODY_SIZE_EXIST) {
-			if (request.getLocation() < 0) {
-				if (static_cast<int>(request.getBody().size()) > server.getClientBodySize())
-					return (returnError(request, 413, "Payload Too Large", connection));
-			}
-			else {
-				if (static_cast<int>(request.getBody().size()) >
-				(*server.getLocations())[request.getLocation()].getClientBodySize()) {
-					return (returnError(request, 413, "Payload Too Large", connection));
-				}
-			}
-		}
+		//if ((request.getResponseFlags() & CLIENT_BODY_SIZE_EXIST) == CLIENT_BODY_SIZE_EXIST) {
+			//if (request.getLocation() < 0) {
+			//	if (static_cast<int>(request.getBody().size()) > server.getClientBodySize())
+			//		return (returnError(request, 413, "Payload Too Large", connection));
+			//}
+			//else {
+			//	if (static_cast<int>(request.getBody().size()) >
+			//	(*server.getLocations())[request.getLocation()].getClientBodySize()) {
+			//		return (returnError(request, 413, "Payload Too Large", connection));
+			//	}
+			//}
+		//}
 		openfile = request.get_uri();
 		if ((result = openfile.find("//")) != std::string::npos) {
 			openfile.replace(result, 2, std::string("/"));

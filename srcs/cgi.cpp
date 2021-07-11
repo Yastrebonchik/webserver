@@ -62,8 +62,8 @@ void CGI::createMetaVariables()
 	envMap_["PATH_INFO"] = *ptrCgiFile;   //Путь к запрошенному файлу - Директория СЖИ + Имя файла
 	envMap_["PATH_TRANSLATED"] = *ptrFile;
 
-	//if (client_.getBody().length() > 0)
-	//	envMap_["QUERY_STRING"] = client_.getBody();    //Собственно информация, которую нужно подставить и динамически изменить в запросе ".php" etc... Строка запроса
+	if (client_.getBody().length() > 0)
+		envMap_["QUERY_STRING"] = client_.getBody();    //Собственно информация, которую нужно подставить и динамически изменить в запросе ".php" etc... Строка запроса
 
 //	sockaddr_in addrCl;
 //	socklen_t lenCl = sizeof(addrCl);
@@ -141,11 +141,6 @@ std::string CGI::run(std::string &body)            // ЗАПУСК СиДЖиА�
 
 	if (pid == 0)
 	{
-		//close(fd[1]);
-		//dup2(fd_cgiFile, 1);
-		//dup2(fd[0], 0);
-		//close(fd_cgiFile);
-		//close(fd[0]);
 		close(stdin_pipe[1]);
 		close(stdout_pipe[0]);
 		dup2(stdin_pipe[0], 0);
@@ -198,9 +193,6 @@ std::string CGI::run(std::string &body)            // ЗАПУСК СиДЖиА�
 //		return "500";                    //500 если неудачно
 //
 //	body_.erase(0, pos + 4);             //вырезать эти символы
-
-	std::cout << "\n\n" << "                  !!!!!                  \n" <<
-	body << "                  !!!!!                  \n" << std::endl;
 	return "200";
 }
 
