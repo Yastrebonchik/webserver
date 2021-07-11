@@ -9,8 +9,8 @@ std::string NumToString(size_t num)
 CGI::CGI(RequestHeaders const &client, LocationClass location, ConnectionClass connection, std::string const &path) :
 client_(client), location_(location), connection_(connection), ptrFile(NULL), ptrCgiFile(NULL), env_(NULL)  //Конструктор для СиЖиаИ ЗДЕСЬ!!!
 {
-	char cwd[PATH_MAX + 1];
-	getcwd(cwd, sizeof(cwd));
+	//char cwd[PATH_MAX + 1];
+	//getcwd(cwd, sizeof(cwd));
 	// path = result.php
 	std::string executable; // php
 
@@ -62,8 +62,8 @@ void CGI::createMetaVariables()
 	envMap_["PATH_INFO"] = *ptrCgiFile;   //Путь к запрошенному файлу - Директория СЖИ + Имя файла
 	envMap_["PATH_TRANSLATED"] = *ptrFile;
 
-	if (client_.getBody().length() > 0)
-		envMap_["QUERY_STRING"] = client_.getBody();    //Собственно информация, которую нужно подставить и динамически изменить в запросе ".php" etc... Строка запроса
+	//if (client_.getBody().length() > 0)
+	//	envMap_["QUERY_STRING"] = client_.getBody();    //Собственно информация, которую нужно подставить и динамически изменить в запросе ".php" etc... Строка запроса
 
 //	sockaddr_in addrCl;
 //	socklen_t lenCl = sizeof(addrCl);
@@ -101,24 +101,31 @@ void CGI::createCgiEnv()
 	env_[i] = NULL;
 }
 
-std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиАй здесь!!!!! С Аргументом ДАТА! ДАТА и получит результат выполнения программы!
+std::string CGI::run(std::string &body)            // ЗАПУСК СиДЖиАй здесь!!!!! С Аргументом ДАТА! ДАТА и получит результат выполнения программы!
 {
 	this->createMetaVariables();
 	this->createCgiEnv();
 
-	int fd_cgiFile = open((*ptrCgiFile).c_str(), O_RDONLY);
-	if (fd_cgiFile < 0)
-	{
-		write(1, "CGI: fail to open file\n", 24);
-		return "500";
-	}
+	//int fd_cgiFile = open((*ptrCgiFile).c_str(), O_RDONLY);
+	//if (fd_cgiFile < 0)
+	//{
+	//	write(1, "CGI: fail to open file\n", 24);
+	//	return "500";
+	//}
 	pid_t pid;
-	int fd[2];
+	int stdin_pipe[2];
+	int stdout_pipe[2];
 
-	if (pipe(fd) != 0)
+	if (pipe(stdin_pipe) != 0)
 	{
 		write(1, "CGI: Pipe error\n", 17);
-		close(fd_cgiFile);
+		//close(fd_cgiFile);
+		return "500";
+	}
+	if (pipe(stdout_pipe) != 0)
+	{
+		write(1, "CGI: Pipe 2 error\n", 19);
+		//close(fd_cgiFile);
 		return "500";
 	}
 
@@ -126,7 +133,7 @@ std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиА�
 	if (pid < 0)
 	{
 		write(1, "CGI: Fork error\n", 17);
-		close(fd_cgiFile);
+		//close(fd_cgiFile);
 		return "500";
 	}
 
@@ -134,13 +141,16 @@ std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиА�
 
 	if (pid == 0)
 	{
-		close(fd[1]);
-		dup2(fd_cgiFile, 1);
-		dup2(fd[0], 0);
-		close(fd_cgiFile);
-		close(fd[0]);
-
-		//std::cout << "Inside execve" << std::endl;
+		//close(fd[1]);
+		//dup2(fd_cgiFile, 1);
+		//dup2(fd[0], 0);
+		//close(fd_cgiFile);
+		//close(fd[0]);
+		close(stdin_pipe[1]);
+		close(stdout_pipe[0]);
+		dup2(stdin_pipe[0], 0);
+		dup2(stdout_pipe[1], 1);
+		
 		int exec_res = execve(args_[0], args_, env_);      //например выполняется файл result.php а там просто идет замена и-мейл адреса клиента, или же можно возраст имя итд, Я Дима, Мне 55 лет итд.
 
 		write(1, "CGI: Execve error\n", 19);
@@ -148,16 +158,17 @@ std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиА�
 	}
 	else
 	{
-		close(fd[0]);
+		close(stdin_pipe[0]);
+		close(stdout_pipe[1]);
 		if (client_.getBody().length() > 0)
-			if (write(fd[1], client_.getBody().c_str(), client_.getBody().length()) == -1)
+			if (write(stdin_pipe[1], client_.getBody().c_str(), client_.getBody().length()) == -1)
 			{
 				write(1, "CGI: Write error\n", 18);
 				kill(pid, SIGKILL);
-				close(fd[1]);
+				close(stdin_pipe[1]);
 				return "500";
 			}
-		close(fd[1]);
+		close(stdin_pipe[1]);
 
 		if (waitpid(pid, &status, 0) == -1)
 		{
@@ -170,44 +181,51 @@ std::string CGI::run(std::string &data)            // ЗАПУСК СиДЖиА�
 			return "500";
 		}
 	}
-
-	if (!this->readFile(*ptrCgiFile, this->body_))    //прочитать результат выполнения ЕХЕСВЕ
-		return "500";                                 //500 если неудачно
+	char buffer[1024 + 1] = {0};
+	int ret;
+	//body = "";
+	while ((ret = read(stdout_pipe[0], buffer, 1024)) > 0)
+		body.append(buffer, ret); 
+	if (ret == -1)
+	{
+		body = "";
+		write(1, "CGI: Error in file reading\n", 28);
+		return "500";
+	}
 
 //	size_t pos = body_.find("\r\n\r\n");
 //	if (pos == std::string::npos)        //не нашел если
 //		return "500";                    //500 если неудачно
 //
 //	body_.erase(0, pos + 4);             //вырезать эти символы
-	data = this->body_;                  //В ДАТА уже лежит финальная версия для отправки обратно клиенту через сервер
 
-	std::cout << "\n\n" << "                  !!!!!                  \n" << data << "                  !!!!!                  \n" << std::endl;
-
-	return "200";                        //200 если все удачно
+	std::cout << "\n\n" << "                  !!!!!                  \n" <<
+	body << "                  !!!!!                  \n" << std::endl;
+	return "200";
 }
 
-bool CGI::readFile(std::string const &file, std::string &body)
-{
-	char buffer[1024 + 1] = {0};
-	int fd;
-	int ret;
-
-	fd = open(file.c_str(), O_RDONLY);
-	if (fd < -1)
-	{
-		write(1, "CGI: File not open secondly\n", 29);
-		return false;
-	}
-
-	body = "";     //oblulenie
-	while ((ret = read(fd, buffer, 1024)) > 0)
-		body.append(buffer, ret);                   //В БОДИ перезаписывается видоизмененый файл after EXECVE
-
-	if (ret == -1)
-	{
-		body = "";
-		write(1, "CGI: Error in file reading\n", 28);
-		return false;
-	}
-	return true;
-}
+//bool CGI::readFile(std::string const &file, std::string &body)
+//{
+//	char buffer[1024 + 1] = {0};
+//	int fd;
+//	int ret;
+//
+//	fd = open(file.c_str(), O_RDONLY);
+//	if (fd < -1)
+//	{
+//		write(1, "CGI: File not open secondly\n", 29);
+//		return false;
+//	}
+//
+//	body = "";     //oblulenie
+//	while ((ret = read(fd, buffer, 1024)) > 0)
+//		body.append(buffer, ret);                   //В БОДИ перезаписывается видоизмененый файл after EXECVE
+//
+//	if (ret == -1)
+//	{
+//		body = "";
+//		write(1, "CGI: Error in file reading\n", 28);
+//		return false;
+//	}
+//	return true;
+//}
