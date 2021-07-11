@@ -30,11 +30,11 @@
 # define CLIENT_BODY_SIZE_EXIST 256
 # define CGI_FLAG 512
 
-char	*generateAnswer(RequestHeaders &request, std::vector<ConfigClass> config, ConnectionClass &connection);
-char 	*GET(RequestHeaders request, ConfigClass server, std::string root);
-char 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass connection);
-char 	*DELETE(RequestHeaders request, ConfigClass server);
-char 	*noSuchMethod(RequestHeaders request);
-char	*returnError(RequestHeaders request);
+void	*generateAnswer(RequestHeaders &request, std::vector<ConfigClass> config, ConnectionClass &connection);
+void 	*GET(RequestHeaders request, ConfigClass server, std::string root, ConnectionClass &connection);
+void 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass &connection);
+void 	*DELETE(RequestHeaders request, ConfigClass server, ConnectionClass &connection);
+void 	*noSuchMethod(RequestHeaders request, ConnectionClass &connection);
+void	*returnError(RequestHeaders request, ConnectionClass &connection);
 
 #endif //WEBSERVER_METHODS_H

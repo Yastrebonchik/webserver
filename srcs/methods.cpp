@@ -4,7 +4,7 @@
 
 #include "methods.h"
 
-char 	*returnError(RequestHeaders request, size_t statusC, std::string reason) {
+void 	*returnError(RequestHeaders request, size_t statusC, std::string reason, ConnectionClass &connection) {
 	ResponseHeaders		response;
 	std::stringstream	strstream;
 	std::fstream 		fin;
@@ -41,10 +41,11 @@ char 	*returnError(RequestHeaders request, size_t statusC, std::string reason) {
 	ret += "\r\nContent-Type: " + response.getContentType() + "\r\nServer: " + response.getServer();
 	ret += "\r\n\r\n" + response.getPage();
 	line = ft_strdup(ret.c_str());
+	connection.setAnswerSize(ret.size());
 	return (line);
 }
 
-char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
+void 	*GET(RequestHeaders request, ConfigClass server, std::string root, ConnectionClass &connection) {
 	ResponseHeaders response;
 	std::string body;
 	std::string ret;
@@ -61,9 +62,11 @@ char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
 	struct dirent *entry;
 	std::string seekfilename;
 	char *line;
+	void *retline;
 	DIR *dir;
-//	int length;
-	char *buffer;
+	int length;
+	void *buffer;
+	char *charbuffer;
 	size_t pos;
 	size_t result;
 	std::string index = "";
@@ -76,7 +79,7 @@ char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
 		else {
 			if ((request.getResponseFlags() & LISTING) == LISTING) {
 				if ((request.getResponseFlags() & LISTING_RESULT_YES) != LISTING_RESULT_YES) {
-					return (returnError(request, 403, "Forbidden"));
+					return (returnError(request, 403, "Forbidden", connection));
 				}
 			}
 		}
@@ -116,7 +119,7 @@ char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
 			if (dir != NULL) {
 				closedir(dir);
 			}
-			return (returnError(request, 404, "Not Found"));
+			return (returnError(request, 404, "Not Found", connection));
 		}
 		file = directory + file;
 	}
@@ -130,7 +133,7 @@ char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
 				directory.replace(result, 2, std::string("/"));
 			}
 			response.setPage(listing(directory));
-			response.setBinaryPage(nullptr);
+			response.setBinaryPage(nullptr, 0);
 		}
 	}
 	else {
@@ -142,37 +145,38 @@ char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
 			fin.open(file, std::fstream::in);
 		}
 		if (!fin.is_open())
-			return (returnError(request, 404, "Not Found"));
+			return (returnError(request, 404, "Not Found", connection));
 		else {
 			if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg"
 				|| mimeDetect(file).find("font") != std::string::npos) {
-//				fin.seekg(0, fin.end);
-//				length = fin.tellg();
-//				fin.seekg(0, fin.beg);
-//				buffer = new char[length];
-//				fin.read(buffer, length);
+				fin.seekg(0, fin.end);
+				length = fin.tellg();
+				fin.seekg(0, fin.beg);
+				charbuffer = new char[length];
+				fin.read(charbuffer, length);
+				buffer = static_cast<void*>(charbuffer);
+				response.setBinaryPage(buffer, length);
+				fin.close();
+//				std::filebuf* pbuf = fin.rdbuf();
+//
+//				// get file size using buffer's members
+//				std::size_t size = pbuf->pubseekoff (0,fin.end,fin.in);
+//				pbuf->pubseekpos (0,fin.in);
+//
+//				// allocate memory to contain file data
+//				buffer = (void*)ft_calloc(size, sizeof(char));
+//
+//				// get file data
+//				pbuf->sgetn(buffer ,size);
+//
 //				response.setBinaryPage(buffer);
 //				fin.close();
-				std::filebuf* pbuf = fin.rdbuf();
-
-				// get file size using buffer's members
-				std::size_t size = pbuf->pubseekoff (0,fin.end,fin.in);
-				pbuf->pubseekpos (0,fin.in);
-
-				// allocate memory to contain file data
-				buffer = (char*)ft_calloc(size, sizeof (char));
-
-				// get file data
-				pbuf->sgetn (buffer,size);
-
-				response.setBinaryPage(buffer);
-				fin.close();
 			} else {
 				strstream << fin.rdbuf();
 				body = strstream.str();
 				response.setPage(body);
 				fin.close();
-				response.setBinaryPage(nullptr);
+				response.setBinaryPage(nullptr, 0);
 			}
 		}
 	}
@@ -186,7 +190,7 @@ char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
 		response.setConnection("keep-alive");
 	}
 	if (response.getBinaryPage() != nullptr) {
-		response.setContentLength(ft_strlen(response.getBinaryPage()));
+		response.setContentLength(response.getBinaryPageLen());
 	}
 	else {
 		response.setContentLength(response.getPage().length());
@@ -203,17 +207,23 @@ char 	*GET(RequestHeaders request, ConfigClass server, std::string root) {
 	ret += "\r\n\r\n";
 	if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg"
 	|| mimeDetect(file).find("font") != std::string::npos) {
-		line = ft_strjoin(ret.c_str(), response.getBinaryPage());
+		line = ft_strdup(ret.c_str());
+		retline = newbuffer(line, response.getBinaryPage(), (int)(response.getBinaryPageLen()));
+		free(line);
+		connection.setAnswerSize(ret.size() + response.getBinaryPageLen());
+		return (retline);
+		//line = ft_strjoin(ret.c_str(), response.getBinaryPage());
 	}
 	else {
 		ret += response.getPage();
 		line = ft_strdup(ret.c_str());
+		response.setBinaryPage(nullptr, 0);
+		connection.setAnswerSize(ret.size() + response.getPage().size());
+		return (line);
 	}
-	response.setBinaryPage(nullptr);
-	return (line);
 }
 
-char 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass connection) {
+void 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass &connection) {
 	ResponseHeaders			response;
 	std::fstream			file;
 	std::string 			openfile;
@@ -238,6 +248,7 @@ char 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass connecti
 		ret = response.getVersion() + " 204 " + response.getReasonPhrase();
 		ret += "\r\nConnection: " + response.getConnection();
 		ret += "\r\nServer: " + response.getServer() + "\r\n";
+		connection.setAnswerSize(ret.size());
 		return (ft_strdup(ret.c_str()));
 	}
 	else {
@@ -246,12 +257,12 @@ char 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass connecti
 		if ((request.getResponseFlags() & CLIENT_BODY_SIZE_EXIST) == CLIENT_BODY_SIZE_EXIST) {
 			if (request.getLocation() < 0) {
 				if (static_cast<int>(request.getBody().size()) > server.getClientBodySize())
-					return (returnError(request, 413, "Payload Too Large"));
+					return (returnError(request, 413, "Payload Too Large", connection));
 			}
 			else {
 				if (static_cast<int>(request.getBody().size()) >
 				(*server.getLocations())[request.getLocation()].getClientBodySize()) {
-					return (returnError(request, 413, "Payload Too Large"));
+					return (returnError(request, 413, "Payload Too Large", connection));
 				}
 			}
 		}
@@ -264,7 +275,7 @@ char 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass connecti
 
 			statucCode = cgi.run(body);
 			if (statucCode == "500")
-				return (returnError(request, 500, "Server Error"));
+				return (returnError(request, 500, "Server Error", connection));
 			else {
 				response.setStatusCode(200);
 				response.setReasonPhrase("OK");
@@ -284,6 +295,7 @@ char 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass connecti
 				ret += "\r\n\r\n";
 				ret += body;
 				line = ft_strdup(ret.c_str());
+				connection.setAnswerSize(ret.size() + ft_strlen(line));
 				return (line);
 			}
 		}
@@ -297,15 +309,16 @@ char 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass connecti
 				ret = response.getVersion() + " 201 " + response.getReasonPhrase();
 				ret += "\r\nConnection: " + response.getConnection();
 				ret += "\r\nServer: " + response.getServer() + "\r\n";
+				connection.setAnswerSize(ret.size());
 				return (ft_strdup(ret.c_str()));
 			} else {
-				return (returnError(request, 404, "Found"));
+				return (returnError(request, 404, "Found", connection));
 			}
 		}
 	}
 }
 
-char 	*DELETE(RequestHeaders request, ConfigClass server) {
+void 	*DELETE(RequestHeaders request, ConfigClass server, ConnectionClass &connection) {
 	ResponseHeaders response;
 	std::string file;
 	std::string ret;
@@ -323,19 +336,20 @@ char 	*DELETE(RequestHeaders request, ConfigClass server) {
 		ret = response.getVersion() + " 200 " + response.getReasonPhrase();
 		ret += "\r\nConnection: " + response.getConnection();
 		ret += "\r\nServer: " + response.getServer() + "\r\n";
+		connection.setAnswerSize(ret.size());
 		return (ft_strdup(ret.c_str()));
 	}
 	else {
-		return (returnError(request, 400, "Bad Request"));
+		return (returnError(request, 400, "Bad Request", connection));
 	}
 }
 
-char 		*methodNotAllowed(RequestHeaders request) {
-	return (returnError(request, 405, "Method Not Allowed"));
+void 		*methodNotAllowed(RequestHeaders request, ConnectionClass &connection) {
+	return (returnError(request, 405, "Method Not Allowed", connection));
 }
 
-char 		*noSuchMethod(RequestHeaders request) {
-	return (returnError(request, 501, "Not Implemented"));
+void 		*noSuchMethod(RequestHeaders request, ConnectionClass &connection) {
+	return (returnError(request, 501, "Not Implemented", connection));
 }
 
 static		std::string	extensionDetect(std::string file) {
@@ -359,7 +373,7 @@ static bool	checkServer(RequestHeaders &request, std::vector<ConfigClass> config
 			ip = config[i].getIp();
 			port = config[i].getPort();
 			serverName = config[i].getServer_name();
-			if (firstServerFlag == 0 && ip == connection.getListenIp()) {
+			if (firstServerFlag == 0 && port == connection.getListenPort()) {
 				firstServer = i;
 				firstServerFlag = 1;
 			}
@@ -519,31 +533,31 @@ static bool	chUriDir(RequestHeaders &request, ConfigClass server, std::string &G
 	return (1);
 }
 
-char 		*generateAnswer(RequestHeaders &request, std::vector<ConfigClass> config, ConnectionClass &connection) {
+void 		*generateAnswer(RequestHeaders &request, std::vector<ConfigClass> config, ConnectionClass &connection) {
 	std::string root;
 	std::string method;
 	std::string index;
-	char 		*ret;
+	void 		*ret;
 
 	if (!checkServer(request, config, connection))
-		return (returnError(request, 400, "Bad Request"));
+		return (returnError(request, 400, "Bad Request", connection));
 	method = request.get_method();
 	root = connection.getServer().getRoot();
 	if (method != "GET" && method != "POST" && method != "DELETE")
-		return (noSuchMethod(request));
+		return (noSuchMethod(request, connection));
 	setFlags(request, connection.getServer());
 	if (!checkAllow(request, method, connection.getServer()))
-		return (methodNotAllowed(request));
+		return (methodNotAllowed(request, connection));
 	if (!chUriDir(request, connection.getServer(), root))
-		return (returnError(request, 404, "Not Found"));
+		return (returnError(request, 404, "Not Found", connection));
 	if (method == "GET") {
-		ret = GET(request,  connection.getServer(), root);
+		ret = GET(request,  connection.getServer(), root, connection);
 	}
 	else if (method == "POST") {
 		ret = POST(request, connection.getServer(), connection);
 	}
 	else {
-		ret = DELETE(request, connection.getServer());
+		ret = DELETE(request, connection.getServer(), connection);
 	}
 	return (ret);
 }

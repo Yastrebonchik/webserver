@@ -72,8 +72,12 @@ std::string 			ResponseHeaders::getPage(){
 	return (this->_page);
 }
 
-char* 					ResponseHeaders::getBinaryPage() {
+void* 					ResponseHeaders::getBinaryPage() {
 	return (this->_binaryPage);
+};
+
+size_t 					ResponseHeaders::getBinaryPageLen() {
+	return (this->_binaryPageLen);
 };
 
 void 					ResponseHeaders::setVersion(){
@@ -124,26 +128,27 @@ void 					ResponseHeaders::setServer(){
 	this->_server.push_back("Webserver/1.0");
 }
 
-void 					ResponseHeaders::pageAdd(std::string line) {
-	this->_page += line;
-}
+//void 					ResponseHeaders::pageAdd(std::string line) {
+//	this->_page += line;
+//}
 
 void 					ResponseHeaders::setPage(std::string page) {
 	this->_page = page;
 }
 
-void 					ResponseHeaders::setBinaryPage(char *buffer) {
+void 					ResponseHeaders::setBinaryPage(void *buffer, size_t len) {
 	this->_binaryPage = buffer;
+	this->_binaryPageLen = len;
 }
 
-void 					ResponseHeaders::binaryPageAdd(char *line) {
-	//char 	*bubble;
-
-	if (!this->_binaryPage)
-		this->_binaryPage = (char*)operator new(1);
-	//bubble = this->_binaryPage;
-	this->_binaryPage = ft_strjoin(this->_binaryPage, line);
-	if (line == nullptr)
-		this->_binaryPage = nullptr;
-	//free(bubble);
-};
+//void 					ResponseHeaders::binaryPageAdd(char *line) {
+//	//char 	*bubble;
+//
+//	if (!this->_binaryPage)
+//		this->_binaryPage = (char*)operator new(1);
+//	//bubble = this->_binaryPage;
+//	this->_binaryPage = ft_strjoin(this->_binaryPage, line);
+//	if (line == nullptr)
+//		this->_binaryPage = nullptr;
+//	//free(bubble);
+//};

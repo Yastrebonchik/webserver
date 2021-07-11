@@ -104,7 +104,7 @@ void	sendData(int i, std::vector<ConnectionClass> &connections) {
 			std::cout << "------------------------" << std::endl;
 		}
 		if (connections[i].getAnswer() != nullptr && send(connections[i].getConnectionfd(), connections[i].getAnswer(),
-				 ft_strlen(connections[i].getAnswer()), 0) < 0) {
+				 connections[i].getAnswerSize(), 0) < 0) {
 			std::cerr << "Error while sending data" << std::endl;
 		}
 	}

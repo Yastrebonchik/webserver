@@ -326,3 +326,18 @@ std::string	listing(std::string directory) {
 		   "</html>";
 	return (ret);
 }
+
+void *newbuffer(char *first, void *second, int v_size)
+{
+	int c_size = std::strlen(first);
+	char *result = (char*)malloc(c_size + v_size + 1);
+	char *tmp_second;
+
+	std::strcpy(result, first);
+	tmp_second = (char*)second;
+	for (int i = c_size; i - c_size < v_size; i++) {
+		result[i] = tmp_second[i - c_size];
+	}
+	result[c_size + v_size] = 0;
+	return result;
+}

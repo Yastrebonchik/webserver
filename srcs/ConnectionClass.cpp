@@ -15,10 +15,14 @@ ConnectionClass::ConnectionClass(int connectionfd, uint32_t listenIp, uint16_t l
 	_answer(nullptr) {
 }
 
-void 		ConnectionClass::setAnswer(char *answer) {
+void 		ConnectionClass::setAnswer(void *answer) {
 	if (this->_answer != nullptr)
 		free(this->_answer);
 	this->_answer = answer;
+}
+
+void 		ConnectionClass::setAnswerSize(size_t answer_size) {
+	this->_answersize = answer_size;
 }
 
 void 		ConnectionClass::clearAnswer() {
@@ -51,7 +55,7 @@ uint16_t	ConnectionClass::getListenPort() {
 	return (this->_listenPort);
 };
 
-char* 		ConnectionClass::getAnswer() {
+void* 		ConnectionClass::getAnswer() {
 	return (this->_answer);
 }
 
@@ -66,3 +70,7 @@ bool 		ConnectionClass::getSendFlag() {
 ConfigClass	ConnectionClass::getServer() {
 	return (this->_server);
 };
+
+size_t 		ConnectionClass::getAnswerSize() {
+	return (this->_answersize);
+}

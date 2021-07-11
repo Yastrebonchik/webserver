@@ -16,7 +16,8 @@ private:
 	uint16_t		_listenPort;
 	bool 			_closeFlag;
 	bool 			_sendFlag;
-	char 			*_answer;
+	void 			*_answer;
+	size_t 			_answersize;
 	ConfigClass		_server;
 
 public:
@@ -24,7 +25,8 @@ public:
 	ConnectionClass(int connectionfd, uint32_t listenIp, uint16_t listenPort);
 	~ConnectionClass();
 
-	void 		setAnswer(char *answer);
+	void 		setAnswer(void *answer);
+	void 		setAnswerSize(size_t answer_size);
 	void 		clearAnswer();
 	void 		setCloseFlag(bool flag);
 	void 		setSendFlag(bool flag);
@@ -32,9 +34,10 @@ public:
 	int 		getConnectionfd();
 	uint32_t	getListenIp();
 	uint16_t	getListenPort();
-	char 		*getAnswer();
+	void 		*getAnswer();
 	bool 		getCloseFlag();
 	bool 		getSendFlag();
+	size_t 		getAnswerSize();
 	ConfigClass	getServer();
 };
 

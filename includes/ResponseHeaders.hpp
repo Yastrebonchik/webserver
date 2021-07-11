@@ -30,7 +30,8 @@ private:
 	std::list<std::string>	_server;
 	std::list<std::string>	_WWWAuthenticate;
 	std::string 			_page;
-	char 					*_binaryPage;
+	void 					*_binaryPage;
+	size_t 					_binaryPageLen;
 
 public:
 	ResponseHeaders();
@@ -52,7 +53,8 @@ public:
 	std::string				getServer() const;
 	std::list<std::string>	getWWWAuthenticate() const;
 	std::string 			getPage();
-	char* 					getBinaryPage();
+	void* 					getBinaryPage();
+	size_t 					getBinaryPageLen();
 	void 					setVersion();
 	void 					setStatusCode(size_t code);
 	void 					setReasonPhrase(std::string phrase);
@@ -62,10 +64,10 @@ public:
 	void 					setContentType(std::string type);
 	void 					setDate(RequestHeaders request);
 	void 					setServer();
-	void 					setBinaryPage(char* buffer);
+	void 					setBinaryPage(void* buffer, size_t len);
 	void 					setPage(std::string page);
-	void 					pageAdd(std::string line);
-	void 					binaryPageAdd(char *line);
+	//void 					pageAdd(std::string line);
+	//void 					binaryPageAdd(char *line);
 };
 
 

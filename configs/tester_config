@@ -37,7 +37,7 @@ server {
         root ./delete_dir
         index   test3.json
         allow_methods GET POST DELETE
-        client_body_size 10
+        client_body_size 100
     }
 }
 
@@ -67,7 +67,11 @@ server {
 	listen 0.0.0.0:8004
 	root /Users/kcedra/webserver/directory_for_tests/newsfeed
 
-	index index.html
+    location / {
+        root ./
+        index index.html
+        allow_methods GET
+    }
 }
 
 server {
