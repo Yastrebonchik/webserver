@@ -8,7 +8,7 @@ CONFPAR = libconfpar.a
 
 FLAGS = -Wall -Werror -Wextra -std=c++98
 
-HEADERS = methods.h RequestHeaders.hpp ResponseHeaders.hpp ConnectionClass.hpp utils.hpp ConnectionHandling.hpp #cgi.hpp
+HEADERS = methods.h RequestHeaders.hpp ResponseHeaders.hpp ConnectionClass.hpp utils.hpp ConnectionHandling.hpp cgi.hpp
 
 HEADER_DIR = includes
 
@@ -17,7 +17,7 @@ S_DIR = srcs
 O_DIR = obj
 
 SRCS = main.cpp RequestHeaders.cpp ResponseHeaders.cpp methods.cpp ConnectionClass.cpp utils.cpp \
-ConnectionHandling.cpp  #cgi.cpp
+ConnectionHandling.cpp cgi.cpp
 
 OBJECTS = $(addprefix $(O_DIR)/, $(SRCS:.cpp=.o))
 

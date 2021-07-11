@@ -34,6 +34,5 @@ int config_check(std::list<std::list<std::string> > lines)
 		return (ft_strerror("Configuration file is empty"));
 	if (bracket_check(lines))
 		return (ft_strerror("Configuration file has unpair brackets"));
-	std::cout << "Configuration file is OK\n----------------------------" << std::endl;
 	return (0);
 }

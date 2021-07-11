@@ -25,5 +25,6 @@ char		*ft_strjoin(char const *s1, char const *s2);
 std::string	mimeDetect(std::string file);
 std::string	listing(std::string directory);
 void 		*newbuffer(char *first, void *second, int v_size);
+std::string	extensionDetect(std::string file);
 
 #endif //WEBSERVER_UTILS_HPP

@@ -50,5 +50,12 @@ server {
 		cgi_dir  /cgishka2
 		allow_methods GET POST DELETE
 		client_body_size 	2
+		error_page 405 ./405.html
+		error_page 301 ./301.html
 	}
+}
+
+server {
+	server_name      third_server
+	listen 0.0.0.0:8000
 }

@@ -125,7 +125,7 @@ void 	RequestHeaders::setAcceptLanguage(){
 	while (token != NULL){
 		values = ft_split(token, ';');
 		language = values[0];
-		q  = 1;
+		q = 1;
 		if (values[1] != NULL)
 			q = atof(ft_strchr(values[1], '=') + 1);
 		this->_acceptLanguage.push_back(std::pair<std::string, float>(language, q));

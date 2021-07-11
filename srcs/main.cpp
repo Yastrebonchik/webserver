@@ -69,7 +69,6 @@ int main() {
 		if (checkPort(ports, server.getPort())) {
 			close(listener[i]);
 			listener.pop_back();
-			//i--;
 		}
 		else {
 			if (bind(listener[i], (struct sockaddr *) &addr, sizeof(addr)) < 0) {

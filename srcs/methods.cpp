@@ -45,7 +45,7 @@ void 	*returnError(RequestHeaders request, size_t statusC, std::string reason, C
 	return (line);
 }
 
-void 	*GET(RequestHeaders request, ConfigClass server, std::string root, ConnectionClass &connection) {
+void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connection) {
 	ResponseHeaders response;
 	std::string body;
 	std::string ret;
@@ -70,17 +70,19 @@ void 	*GET(RequestHeaders request, ConfigClass server, std::string root, Connect
 	size_t pos;
 	size_t result;
 	std::string index = "";
+	bool 		flag = 0;
 
 	if (*(--uri.end()) == '/') {
-		if ((request.getResponseFlags() & INDEX) == INDEX) {
-			//Выбираю индекс из локейшена
-			file = (*server.getLocations())[request.getLocation()].getIndex();
+		if ((request.getResponseFlags() & LISTING) == LISTING) {
+			if ((request.getResponseFlags() & LISTING_RESULT_YES) != LISTING_RESULT_YES) {
+				return (returnError(request, 403, "Forbidden", connection));
+			}
+			flag = 1;
 		}
 		else {
-			if ((request.getResponseFlags() & LISTING) == LISTING) {
-				if ((request.getResponseFlags() & LISTING_RESULT_YES) != LISTING_RESULT_YES) {
-					return (returnError(request, 403, "Forbidden", connection));
-				}
+			if ((request.getResponseFlags() & INDEX) == INDEX) {
+				//Выбираю индекс из локейшена
+				file = (*server.getLocations())[request.getLocation()].getIndex();
 			}
 		}
 	}
@@ -126,12 +128,9 @@ void 	*GET(RequestHeaders request, ConfigClass server, std::string root, Connect
 	if ((pos = file.find("?")) != std::string::npos) {
 		file.erase(pos, file.length() - 1);
 	}
-	if ((request.getResponseFlags() & LISTING) == LISTING) {
+	if ((request.getResponseFlags() & LISTING) == LISTING && flag == 1) {
 		if ((request.getResponseFlags() & LISTING_RESULT_YES) == LISTING_RESULT_YES) {
-			directory = root + uri;
-			if ((result = directory.find("//")) != std::string::npos) {
-				directory.replace(result, 2, std::string("/"));
-			}
+			directory = uri;
 			response.setPage(listing(directory));
 			response.setBinaryPage(nullptr, 0);
 		}
@@ -157,21 +156,8 @@ void 	*GET(RequestHeaders request, ConfigClass server, std::string root, Connect
 				buffer = static_cast<void*>(charbuffer);
 				response.setBinaryPage(buffer, length);
 				fin.close();
-//				std::filebuf* pbuf = fin.rdbuf();
-//
-//				// get file size using buffer's members
-//				std::size_t size = pbuf->pubseekoff (0,fin.end,fin.in);
-//				pbuf->pubseekpos (0,fin.in);
-//
-//				// allocate memory to contain file data
-//				buffer = (void*)ft_calloc(size, sizeof(char));
-//
-//				// get file data
-//				pbuf->sgetn(buffer ,size);
-//
-//				response.setBinaryPage(buffer);
-//				fin.close();
-			} else {
+			}
+			else {
 				strstream << fin.rdbuf();
 				body = strstream.str();
 				response.setPage(body);
@@ -195,10 +181,13 @@ void 	*GET(RequestHeaders request, ConfigClass server, std::string root, Connect
 	else {
 		response.setContentLength(response.getPage().length());
 	}
-	response.setContentType(mimeDetect(file));
+	if ((request.getResponseFlags() & LISTING) == LISTING && flag == 1)
+		response.setContentType("text/html");
+	else
+		response.setContentType(mimeDetect(file));
 	response.setDate(request);
 	response.setServer();
-	statusCode = std::to_string(response.getStatusCode()); //Добавить сюда свой итоа
+	statusCode = std::to_string(response.getStatusCode());
 	contentLength = std::to_string(response.getContentLength());
 	ret = response.getVersion() + " " + statusCode + " " + response.getReasonPhrase();
 	ret += "\r\nConnection: " + response.getConnection() + "\r\nContent-Length: " + contentLength;
@@ -212,7 +201,6 @@ void 	*GET(RequestHeaders request, ConfigClass server, std::string root, Connect
 		free(line);
 		connection.setAnswerSize(ret.size() + response.getBinaryPageLen());
 		return (retline);
-		//line = ft_strjoin(ret.c_str(), response.getBinaryPage());
 	}
 	else {
 		ret += response.getPage();
@@ -352,13 +340,6 @@ void 		*noSuchMethod(RequestHeaders request, ConnectionClass &connection) {
 	return (returnError(request, 501, "Not Implemented", connection));
 }
 
-static		std::string	extensionDetect(std::string file) {
-	if (file.rfind(".") != std::string::npos)
-		return (std::string(file.begin() + file.find("."), file.end()));
-	else
-		return ("none");
-}
-
 static bool	checkServer(RequestHeaders &request, std::vector<ConfigClass> config, ConnectionClass &connection) {
 	uint32_t	ip;
 	uint16_t	port;
@@ -437,7 +418,7 @@ void		setFlags(RequestHeaders &request, ConfigClass server) {
 	if (flag == 1) {
 		if (allowIter->getRoot() != "") {
 			request.setResponseFlag(ROOT_EXISTS);
-			uri.replace(0, location.size(), locationRoot);
+			uri.replace(0, allowIter->getLocation().size(), allowIter->getRoot());
 			if (uri.find("./") != std::string::npos) {
 				uri = server.getRoot() + "/" + uri;
 			}
@@ -551,7 +532,7 @@ void 		*generateAnswer(RequestHeaders &request, std::vector<ConfigClass> config,
 	if (!chUriDir(request, connection.getServer(), root))
 		return (returnError(request, 404, "Not Found", connection));
 	if (method == "GET") {
-		ret = GET(request,  connection.getServer(), root, connection);
+		ret = GET(request,  connection.getServer(), connection);
 	}
 	else if (method == "POST") {
 		ret = POST(request, connection.getServer(), connection);

@@ -31,7 +31,7 @@
 # define CGI_FLAG 512
 
 void	*generateAnswer(RequestHeaders &request, std::vector<ConfigClass> config, ConnectionClass &connection);
-void 	*GET(RequestHeaders request, ConfigClass server, std::string root, ConnectionClass &connection);
+void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connection);
 void 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass &connection);
 void 	*DELETE(RequestHeaders request, ConfigClass server, ConnectionClass &connection);
 void 	*noSuchMethod(RequestHeaders request, ConnectionClass &connection);

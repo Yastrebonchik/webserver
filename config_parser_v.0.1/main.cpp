@@ -17,7 +17,8 @@ int main (int argc, char **argv)
 	std::vector<LocationClass>::iterator it;
 	std::vector<std::string>::iterator it_str;
 
-	config_parser(argv[1], conf);
+	if (config_parser(argv[1], conf))
+		return(1);
 	i = 0;
 	size = conf.size();
 	while (i < size)
@@ -31,6 +32,15 @@ int main (int argc, char **argv)
 		std::cout << "Client body size: " << conf[i].getClientBodySize() << std::endl;
 		std::cout << "Location number:  " << conf[i].getLocNum() << std::endl;
 		m = 1;
+		std::map<int, std::string> error_map(conf[i].getErrorPages());
+		if (!(error_map.empty()))
+		{
+			std::cout << "Error_pages:\n";
+			for(std::map<int, std::string>::const_iterator it = error_map.begin(); it != error_map.end(); it++)
+			{
+				std::cout << "    {" << it->first << ": " << it->second << "}\n";
+			}
+		}
 		if (!(conf[i].getLocations())->empty())
 		{
 			it = (conf[i].getLocations())->begin();
@@ -49,7 +59,7 @@ int main (int argc, char **argv)
 				if (!(*it).getMethods()->empty())
 				{
 					it_str = (*it).getMethods()->begin();
-					std::cout << "		Allow methods: ";
+					std::cout << "	Allow methods: ";
 					while (it_str != (*it).getMethods()->end())
 					{
 						std::cout << *it_str << " ";
@@ -58,6 +68,15 @@ int main (int argc, char **argv)
 					std::cout << std::endl;
 				}
 				m++;
+				std::map<int, std::string> error_map((*it).getErrorPages());
+				if (!(error_map.empty()))
+				{
+					std::cout << "	Error_pages:\n";
+					for(std::map<int, std::string>::const_iterator it = error_map.begin(); it != error_map.end(); it++)
+					{
+						std::cout << "	    {" << it->first << ": " << it->second << "}\n";
+					}
+				}
 				it++;
 			}
 		}

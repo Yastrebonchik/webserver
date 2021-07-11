@@ -1,6 +1,6 @@
 #include "config_parser.hpp"
 
-int class_add(std::map<std::string, std::string> &attributes, std::vector<ConfigClass> &conf, std::vector<LocationClass> *locations)
+int class_add(std::map<std::string, std::string> &attributes, std::vector<ConfigClass> &conf, std::vector<LocationClass> *locations, std::map<int, std::string> error_map)
 {
 	ConfigClass *server;
 	int			ip[4];
@@ -44,7 +44,7 @@ int class_add(std::map<std::string, std::string> &attributes, std::vector<Config
 	server->setPort(htons(port));
 	server->setRoot(attributes.find("root")->second);
 	server->setIndex(attributes.find("index")->second);
-	//server->setErrorPage(attributes.find("error_page")->second);
+	server->setErrorPages(error_map);
 	server->setClientBodySize(cbs);
 	server->setLocations(locations);
 	conf.push_back(*server);
@@ -52,7 +52,7 @@ int class_add(std::map<std::string, std::string> &attributes, std::vector<Config
 	return (0);
 }
 
-static LocationClass *location_class_create(std::map<std::string, std::string> &attributes)
+static LocationClass *location_class_create(std::map<std::string, std::string> &attributes, std::map<int, std::string> error_map)
 {
 	LocationClass *location = new LocationClass();
 	std::vector<std::string> *words = new std::vector<std::string>();
@@ -68,7 +68,7 @@ static LocationClass *location_class_create(std::map<std::string, std::string> &
 	location->setClientBodySize(atoi((char *)(attributes.find("client_body_size")->second).c_str()));
 	location->setRoot(attributes.find("root")->second);
 	location->setIndex(attributes.find("index")->second);
-	location->setErrorPage(attributes.find("error_page")->second);
+	location->setErrorPages(error_map);
 	location->setLocation(attributes.find("location")->second);
 	location->setRedirection(attributes.find("redirection")->second);
 	location->setCgi_dir(attributes.find("cgi_dir")->second);
@@ -87,9 +87,11 @@ LocationClass *location_add(std::list<std::list<std::string> > &lines, std::list
 	std::map<std::string, std::string>::iterator it_map;
 	std::map<std::string, std::string> attributes;
 	std::list<std::string>::iterator it_str;
+	std::map<int, std::string> error_map;
+	int erNum;
 
 	attributes["listen"] = DEFAULT_LISTEN;
-	attributes["error_page"] = DEFAULT_ERROR_PAGE;
+	attributes["error_page"];
 	attributes["client_body_size"] = DEFAULT_CLIENT_BODY_SIZE;
 	attributes["root"] = "";
 	attributes["index"] = DEFAULT_INDEX;
@@ -113,12 +115,20 @@ LocationClass *location_add(std::list<std::list<std::string> > &lines, std::list
 					it_str++;
 				}
 			}
+			else if (*((*it).begin()) == "error_page")
+			{
+
+				it_str = (*it).begin();
+				it_str++;
+				erNum = atoi((*it_str).c_str());
+				error_map[erNum] = *(++it_str);
+			}
 			else if (++((*it).begin()) != (*it).end())
 				it_map->second = *(++((*it).begin()));
 		}
 		it++;
 	}
-	return (location_class_create(attributes));
+	return (location_class_create(attributes, error_map));
 }
 
 int server_add(std::list<std::list<std::string> > &lines, std::list<std::list<std::string> >::iterator &it, std::vector<ConfigClass> &conf)
@@ -135,6 +145,7 @@ int server_add(std::list<std::list<std::string> > &lines, std::list<std::list<st
 	std::list<std::string>::iterator it_str;
 	std::vector<LocationClass> *locations = new std::vector<LocationClass>();
 	std::map<int, std::string> error_map;
+	int erNum;
 
 	while (it != lines.end())
 	{
@@ -144,14 +155,14 @@ int server_add(std::list<std::list<std::string> > &lines, std::list<std::list<st
 			if (it == lines.end() || *((*it).begin()) == "server")
 				break;
 		}
-		if (*((*it).begin()) == "error_page")
+		else if (*((*it).begin()) == "error_page")
 		{
 			it_str = (*it).begin();
 			it_str++;
-			std::cout << (*it_str).c_str() << "\n";
-			error_map[atoi((*it_str).c_str())] = *(it_str++);
+			erNum = atoi((*it_str).c_str());
+			error_map[erNum] = *(++it_str);
 		}
-		if ((it_map = attributes.find(*((*it).begin()))) != attributes.end())
+		else if ((it_map = attributes.find(*((*it).begin()))) != attributes.end())
 			{
 				if (++((*it).begin()) != (*it).end())
 					it_map->second = *(++((*it).begin()));
@@ -162,12 +173,7 @@ int server_add(std::list<std::list<std::string> > &lines, std::list<std::list<st
 	}
 	it_map = attributes.begin();
 
-//while(std::map<int, std::string>::const_iterator it = error_map.begin(); it != error_map.end(); it++)
-//{
-//	std::cout << "{" << it->first << ": " << it->second << "}\n";
-//}
-
-	if (class_add(attributes, conf, locations))
+	if (class_add(attributes, conf, locations, error_map))
 		return (1);
 	return (0);
 }
@@ -220,6 +226,28 @@ static int open_read(char *file, std::list<std::list<std::string> > *config)
 	return (0);
 }
 
+int static same_server(std::vector<ConfigClass> &conf)
+{
+	std::map<std::string, uint16_t>		server_map;
+	std::map<std::string, uint16_t>::iterator s_map;
+	std::string							serverName;
+	uint16_t							port;
+
+	for (std::vector<ConfigClass>::iterator it = conf.begin(); it != conf.end(); it++)
+	{
+		serverName = (*it).getServer_name();
+		port = (*it).getPort();
+		if ((s_map = server_map.find(serverName)) != server_map.end() && (*s_map).second == port)
+		{
+			std::cout << "Configuration error. Same servers in config\n";
+			return(1);
+		}
+		else
+			server_map[serverName] = port;
+	}
+	return(0);
+}
+
 int config_parser(char *file, std::vector<ConfigClass> &conf)
 {
 	std::list<std::list<std::string> > lines;
@@ -230,5 +258,8 @@ int config_parser(char *file, std::vector<ConfigClass> &conf)
 		return (1);
 	if (server_fuller(lines, conf))
 		return (1);
+	if (same_server(conf))
+		return (1);
+	std::cout << "Configuration file is OK\n----------------------------" << std::endl;
 	return (0);
 }

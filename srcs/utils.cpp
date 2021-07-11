@@ -292,6 +292,8 @@ std::string	mimeDetect(std::string file) {
 		ret = "font/ttf";
 	else if (ret.find("less") != std::string::npos)
 		ret = "text/plain";
+	else if (ret.find("json") != std::string::npos)
+		ret = "application/json";
 	else
 		ret = "text/plain";
 	return (ret);
@@ -315,7 +317,7 @@ std::string	listing(std::string directory) {
 		ret += "<a href=\"";
 		file = entry->d_name;
 		stat(file.c_str(), &buf);
-		if (S_ISDIR(buf.st_mode)) {
+		if (S_ISDIR(buf.st_mode) && extensionDetect(file) == "none") {
 			ret += file + "/\">" + file + "/" + "</a>\n";
 		}
 		else {
@@ -340,4 +342,11 @@ void *newbuffer(char *first, void *second, int v_size)
 	}
 	result[c_size + v_size] = 0;
 	return result;
+}
+
+std::string	extensionDetect(std::string file) {
+	if (file.rfind(".") != std::string::npos)
+		return (std::string(file.begin() + file.find("."), file.end()));
+	else
+		return ("none");
 }

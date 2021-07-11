@@ -15,7 +15,7 @@ server {
     server_name     post_server
 	listen 0.0.0.0:80
 
-	root /Users/kcedra/webserver/directory_for_tests/tournament
+	root /Users/kcedra/webserver/YoupiBanane
 
     location / {
         root ./
@@ -79,12 +79,17 @@ server {
 
 	server_name      localhost:443
 
-	root /Users/kcedra/webserver
+	root /Users/kcedra/webserver/directory_for_tests
 
     location / {
         root ./
         index index.html
         listing yes
+        allow_methods GET POST
+    }
+    location /devAid-v1.1 {
+        root ./devAid-v1.1
+        index index.html
         allow_methods GET POST
     }
     location /delete {
