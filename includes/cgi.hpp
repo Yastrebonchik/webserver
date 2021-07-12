@@ -37,7 +37,7 @@ private:
 	ConnectionClass connection_;
 	std::string *EXEC;
 	std::string *Scrypt;
-	std::string php_copy;
+	char *copyptr;
 
 	char **env_;
 	std::map<std::string, std::string> envMap_;

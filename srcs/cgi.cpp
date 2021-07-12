@@ -21,6 +21,7 @@ client_(client), location_(location), connection_(connection), EXEC(NULL), Scryp
 	///////////////////////////////////////////////////////////////////////////////////
 	std::ifstream myfile;
 	std::string line;
+	std::string php_copy;
 
 	myfile.open(path.c_str());
 	if (myfile.is_open())
@@ -31,6 +32,7 @@ client_(client), location_(location), connection_(connection), EXEC(NULL), Scryp
 			php_copy.append("\n", 1);
 		}
 		myfile.close();
+		this->copyptr = ft_strdup(php_copy.c_str());
 	}
 	else
 		write(1, "File not found to open\n", 24);
@@ -49,6 +51,7 @@ CGI::~CGI()
 	delete(args_[1]);
 	delete EXEC;
 	delete Scrypt;
+	delete copyptr; ////
 }
 
 void CGI::createEnvVar()
@@ -178,7 +181,7 @@ std::string CGI::run(std::string &body)            // ЗАПУСК СиДЖиА�
 	//////////////////////////////////////////////////////////////////////////////////////
 	std::ofstream newfile;
 	newfile.open(args_[1]);
-	newfile << php_copy;
+	newfile << this->copyptr;
 	newfile.close();
 	//////////////////////////////////////////////////////////////////////////////////////
 	return "200";
