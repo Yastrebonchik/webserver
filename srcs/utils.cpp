@@ -326,13 +326,14 @@ std::string	listing(std::string directory) {
 	}
 	ret += "</pre><hr></body>\n"
 		   "</html>";
+	closedir(dir);
 	return (ret);
 }
 
 void *newbuffer(char *first, void *second, int v_size)
 {
 	int c_size = std::strlen(first);
-	char *result = (char*)malloc(c_size + v_size + 1);
+	char *result = new char[c_size + v_size + 1];
 	char *tmp_second;
 
 	std::strcpy(result, first);
@@ -341,6 +342,8 @@ void *newbuffer(char *first, void *second, int v_size)
 		result[i] = tmp_second[i - c_size];
 	}
 	result[c_size + v_size] = 0;
+	delete first;
+	delete static_cast<char*>(second);
 	return result;
 }
 

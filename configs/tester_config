@@ -6,7 +6,7 @@ server {
     location / {
        root ./
        index index.html
-       error_page 44 /Users/kcedra/webserver/custom_errors/404.jpeg
+       error_page 404 /Users/kcedra/webserver/custom_errors/413.jpeg
        client_body_size 50
     }
 }
@@ -15,22 +15,11 @@ server {
     server_name     post_server
 	listen 0.0.0.0:80
 
-	root /Users/kcedra/webserver/YoupiBanane
+	root /Users/kcedra/webserver/directory_for_tests/tournament
 
     location / {
         root ./
-        index youpi.bad_extension
-        allow_methods GET
-    }
-    location /post_body {
-        root ./post_directory
-        index index.html
-        allow_methods GET POST
-        client_body_size    100
-    }
-    location /directory {
-        root ./
-        index youpi.bad_extension
+        index compete.html
         allow_methods GET
     }
     location /directory/test {
@@ -49,7 +38,7 @@ server {
     location / {
        index compete.html
        error_page custom_error
-       client_body_size 	50
+       client_body_size 50
     }
     location /cgi_test {
         allow_methods POST
@@ -102,7 +91,7 @@ server {
 
 server {
 	server_name      redirect_server
-	listen 0.0.0.0:1000
+	listen 0.0.0.0:8050
 	root /Users/kcedra/webserver/directory_for_tests
 
     location / {

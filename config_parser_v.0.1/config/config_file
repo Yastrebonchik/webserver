@@ -1,0 +1,56 @@
+server {
+
+	listen 0.0.0.0:80
+
+	server_name      second
+
+	root /Users/kcedra/webserver/directory_for_tests/devAid-v1.1
+
+	index index.html
+	error_page 404 ./404.html
+	error_page 303 ./303.html
+	client_body_size 	50
+	allow_methods GET POST
+
+	location /bla/blf {
+		index index_cgi.html
+		redirection /vgopu
+		listing yes
+		cgi_dir  /cgishka
+		allow_methods GET POST
+		client_body_size 	1
+	}
+		location /bla2 {
+		index index_cgi2.html
+		redirection /vgopu2
+		listing no
+		cgi_dir  /cgishka2
+		allow_methods GET POST DELETE
+		client_body_size 	2
+	}
+}
+
+server {
+	server_name      
+	listen
+	root 
+	index
+
+}
+
+server {
+	server_name      third_server
+	listen 0.0.0.0:8000
+	root /Users/kcedra/webserver/directory_for_tests/tournament
+
+	index compete.html
+		location /bla3 {
+		index index_cgi3.html
+		redirection /vgopu3
+		cgi_dir  /cgishka2
+		allow_methods GET POST DELETE
+		client_body_size 	2
+		error_page 405 ./405.html
+		error_page 301 ./301.html
+	}
+}

@@ -30,7 +30,7 @@
 # define CLIENT_BODY_SIZE_EXIST 256
 # define CGI_FLAG 512
 
-void	*generateAnswer(RequestHeaders &request, std::vector<ConfigClass> config, ConnectionClass &connection);
+void	*generateAnswer(RequestHeaders &request, std::vector<ConfigClass*> config, ConnectionClass &connection);
 void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connection);
 void 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass &connection);
 void 	*DELETE(RequestHeaders request, ConfigClass server, ConnectionClass &connection);

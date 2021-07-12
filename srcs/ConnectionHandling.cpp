@@ -33,16 +33,16 @@ void	makeConnection(int i, std::vector<ConnectionClass> &connections, std::vecto
 
 	sock = accept(listener[i], nullptr, nullptr);
 	if (sock < 0) {
-		perror("accept");
+		std::cerr << "Accept error" << std::endl;
 		exit(3);
 	}
-	fcntl(sock, F_SETFL, O_NONBLOCK);
 	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+	fcntl(sock, F_SETFL, O_NONBLOCK);
 	getsockname(listener[i], (struct sockaddr *) &myAddr, &len);
 	connections.push_back(ConnectionClass(sock, myAddr.sin_addr.s_addr, myAddr.sin_port));
 }
 
-void	recieveData(int i, std::vector<ConnectionClass> &connections, std::vector<ConfigClass> config) {
+void	recieveData(int i, std::vector<ConnectionClass> &connections, std::vector<ConfigClass*> config) {
 	int 			bytes_read;
 	static char 	*source = nullptr;
 	char 			*line;
@@ -103,6 +103,7 @@ void	sendData(int i, std::vector<ConnectionClass> &connections) {
 				 connections[i].getAnswerSize(), 0) < 0) {
 			std::cerr << "Error while sending data" << std::endl;
 		}
+		connections[i].clearAnswer();
 	}
 	if (connections.size() > 0 && connections[i].getCloseFlag()) {
 		close(connections[i].getConnectionfd()); // Удаляем соединение, закрываем сокет

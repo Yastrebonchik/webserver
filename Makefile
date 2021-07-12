@@ -23,7 +23,7 @@ OBJECTS = $(addprefix $(O_DIR)/, $(SRCS:.cpp=.o))
 
 all: compile
 
-$(NAME): $(OBJECTS) srcs/main.cpp $(CONFPAR_DIR)/$(CONFPAR)
+$(NAME): $(OBJECTS) srcs/main.cpp $(CONFPAR_DIR)/$(CONFPAR) $(HEADER_DIR)/*
 	clang++ -o $(NAME) $(OBJECTS) -L$(CONFPAR_DIR) -I$(HEADER_DIR) -lconfpar
 
 compile:

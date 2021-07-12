@@ -13,7 +13,7 @@
 int		selectSet(fd_set *readfds, fd_set *writefds, std::vector<int> &listener,
 					 std::vector<ConnectionClass> &connections);
 void	makeConnection(int i, std::vector<ConnectionClass> &connections, std::vector<int> &listener);
-void	recieveData(int i, std::vector<ConnectionClass> &connections, std::vector<ConfigClass> config);
+void	recieveData(int i, std::vector<ConnectionClass> &connections, std::vector<ConfigClass*> config);
 void	sendData(int i, std::vector<ConnectionClass> &connections);
 void 	dropConnections(std::vector<ConnectionClass> &connections);
 

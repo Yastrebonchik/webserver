@@ -97,7 +97,7 @@ void					ResponseHeaders::setAllow(ConnectionClass connection, RequestHeaders re
 	std::vector<std::string>	allow;
 
 	server = connection.getServer();
-	allow = (*(*server.getLocations())[request.getLocation()].getMethods());
+	allow = (*(*server.getLocations())[request.getLocation()]->getMethods());
 	if (allow.size() > 0) {
 		for (size_t i = 0; i < allow.size(); ++i) {
 			this->_allow += allow[i];

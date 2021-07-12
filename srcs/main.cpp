@@ -7,7 +7,8 @@
 #include "ConnectionClass.hpp"
 #include "ConnectionHandling.h"
 
-# define CONNECTION_DROP_TIME 5
+# define CONNECTION_DROP_TIME 2
+
 std::vector<ConnectionClass>	connections;
 std::vector<int> 				listener;
 
@@ -33,10 +34,10 @@ bool	checkPort(std::vector<uint16_t> ports, uint16_t port) {
 	return (0);
 }
 
-int main() {
-	std::vector<ConfigClass>		config;
+int main(int argc, char **argv) {
+	std::vector<ConfigClass*>		config;
 	std::vector<uint16_t>			ports;
-	ConfigClass						server;
+	ConfigClass						*server;
 	std::string 					line;
 	fd_set 							readfds;
 	fd_set							writefds;
@@ -49,36 +50,39 @@ int main() {
 
 	signal(SIGINT, sigint);
 	signal(SIGTERM, sigTerm);
-	if (config_parser((char*)"configs/tester_config", config) != 0) {
-		perror("config");
-		exit(10);
+	if (argc != 2) {
+		std::cerr << "Invalid number of arguments" << std::endl;
+		exit(1);
+	}
+	if (config_parser(argv[1], config) != 0) {
+		exit(1);
 	}
 	std::cout << "Webserver start" << std::endl;
 	timeout.tv_sec = CONNECTION_DROP_TIME;
 	timeout.tv_usec = 0;
-	for (std::vector<ConfigClass>::iterator it = config.begin(); it != config.end(); ++it) {
+	for (std::vector<ConfigClass*>::iterator it = config.begin(); it != config.end(); ++it) {
 		listener.push_back(socket(AF_INET, SOCK_STREAM, 0));
 		if(listener[i] < 0) {
-			perror("socket");
+			std::cerr << "Socket creating error" << std::endl;
 			exit(1);
 		}
 		server = *it;
 		addr.sin_family = AF_INET;
-		addr.sin_port = server.getPort();
-		addr.sin_addr.s_addr = server.getIp();
-		if (checkPort(ports, server.getPort())) {
+		addr.sin_port = server->getPort();
+		addr.sin_addr.s_addr = server->getIp();
+		if (checkPort(ports, server->getPort())) {
 			close(listener[i]);
 			listener.pop_back();
 		}
 		else {
 			if (bind(listener[i], (struct sockaddr *) &addr, sizeof(addr)) < 0) {
-				perror("bind");
-				exit(2);
+				std::cerr << "Bind error" << std::endl;
+				exit(1);
 			}
 			listen(listener[i], SOMAXCONN);
 			setsockopt(listener[i], SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 			fcntl(listener[i], F_SETFL, O_NONBLOCK);
-			ports.push_back(server.getPort());
+			ports.push_back(server->getPort());
 			i++;
 		}
 	}
@@ -110,8 +114,8 @@ int main() {
 			continue;
 		}
 		else {
-			perror("select");
-			exit(errno);
+			std::cerr << "Select error" << std::endl;
+			exit(1);
 		}
 	}
 }

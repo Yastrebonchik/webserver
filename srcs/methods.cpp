@@ -28,7 +28,7 @@ void 	*returnError(RequestHeaders request, int statusC, std::string reason, Conn
 			errors = connection.getServer().getErrorPages();
 		}
 		else {
-			errors = (*connection.getServer().getLocations())[request.getLocation()].getErrorPages();
+			errors = (*connection.getServer().getLocations())[request.getLocation()]->getErrorPages();
 		}
 		for (std::map<int, std::string>::iterator it = errors.begin(); it != errors.end() ; ++it) {
 			if (it->first == statusC) {
@@ -71,7 +71,7 @@ void 	*returnError(RequestHeaders request, int statusC, std::string reason, Conn
 	response.setStatusCode(statusC);
 	response.setReasonPhrase(reason);
 	if (statusC == 308) {
-		response.setLocation((*connection.getServer().getLocations())[request.getLocation()].getRedirection());
+		response.setLocation((*connection.getServer().getLocations())[request.getLocation()]->getRedirection());
 	}
 	if (statusC == 405 || statusC == 501)
 		response.setAllow(connection, request);
@@ -95,7 +95,6 @@ void 	*returnError(RequestHeaders request, int statusC, std::string reason, Conn
 	if (errorexist) {
 		line = ft_strdup(ret.c_str());
 		retline = newbuffer(line, response.getBinaryPage(), (int)(response.getBinaryPageLen()));
-		free(line);
 		connection.setAnswerSize(ret.size() + response.getBinaryPageLen());
 		return (retline);
 	}
@@ -145,7 +144,7 @@ void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connecti
 		else {
 			if ((request.getResponseFlags() & INDEX) == INDEX) {
 				//Выбираю индекс из локейшена
-				file = (*server.getLocations())[request.getLocation()].getIndex();
+				file = (*server.getLocations())[request.getLocation()]->getIndex();
 			}
 		}
 	}
@@ -190,7 +189,6 @@ void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connecti
 		if ((request.getResponseFlags() & LISTING_RESULT_YES) == LISTING_RESULT_YES) {
 			directory = uri;
 			response.setPage(listing(directory));
-			response.setBinaryPage(nullptr, 0);
 		}
 	}
 	else {
@@ -255,8 +253,10 @@ void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connecti
 	|| mimeDetect(file).find("font") != std::string::npos) {
 		line = ft_strdup(ret.c_str());
 		retline = newbuffer(line, response.getBinaryPage(), (int)(response.getBinaryPageLen()));
-		free(line);
+		//delete line;
 		connection.setAnswerSize(ret.size() + response.getBinaryPageLen());
+		//delete charbuffer; //static_cast<char*>(response.getBinaryPage());
+		response.setBinaryPage(nullptr, 0);
 		return (retline);
 	}
 	else {
@@ -305,7 +305,7 @@ void 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass &connect
 			}
 			else {
 				if (static_cast<int>(request.getBody().size()) >
-				(*server.getLocations())[request.getLocation()].getClientBodySize()) {
+				(*server.getLocations())[request.getLocation()]->getClientBodySize()) {
 					return (returnError(request, 413, "Payload Too Large", connection));
 				}
 			}
@@ -315,7 +315,7 @@ void 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass &connect
 			openfile.replace(result, 2, std::string("/"));
 		}
 		if ((request.getResponseFlags() & CGI_FLAG) == CGI_FLAG) {
-			CGI	cgi(request, (*server.getLocations())[request.getCGILocation()], connection, request.get_uri());
+			CGI	cgi(request, *(*server.getLocations())[request.getCGILocation()], connection, request.get_uri());
 
 			statucCode = cgi.run(body);
 			if (statucCode == "500")
@@ -396,7 +396,7 @@ void 		*noSuchMethod(RequestHeaders request, ConnectionClass &connection) {
 	return (returnError(request, 501, "Not Implemented", connection));
 }
 
-static bool	checkServer(RequestHeaders &request, std::vector<ConfigClass> config, ConnectionClass &connection) {
+static bool	checkServer(RequestHeaders &request, std::vector<ConfigClass*> config, ConnectionClass &connection) {
 	uint32_t	ip;
 	uint16_t	port;
 	std::string serverName;
@@ -407,32 +407,32 @@ static bool	checkServer(RequestHeaders &request, std::vector<ConfigClass> config
 	request.clearResponesFlag();
 	if (request.get_host() != "") {
 		for (size_t i = 0; i < config.size(); ++i) {
-			ip = config[i].getIp();
-			port = config[i].getPort();
-			serverName = config[i].getServer_name();
+			ip = config[i]->getIp();
+			port = config[i]->getPort();
+			serverName = config[i]->getServer_name();
 			if (firstServerFlag == 0 && port == connection.getListenPort()) {
 				firstServer = i;
 				firstServerFlag = 1;
 			}
 			if (serverName == request.get_host() && ip == connection.getListenIp() && port == connection.getListenPort()) {
-				connection.setServer(config[i]);
+				connection.setServer(*config[i]);
 				request.setResponseFlag(SERVER_NAME);
 				flag = 1;
 				break;
 			}
 		}
 		if (firstServerFlag && !flag) {
-			connection.setServer(config[firstServer]);
+			connection.setServer(*config[firstServer]);
 			request.setResponseFlag(SERVER_NAME);
 			flag = 1;
 		}
 	}
 	else {
 		for (size_t i = 0; i < config.size(); ++i) {
-			ip = config[i].getIp();
-			port = config[i].getPort();
+			ip = config[i]->getIp();
+			port = config[i]->getPort();
 			if (ip == connection.getListenIp() && port == connection.getListenPort()) {
-				connection.setServer(config[i]);
+				connection.setServer(*config[i]);
 				request.setResponseFlag(SERVER_NAME);
 				flag = 1;
 				break;
@@ -448,16 +448,16 @@ void		setFlags(RequestHeaders &request, ConfigClass server) {
 	std::string 							locationRoot;
 	std::string 							location;
 	std::pair<std::string, std::string>		root;
-	std::vector<LocationClass>::iterator	allowIter;
+	std::vector<LocationClass*>::iterator	allowIter;
 	bool 									flag = 0;
 	size_t 									result;
 	size_t 									locationNumber = 0;
 	size_t 									locationSize = 0;
 
 	fileExtension = extensionDetect(uri);
-	for (std::vector<LocationClass>::iterator it = server.getLocations()->begin(); it != server.getLocations()->end(); ++it) {
-		locationRoot = it->getRoot();
-		location = it->getLocation();
+	for (std::vector<LocationClass*>::iterator it = server.getLocations()->begin(); it != server.getLocations()->end(); ++it) {
+		locationRoot = (*it)->getRoot();
+		location = (*it)->getLocation();
 		if (fileExtension != "none" && location == fileExtension) {
 			request.setResponseFlag(CGI_FLAG);
 			request.setCGILocation(locationNumber);
@@ -472,9 +472,9 @@ void		setFlags(RequestHeaders &request, ConfigClass server) {
 		locationNumber++;
 	}
 	if (flag == 1) {
-		if (allowIter->getRoot() != "") {
+		if ((*allowIter)->getRoot() != "") {
 			request.setResponseFlag(ROOT_EXISTS);
-			uri.replace(0, allowIter->getLocation().size(), allowIter->getRoot());
+			uri.replace(0, (*allowIter)->getLocation().size(), (*allowIter)->getRoot());
 			if (uri.find("./") != std::string::npos) {
 				uri = server.getRoot() + "/" + uri;
 			}
@@ -498,21 +498,21 @@ void		setFlags(RequestHeaders &request, ConfigClass server) {
 				uri.replace(result, 2,std::string("/"));
 			request.setUri(uri);
 		}
-		if (allowIter->getListing() != -1) {
+		if ((*allowIter)->getListing() != -1) {
 			request.setResponseFlag(LISTING);
-			if (allowIter->getListing() == 1) {
+			if ((*allowIter)->getListing() == 1) {
 				request.setResponseFlag(LISTING_RESULT_YES);
 			}
 		}
-		if (allowIter->getMethods()->size() > 0)
+		if ((*allowIter)->getMethods()->size() > 0)
 			request.setResponseFlag(ALLOW_METHODS);
-		if (allowIter->getClientBodySize() > 0)
+		if ((*allowIter)->getClientBodySize() > 0)
 			request.setResponseFlag(CLIENT_BODY_SIZE_EXIST);
-		if (allowIter->getIndex() != "")
+		if ((*allowIter)->getIndex() != "")
 			request.setResponseFlag(INDEX);
-		if (allowIter->getRedirection() != "")
+		if ((*allowIter)->getRedirection() != "")
 			request.setResponseFlag(REDIRECTION);
-		if (allowIter->getErrorPages().size() > 0) {
+		if ((*allowIter)->getErrorPages().size() > 0) {
 			request.setResponseFlag(CUSTOM_ERRORS);
 		}
 	}
@@ -520,7 +520,7 @@ void		setFlags(RequestHeaders &request, ConfigClass server) {
 		request.setLocation(-1);
 		if (server.getClientBodySize() > 0)
 			request.setResponseFlag(CLIENT_BODY_SIZE_EXIST);
-		if (allowIter->getErrorPages().size() > 0) {
+		if ((*allowIter)->getErrorPages().size() > 0) {
 			request.setResponseFlag(CUSTOM_ERRORS);
 		}
 	}
@@ -532,10 +532,10 @@ static bool checkAllow(RequestHeaders &request, std::string method, ConfigClass 
 	if ((request.getResponseFlags() & ALLOW_METHODS) == ALLOW_METHODS) {
 		locationNumber = request.getLocation();
 		// Создаю объект локации из той, что получил при парсе флагов
-		LocationClass	location((*server.getLocations())[locationNumber]);
+		LocationClass	*location((*server.getLocations())[locationNumber]);
 
 		// Создаю вектор доступных методов из полученного location
-		std::vector<std::string>	allow((*location.getMethods()));
+		std::vector<std::string>	allow((*location->getMethods()));
 
 		if (allow.size() > 0 && (std::find(allow.begin(), allow.end(), method) == allow.end())) {
 			return (0);
@@ -553,9 +553,9 @@ static bool	chUriDir(RequestHeaders &request, ConfigClass server, std::string Ge
 	if ((request.getResponseFlags() & ROOT_EXISTS) == ROOT_EXISTS) {
 		locationNumber = request.getLocation();
 		// Создаю объект локации из той, что получил при парсе флагов
-		LocationClass	location((*server.getLocations())[locationNumber]);
+		LocationClass	*location((*server.getLocations())[locationNumber]);
 
-		locationRoot = location.getRoot();
+		locationRoot = location->getRoot();
 		if (locationRoot.find("./") == 0 || locationRoot == "./") {
 			locationRoot.replace(0, 2, "/");
 			root = server.getRoot() + "/" + locationRoot;
@@ -563,7 +563,7 @@ static bool	chUriDir(RequestHeaders &request, ConfigClass server, std::string Ge
 				root.replace(result, 2,"/");
 		}
 		else {
-			root = location.getRoot();
+			root = location->getRoot();
 		}
 		if (chdir(root.c_str()) == -1)
 			return (0);
@@ -582,7 +582,7 @@ static bool checkRedirect(RequestHeaders &request) {
 	return (1);
 }
 
-void 		*generateAnswer(RequestHeaders &request, std::vector<ConfigClass> config, ConnectionClass &connection) {
+void 		*generateAnswer(RequestHeaders &request, std::vector<ConfigClass*> config, ConnectionClass &connection) {
 	std::string root;
 	std::string method;
 	std::string index;
