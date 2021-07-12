@@ -84,8 +84,8 @@ public:
 	std::string									getSourceHeader();
 	std::string 								getBody();
 	unsigned int								getResponseFlags();
-	size_t 										getLocation();
-	size_t 										getCGILocation();
+	int 										getLocation();
+	int 										getCGILocation();
 	void 										setUri(std::string);
 	void 										detectHeader(std::string header);
 	void										setSource(char *source);
@@ -94,7 +94,7 @@ public:
 	void 										clear();
 	void 										setResponseFlag(unsigned int flag);
 	void 										clearResponesFlag();
-	void 										setLocation(size_t location);
+	void 										setLocation(int location);
 	void 										setCGILocation(size_t CGILocation);
 };
 

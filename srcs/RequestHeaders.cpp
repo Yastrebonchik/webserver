@@ -374,11 +374,11 @@ unsigned int					RequestHeaders::getResponseFlags() {
 	return (this->_responseFlags);
 };
 
-size_t 							RequestHeaders::getLocation() {
+int 							RequestHeaders::getLocation() {
 	return (this->_location);
 };
 
-size_t 							RequestHeaders::getCGILocation() {
+int 							RequestHeaders::getCGILocation() {
 	return (this->_CGILocation);
 };
 
@@ -422,7 +422,7 @@ void 							RequestHeaders::clearResponesFlag() {
 	this->_responseFlags = 0;
 }
 
-void 							RequestHeaders::setLocation(size_t location) {
+void 							RequestHeaders::setLocation(int location) {
 	this->_location = location;
 };
 

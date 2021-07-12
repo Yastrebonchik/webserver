@@ -6,8 +6,8 @@ server {
     location / {
        root ./
        index index.html
-       error_page custom_error
-       client_body_size 	50
+       error_page 44 /Users/kcedra/webserver/custom_errors/404.jpeg
+       client_body_size 50
     }
 }
 
@@ -98,4 +98,17 @@ server {
     }
 	error_page custom_error
 	allow_methods GET POST
+}
+
+server {
+	server_name      redirect_server
+	listen 0.0.0.0:1000
+	root /Users/kcedra/webserver/directory_for_tests
+
+    location / {
+        root ./
+        redirection http://localhost:8004
+        index index.html
+        allow_methods GET
+    }
 }

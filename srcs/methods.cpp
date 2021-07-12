@@ -4,32 +4,82 @@
 
 #include "methods.h"
 
-void 	*returnError(RequestHeaders request, size_t statusC, std::string reason, ConnectionClass &connection) {
-	ResponseHeaders		response;
-	std::stringstream	strstream;
-	std::fstream 		fin;
-	std::string 		body;
-	std::string 		statusCode;
-	std::string 		contentLength;
-	std::string 		fileline;
-	std::string 		ret;
-	char 				*line;
+void 	*returnError(RequestHeaders request, int statusC, std::string reason, ConnectionClass &connection) {
+	ResponseHeaders				response;
+	std::stringstream			strstream;
+	std::fstream 				fin;
+	std::string 				body;
+	std::string 				statusCode;
+	std::string 				contentLength;
+	std::string 				file;
+	std::string 				ret;
+	char 						*line;
+	char 						*charbuffer;
+	void 						*buffer;
+	void 						*retline;
+	int 						length;
+	bool 						errorexist = 0;
+	std::map<int, std::string>	errors;
+	std::string 				errorfile;
 
 
-	fin.open(std::string("/Users/kcedra/webserver/default_errors/error" +
-						 std::to_string(statusC) + ".html"), std::ios::in); // Убрать косталь с моим абсоютным путем
-	strstream << fin.rdbuf();
-	body = strstream.str();
-	response.setPage(std::string(body.begin(), body.end()));
-	fin.close();
+	if ((request.getResponseFlags() & CUSTOM_ERRORS) == CUSTOM_ERRORS) {
+		if (request.getLocation() == -1) {
+			errors = connection.getServer().getErrorPages();
+		}
+		else {
+			errors = (*connection.getServer().getLocations())[request.getLocation()].getErrorPages();
+		}
+		for (std::map<int, std::string>::iterator it = errors.begin(); it != errors.end() ; ++it) {
+			if (it->first == statusC) {
+				errorexist = 1;
+				file = it->second;
+				break;;
+			}
+		}
+		if (errorexist) {
+			fin.open(file);
+			fin.seekg(0, fin.end);
+			length = fin.tellg();
+			fin.seekg(0, fin.beg);
+			charbuffer = new char[length];
+			fin.read(charbuffer, length);
+			buffer = static_cast<void *>(charbuffer);
+			response.setBinaryPage(buffer, length);
+			fin.close();
+			response.setContentType(mimeDetect(file));
+		}
+	}
+	if (!errorexist) {
+		body += "<html>\n"
+				"<head><title>";
+		body += std::to_string(statusC);
+		body += " " + reason;
+		body += "</title></head>\n"
+				"<body>\n"
+				"<center><h1>";
+		body += std::to_string(statusC);
+		body += " " + reason;
+		body += "</h1></center>\n"
+				"<hr><center>webserver</center>\n"
+				"</body>\n"
+				"</html>";
+		response.setPage(body);
+		response.setContentType("text/html");
+	}
 	response.setVersion();
 	response.setStatusCode(statusC);
 	response.setReasonPhrase(reason);
+	if (statusC == 308) {
+		response.setLocation((*connection.getServer().getLocations())[request.getLocation()].getRedirection());
+	}
 	if (statusC == 405 || statusC == 501)
-		response.setAllow();
+		response.setAllow(connection, request);
 	response.setConnection("keep-alive");
-	response.setContentLength(response.getPage().length());
-	response.setContentType("text/html");
+	if (errorexist)
+		response.setContentLength(response.getBinaryPageLen());
+	else
+		response.setContentLength(response.getPage().length());
 	response.setDate(request);
 	response.setServer();
 	statusCode = std::to_string(response.getStatusCode());
@@ -39,10 +89,23 @@ void 	*returnError(RequestHeaders request, size_t statusC, std::string reason, C
 		ret += "\r\nAllow: " + response.getAllow();
 	ret += "\r\nConnection: " + response.getConnection() + "\r\nContent-Length: " + contentLength;
 	ret += "\r\nContent-Type: " + response.getContentType() + "\r\nServer: " + response.getServer();
+	if (statusC == 308)
+		ret += "\r\nLocation: " + response.getLocation();
 	ret += "\r\n\r\n" + response.getPage();
-	line = ft_strdup(ret.c_str());
-	connection.setAnswerSize(ret.size());
-	return (line);
+	if (errorexist) {
+		line = ft_strdup(ret.c_str());
+		retline = newbuffer(line, response.getBinaryPage(), (int)(response.getBinaryPageLen()));
+		free(line);
+		connection.setAnswerSize(ret.size() + response.getBinaryPageLen());
+		return (retline);
+	}
+	else {
+		ret += response.getPage();
+		line = ft_strdup(ret.c_str());
+		response.setBinaryPage(nullptr, 0);
+		connection.setAnswerSize(ret.size() + response.getPage().size());
+		return (line);
+	}
 }
 
 void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connection) {
@@ -95,9 +158,6 @@ void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connecti
 			it--;
 		}
 		directory = (std::string(uri.begin(), it++)) + '/';
-//		if (directory.find("./") == 0 || directory == "./") {
-//			directory.replace(0, 2, "/");
-//		}
 		if ((result = directory.find("//")) != std::string::npos) {
 			directory.replace(result, 2, std::string("/"));
 		}
@@ -125,9 +185,7 @@ void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connecti
 		}
 		file = directory + file;
 	}
-	if ((pos = file.find("?")) != std::string::npos) {
-		file.erase(pos, file.length() - 1);
-	}
+	response.setBinaryPage(nullptr, 0);
 	if ((request.getResponseFlags() & LISTING) == LISTING && flag == 1) {
 		if ((request.getResponseFlags() & LISTING_RESULT_YES) == LISTING_RESULT_YES) {
 			directory = uri;
@@ -138,10 +196,10 @@ void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connecti
 	else {
 		if (mimeDetect(file) == "image/png" || mimeDetect(file) == "image/jpeg"
 			|| mimeDetect(file).find("font") != std::string::npos) {
-			fin.open(file, std::fstream::binary | std::fstream::in);
+			fin.open(file, std::ios::binary | std::ios::in);
 		}
 		else {
-			fin.open(file, std::fstream::in);
+			fin.open(file, std::ios::in);
 		}
 		if (!fin.is_open())
 			return (returnError(request, 404, "Not Found", connection));
@@ -152,6 +210,7 @@ void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connecti
 				length = fin.tellg();
 				fin.seekg(0, fin.beg);
 				charbuffer = new char[length];
+				ft_bzero(charbuffer, sizeof(char));
 				fin.read(charbuffer, length);
 				buffer = static_cast<void*>(charbuffer);
 				response.setBinaryPage(buffer, length);
@@ -162,7 +221,6 @@ void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connecti
 				body = strstream.str();
 				response.setPage(body);
 				fin.close();
-				response.setBinaryPage(nullptr, 0);
 			}
 		}
 	}
@@ -185,7 +243,6 @@ void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connecti
 		response.setContentType("text/html");
 	else
 		response.setContentType(mimeDetect(file));
-	response.setDate(request);
 	response.setServer();
 	statusCode = std::to_string(response.getStatusCode());
 	contentLength = std::to_string(response.getContentLength());
@@ -205,7 +262,6 @@ void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connecti
 	else {
 		ret += response.getPage();
 		line = ft_strdup(ret.c_str());
-		response.setBinaryPage(nullptr, 0);
 		connection.setAnswerSize(ret.size() + response.getPage().size());
 		return (line);
 	}
@@ -242,18 +298,18 @@ void 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass &connect
 	else {
 		response.setVersion();
 		response.setServer();
-		//if ((request.getResponseFlags() & CLIENT_BODY_SIZE_EXIST) == CLIENT_BODY_SIZE_EXIST) {
-			//if (request.getLocation() < 0) {
-			//	if (static_cast<int>(request.getBody().size()) > server.getClientBodySize())
-			//		return (returnError(request, 413, "Payload Too Large", connection));
-			//}
-			//else {
-			//	if (static_cast<int>(request.getBody().size()) >
-			//	(*server.getLocations())[request.getLocation()].getClientBodySize()) {
-			//		return (returnError(request, 413, "Payload Too Large", connection));
-			//	}
-			//}
-		//}
+		if ((request.getResponseFlags() & CLIENT_BODY_SIZE_EXIST) == CLIENT_BODY_SIZE_EXIST) {
+			if (request.getLocation() < 0) {
+				if (static_cast<int>(request.getBody().size()) > server.getClientBodySize())
+					return (returnError(request, 413, "Payload Too Large", connection));
+			}
+			else {
+				if (static_cast<int>(request.getBody().size()) >
+				(*server.getLocations())[request.getLocation()].getClientBodySize()) {
+					return (returnError(request, 413, "Payload Too Large", connection));
+				}
+			}
+		}
 		openfile = request.get_uri();
 		if ((result = openfile.find("//")) != std::string::npos) {
 			openfile.replace(result, 2, std::string("/"));
@@ -429,13 +485,15 @@ void		setFlags(RequestHeaders &request, ConfigClass server) {
 				uri.replace(result, 2, "/");
 		}
 		else {
-			//uri.replace(0, location.size(), server.getRoot());
 			uri = server.getRoot() + request.get_uri();
-//			if ((result = uri.find("./")) != std::string::npos)
-//				uri.replace(result, 2, "/");
-			//uri += request.get_uri();
 		}
 		if (uri != request.get_uri()) {
+			if ((result = uri.find("?")) != std::string::npos) {
+				uri.erase(result, uri.length() - 1);
+			}
+			if ((result = uri.find(".map")) != std::string::npos) {
+				uri.erase(result, uri.length() - 1);
+			}
 			if ((result = uri.find("//")) != std::string::npos)
 				uri.replace(result, 2,std::string("/"));
 			request.setUri(uri);
@@ -448,19 +506,23 @@ void		setFlags(RequestHeaders &request, ConfigClass server) {
 		}
 		if (allowIter->getMethods()->size() > 0)
 			request.setResponseFlag(ALLOW_METHODS);
-		if (allowIter->getClientBodySize() != -1)
+		if (allowIter->getClientBodySize() > 0)
 			request.setResponseFlag(CLIENT_BODY_SIZE_EXIST);
 		if (allowIter->getIndex() != "")
 			request.setResponseFlag(INDEX);
 		if (allowIter->getRedirection() != "")
 			request.setResponseFlag(REDIRECTION);
-//		if (allowIter->getErrorPage()) Добавить error page когда Серега завезет
+		if (allowIter->getErrorPages().size() > 0) {
+			request.setResponseFlag(CUSTOM_ERRORS);
+		}
 	}
 	else {
 		request.setLocation(-1);
-		if (server.getClientBodySize() != -1)
+		if (server.getClientBodySize() > 0)
 			request.setResponseFlag(CLIENT_BODY_SIZE_EXIST);
-//		if (allowIter->getErrorPage()) Добавить error page когда Серега завезет
+		if (allowIter->getErrorPages().size() > 0) {
+			request.setResponseFlag(CUSTOM_ERRORS);
+		}
 	}
 }
 
@@ -482,7 +544,7 @@ static bool checkAllow(RequestHeaders &request, std::string method, ConfigClass 
 	return (1);
 }
 
-static bool	chUriDir(RequestHeaders &request, ConfigClass server, std::string &GetRoot) {
+static bool	chUriDir(RequestHeaders &request, ConfigClass server, std::string GetRoot) {
 	std::string	root;
 	std::string locationRoot;
 	size_t 		locationNumber;
@@ -503,13 +565,19 @@ static bool	chUriDir(RequestHeaders &request, ConfigClass server, std::string &G
 		else {
 			root = location.getRoot();
 		}
-		GetRoot = root;
 		if (chdir(root.c_str()) == -1)
 			return (0);
 	}
 	else {
 		if (chdir(GetRoot.c_str()) == -1)
 			return (0);
+	}
+	return (1);
+}
+
+static bool checkRedirect(RequestHeaders &request) {
+	if ((request.getResponseFlags() & REDIRECTION) == REDIRECTION) {
+		return (0);
 	}
 	return (1);
 }
@@ -529,6 +597,8 @@ void 		*generateAnswer(RequestHeaders &request, std::vector<ConfigClass> config,
 	setFlags(request, connection.getServer());
 	if (!checkAllow(request, method, connection.getServer()))
 		return (methodNotAllowed(request, connection));
+	if (!checkRedirect(request))
+		return (returnError(request, 308, "Permanent Redirect", connection));
 	if (!chUriDir(request, connection.getServer(), root))
 		return (returnError(request, 404, "Not Found", connection));
 	if (method == "GET") {

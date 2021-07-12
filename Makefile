@@ -21,11 +21,15 @@ ConnectionHandling.cpp cgi.cpp
 
 OBJECTS = $(addprefix $(O_DIR)/, $(SRCS:.cpp=.o))
 
-all: $(NAME)
+all: compile
 
-$(NAME): $(OBJECTS) confpar srcs/main.cpp
+$(NAME): $(OBJECTS) srcs/main.cpp $(CONFPAR_DIR)/$(CONFPAR)
 	clang++ -o $(NAME) $(OBJECTS) -L$(CONFPAR_DIR) -I$(HEADER_DIR) -lconfpar
-	#clang++ main.cpp libconfpar.a -L$(LIBFT_DIR) -lft
+
+compile:
+	$(MAKE) confpar
+	$(MAKE) $(NAME)
+
 
 $(O_DIR)/%.o: $(S_DIR)/%.cpp
 	mkdir -p $(O_DIR)
@@ -44,4 +48,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re confpar
+.PHONY: all clean fclean re confpar compile

@@ -25,7 +25,7 @@ std::string 			ResponseHeaders::getReasonPhrase() const{
 }
 
 std::string				ResponseHeaders::getAllow() const{
-	return ("GET, POST");
+	return (this->_allow);
 }
 
 std::string 			ResponseHeaders::getConnection() const{
@@ -92,9 +92,22 @@ void 					ResponseHeaders::setReasonPhrase(std::string phrase){
 	this->_reasonPhrase = phrase;
 }
 
-void					ResponseHeaders::setAllow(){
-	this->_allow.push_back("GET");
-	this->_allow.push_back("POST");
+void					ResponseHeaders::setAllow(ConnectionClass connection, RequestHeaders request){
+	ConfigClass	server;
+	std::vector<std::string>	allow;
+
+	server = connection.getServer();
+	allow = (*(*server.getLocations())[request.getLocation()].getMethods());
+	if (allow.size() > 0) {
+		for (size_t i = 0; i < allow.size(); ++i) {
+			this->_allow += allow[i];
+			this->_allow += " ";
+		}
+		this->_allow.pop_back();
+	}
+	else {
+		this->_allow = "GET, POST, DELETE";
+	}
 }
 
 void 					ResponseHeaders::setConnection(std::string phrase){
@@ -110,27 +123,16 @@ void 					ResponseHeaders::setContentType(std::string type){
 }
 
 void 					ResponseHeaders::setDate(RequestHeaders request) {
-//	struct timeval	gmt;
-//	struct tm 		*m_time;
-//	char str_t[128];
-//
-//	//Нужно добавить костыль в виде считывания даты при поступлении реквеста и вычислении новой после выполнения запроса.
-//	ft_bzero(str_t, 128);
-//	localtime()
-//	//Считываем системное время
-//	gettimeofday(&gmt, NULL);
-//	//Преобразуем локальное время в текстовую строку
-//	strftime(str_t, 128, "Date: %x %A %X %Z", gmt);
 	this->_date = request.get_date();
+}
+
+void 					ResponseHeaders::setLocation(std::string location) {
+	this->_location = location;
 }
 
 void 					ResponseHeaders::setServer(){
 	this->_server.push_back("Webserver/1.0");
 }
-
-//void 					ResponseHeaders::pageAdd(std::string line) {
-//	this->_page += line;
-//}
 
 void 					ResponseHeaders::setPage(std::string page) {
 	this->_page = page;
@@ -140,15 +142,3 @@ void 					ResponseHeaders::setBinaryPage(void *buffer, size_t len) {
 	this->_binaryPage = buffer;
 	this->_binaryPageLen = len;
 }
-
-//void 					ResponseHeaders::binaryPageAdd(char *line) {
-//	//char 	*bubble;
-//
-//	if (!this->_binaryPage)
-//		this->_binaryPage = (char*)operator new(1);
-//	//bubble = this->_binaryPage;
-//	this->_binaryPage = ft_strjoin(this->_binaryPage, line);
-//	if (line == nullptr)
-//		this->_binaryPage = nullptr;
-//	//free(bubble);
-//};

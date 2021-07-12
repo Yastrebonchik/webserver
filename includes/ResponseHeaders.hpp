@@ -11,13 +11,14 @@
 # include "utils.hpp"
 # include <time.h>
 # include <sys/time.h>
+# include "ConnectionClass.hpp"
 
 class ResponseHeaders {
 private:
 	std::string 			_version;
 	size_t 					_statusCode;
 	std::string 			_reasonPhrase;
-	std::list<std::string>	_allow;
+	std::string				_allow;
 	std::string 			_connection;
 	std::list<std::string>	_contentLanguage;
 	size_t 					_contentLength;
@@ -58,16 +59,15 @@ public:
 	void 					setVersion();
 	void 					setStatusCode(size_t code);
 	void 					setReasonPhrase(std::string phrase);
-	void					setAllow();
+	void					setAllow(ConnectionClass connection, RequestHeaders request);
 	void 					setConnection(std::string phrase);
 	void 					setContentLength(size_t length);
 	void 					setContentType(std::string type);
 	void 					setDate(RequestHeaders request);
+	void 					setLocation(std::string location);
 	void 					setServer();
 	void 					setBinaryPage(void* buffer, size_t len);
 	void 					setPage(std::string page);
-	//void 					pageAdd(std::string line);
-	//void 					binaryPageAdd(char *line);
 };
 
 

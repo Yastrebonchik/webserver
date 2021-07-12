@@ -21,7 +21,7 @@
 
 # define SERVER_NAME 1
 # define REDIRECTION 2
-# define DEFAULT_ERRORS 4
+# define CUSTOM_ERRORS 4
 # define ALLOW_METHODS 8
 # define ROOT_EXISTS 16
 # define LISTING 32
@@ -35,6 +35,6 @@ void 	*GET(RequestHeaders request, ConfigClass server, ConnectionClass &connecti
 void 	*POST(RequestHeaders request, ConfigClass server, ConnectionClass &connection);
 void 	*DELETE(RequestHeaders request, ConfigClass server, ConnectionClass &connection);
 void 	*noSuchMethod(RequestHeaders request, ConnectionClass &connection);
-void	*returnError(RequestHeaders request, ConnectionClass &connection);
+void 	*returnError(RequestHeaders request, int statusC, std::string reason, ConnectionClass &connection);
 
 #endif //WEBSERVER_METHODS_H

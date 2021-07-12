@@ -25,6 +25,11 @@ CMakeFiles/webserver.dir/srcs/RequestHeaders.cpp.o: ../includes/RequestHeaders.h
 CMakeFiles/webserver.dir/srcs/RequestHeaders.cpp.o: ../includes/utils.hpp
 CMakeFiles/webserver.dir/srcs/RequestHeaders.cpp.o: ../srcs/RequestHeaders.cpp
 
+CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o: ../config_parser_v.0.1/includes/ConfigClass.hpp
+CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o: ../config_parser_v.0.1/includes/LocationClass.hpp
+CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o: ../config_parser_v.0.1/includes/config.hpp
+CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o: ../config_parser_v.0.1/includes/config_parser.hpp
+CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o: ../includes/ConnectionClass.hpp
 CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o: ../includes/RequestHeaders.hpp
 CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o: ../includes/ResponseHeaders.hpp
 CMakeFiles/webserver.dir/srcs/ResponseHeaders.cpp.o: ../includes/utils.hpp

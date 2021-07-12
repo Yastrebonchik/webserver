@@ -103,6 +103,8 @@ time.h
 -
 sys/time.h
 -
+ConnectionClass.hpp
+../includes/ConnectionClass.hpp
 
 ../includes/cgi.hpp
 iostream
