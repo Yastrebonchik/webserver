@@ -2,10 +2,10 @@
 
 <html>
  <head>
-  <title>*CGI test*</title>
+  <title>* CGI test *</title>
 </head>
 <body>
-<h2> *Dynamically generated page*</h2>
+<h2> *** Dynamically generated page (e-mail) ***</h2>
 
 <?php
 parse_str(getenv("QUERY_STRING"), $_GET);
